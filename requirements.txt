@@ -6,3 +6,4 @@ pdfplumber
 tiktoken
 python-dotenv
 pypdf
+azure-core

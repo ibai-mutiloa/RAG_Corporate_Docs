@@ -5,6 +5,8 @@ import psycopg2
 from psycopg2.extras import execute_values
 from pypdf import PdfReader
 from dotenv import load_dotenv
+from openai import AzureOpenAI
+from azure.core.credentials import AzureKeyCredential
 
 # Cargar variables de entorno desde .env
 load_dotenv()
@@ -29,6 +31,23 @@ IGNORE_DIRS = [d.strip() for d in os.getenv("IGNORE_DIRS", "NormativasAPP").spli
 # ===========================
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "1000"))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "200"))
+
+# ===========================
+# Azure OpenAI Configuration
+# ===========================
+AZURE_ENDPOINT = os.getenv("AZURE_ENDPOINT", "")
+AZURE_API_KEY = os.getenv("AZURE_API_KEY", "")
+AZURE_DEPLOYMENT_NAME = os.getenv("AZURE_DEPLOYMENT_NAME", "text-embedding-3-small")
+AZURE_API_VERSION = os.getenv("AZURE_API_VERSION", "2024-12-01-preview")
+
+# Cliente de Azure OpenAI
+azure_client = None
+if AZURE_ENDPOINT and AZURE_API_KEY:
+    azure_client = AzureOpenAI(
+        api_version=AZURE_API_VERSION,
+        azure_endpoint=AZURE_ENDPOINT,
+        api_key=AZURE_API_KEY
+    )
 
 # ===========================
 # Funciones
@@ -121,10 +140,40 @@ def create_table():
             cur.execute(migrate_sql)
     conn.close()
 
+def calculate_embeddings(chunks):
+    """Calcula embeddings para una lista de chunks usando Azure OpenAI."""
+    if not azure_client:
+        print("[WARN] Azure OpenAI no configurado, embeddings serán NULL")
+        return [None] * len(chunks)
+    
+    try:
+        # Azure OpenAI permite hasta 2048 inputs por request, procesamos en lotes
+        batch_size = 2048
+        all_embeddings = []
+        
+        for i in range(0, len(chunks), batch_size):
+            batch = chunks[i:i + batch_size]
+            response = azure_client.embeddings.create(
+                input=batch,
+                model=AZURE_DEPLOYMENT_NAME
+            )
+            batch_embeddings = [item.embedding for item in response.data]
+            all_embeddings.extend(batch_embeddings)
+            print(f"[INFO] Embeddings calculados: {i + len(batch)}/{len(chunks)}")
+        
+        return all_embeddings
+    except Exception as e:
+        print(f"[ERROR] Error calculando embeddings: {e}")
+        return [None] * len(chunks)
+
 def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
+    """Inserta chunks con sus embeddings en la base de datos."""
+    # Calcular embeddings para todos los chunks
+    embeddings = calculate_embeddings(chunks)
+    
     conn = connect_db()
     data = [
-        (file_name, file_path, folder_name, i, chunk, None, file_hash)
+        (file_name, file_path, folder_name, i, chunk, embeddings[i], file_hash)
         for i, chunk in enumerate(chunks)
     ]
     sql = """
