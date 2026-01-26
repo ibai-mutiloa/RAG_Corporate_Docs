@@ -192,6 +192,40 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
             execute_values(cur, sql, data)
     conn.close()
 
+def update_missing_embeddings(file_path):
+    """Calcula y actualiza embeddings NULL para un PDF."""
+    conn = connect_db()
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT id, text FROM chunks WHERE file_path = %s AND embedding IS NULL ORDER BY chunk_index",
+            (file_path,)
+        )
+        rows = cur.fetchall()
+    conn.close()
+    
+    if not rows:
+        return 0
+    
+    chunk_ids = [row[0] for row in rows]
+    chunk_texts = [row[1] for row in rows]
+    
+    print(f"[INFO] Calculando {len(chunk_texts)} embeddings faltantes para {file_path}")
+    embeddings = calculate_embeddings(chunk_texts)
+    
+    # Actualizar embeddings en la base de datos
+    conn = connect_db()
+    with conn:
+        with conn.cursor() as cur:
+            for chunk_id, embedding in zip(chunk_ids, embeddings):
+                if embedding is not None:
+                    cur.execute(
+                        "UPDATE chunks SET embedding = %s WHERE id = %s",
+                        (embedding, chunk_id)
+                    )
+    conn.close()
+    
+    return len(chunk_ids)
+
 def delete_chunks(file_path):
     """Borra todos los chunks de un PDF (ruta relativa)."""
     conn = connect_db()
@@ -241,6 +275,11 @@ def process_pdfs():
                     chunks = chunk_text(text)
                     insert_chunks(f, relative_path, folder_name, chunks, file_hash)
                     print(f"[INFO] {len(chunks)} chunks insertados para {relative_path}")
+                else:
+                    # PDF no modificado, pero verificar si faltan embeddings
+                    missing_count = update_missing_embeddings(relative_path)
+                    if missing_count > 0:
+                        print(f"[INFO] {missing_count} embeddings actualizados para {relative_path}")
 
     # Borrar de DB PDFs que ya no existen
     conn = connect_db()
