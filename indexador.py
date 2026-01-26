@@ -22,7 +22,7 @@ DB_PASS = os.getenv("DB_PASS", "")
 # Directorio base de PDFs
 # ===========================
 BASE_DIR = os.path.expanduser(os.getenv("BASE_DIR", "~/normativas"))
-IGNORE_DIRS = os.getenv("IGNORE_DIRS", "NormativasAPP").split(",")
+IGNORE_DIRS = [d.strip() for d in os.getenv("IGNORE_DIRS", "NormativasAPP").split(",") if d.strip()]
 
 # ===========================
 # Parámetros de chunking
@@ -68,11 +68,12 @@ def connect_db():
     )
 
 def create_table():
-    """Tabla de chunks + hash para versionado"""
-    sql = """
+    """Tabla de chunks + hash para versionado y esquemas nuevos."""
+    create_sql = """
     CREATE TABLE IF NOT EXISTS chunks (
         id SERIAL PRIMARY KEY,
         file_name TEXT,
+        file_path TEXT,
         folder_name TEXT,
         chunk_index INT,
         text TEXT,
@@ -80,33 +81,82 @@ def create_table():
         file_hash TEXT
     );
     """
+
+    migrate_sql = """
+    DO $$
+    BEGIN
+        -- Asegura la columna file_path si la tabla existía sin ella
+        IF NOT EXISTS (
+            SELECT 1 FROM information_schema.columns
+            WHERE table_name = 'chunks' AND column_name = 'file_path'
+        ) THEN
+            ALTER TABLE chunks ADD COLUMN file_path TEXT;
+        END IF;
+
+        -- Índice para búsquedas por ruta
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_class c
+            JOIN pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relname = 'idx_chunks_file_path' AND n.nspname = 'public'
+        ) THEN
+            CREATE INDEX idx_chunks_file_path ON chunks(file_path);
+        END IF;
+
+        -- Índice único para ruta + chunk_index
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_class c
+            JOIN pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relname = 'ux_chunks_file_path_chunk_index' AND n.nspname = 'public'
+        ) THEN
+            CREATE UNIQUE INDEX ux_chunks_file_path_chunk_index ON chunks(file_path, chunk_index);
+        END IF;
+    END
+    $$;
+    """
+
     conn = connect_db()
     with conn:
         with conn.cursor() as cur:
-            cur.execute(sql)
+            cur.execute(create_sql)
+            cur.execute(migrate_sql)
     conn.close()
 
-def insert_chunks(file_name, folder_name, chunks, file_hash):
+def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
     conn = connect_db()
-    data = [(file_name, folder_name, i, chunk, None, file_hash) for i, chunk in enumerate(chunks)]
-    sql = "INSERT INTO chunks (file_name, folder_name, chunk_index, text, embedding, file_hash) VALUES %s"
+    data = [
+        (file_name, file_path, folder_name, i, chunk, None, file_hash)
+        for i, chunk in enumerate(chunks)
+    ]
+    sql = """
+    INSERT INTO chunks (
+        file_name,
+        file_path,
+        folder_name,
+        chunk_index,
+        text,
+        embedding,
+        file_hash
+    ) VALUES %s
+    """
     with conn:
         with conn.cursor() as cur:
             execute_values(cur, sql, data)
     conn.close()
 
-def delete_chunks(file_name):
-    """Borra todos los chunks de un PDF"""
+def delete_chunks(file_path):
+    """Borra todos los chunks de un PDF (ruta relativa)."""
     conn = connect_db()
-    sql = "DELETE FROM chunks WHERE file_name = %s"
     with conn:
         with conn.cursor() as cur:
-            cur.execute(sql, (file_name,))
+            if file_path is None:
+                cur.execute("DELETE FROM chunks WHERE file_path IS NULL")
+            else:
+                cur.execute("DELETE FROM chunks WHERE file_path = %s", (file_path,))
     conn.close()
 
 def process_pdfs():
     """Procesa todos los PDFs, detectando cambios"""
-    # Lista de PDFs actuales
+    # Lista de PDFs actuales usando ruta relativa para evitar colisiones de nombres
     current_files = {}
     for root, dirs, files in os.walk(BASE_DIR):
         for ignore in IGNORE_DIRS:
@@ -116,37 +166,43 @@ def process_pdfs():
         for f in files:
             if f.lower().endswith(".pdf"):
                 full_path = os.path.join(root, f)
+                relative_path = os.path.relpath(full_path, BASE_DIR)
                 file_hash = hash_file(full_path)
-                current_files[f] = file_hash
+                current_files[relative_path] = file_hash
                 # Revisar si está en DB con mismo hash
                 conn = connect_db()
                 with conn.cursor() as cur:
-                    cur.execute("SELECT file_hash FROM chunks WHERE file_name = %s LIMIT 1", (f,))
+                    cur.execute(
+                        "SELECT file_hash FROM chunks WHERE file_path = %s LIMIT 1",
+                        (relative_path,),
+                    )
                     row = cur.fetchone()
                 conn.close()
                 if row is None or row[0] != file_hash:
                     if row is not None:
-                        print(f"[INFO] PDF modificado: {f}, eliminando chunks antiguos")
-                        delete_chunks(f)
-                    print(f"[INFO] Procesando PDF nuevo o modificado: {full_path}")
+                        print(
+                            f"[INFO] PDF modificado: {relative_path}, eliminando chunks antiguos"
+                        )
+                        delete_chunks(relative_path)
+                    print(f"[INFO] Procesando PDF nuevo o modificado: {relative_path}")
                     text = extract_text_from_pdf(full_path)
                     if text.strip() == "":
                         print(f"[WARN] {full_path} está vacío")
                         continue
                     chunks = chunk_text(text)
-                    insert_chunks(f, folder_name, chunks, file_hash)
-                    print(f"[INFO] {len(chunks)} chunks insertados para {f}")
+                    insert_chunks(f, relative_path, folder_name, chunks, file_hash)
+                    print(f"[INFO] {len(chunks)} chunks insertados para {relative_path}")
 
     # Borrar de DB PDFs que ya no existen
     conn = connect_db()
     with conn.cursor() as cur:
-        cur.execute("SELECT DISTINCT file_name FROM chunks")
+        cur.execute("SELECT DISTINCT file_path FROM chunks")
         all_files_in_db = [r[0] for r in cur.fetchall()]
     conn.close()
-    for f in all_files_in_db:
-        if f not in current_files:
-            print(f"[INFO] PDF eliminado del disco: {f}, borrando chunks")
-            delete_chunks(f)
+    for file_path in all_files_in_db:
+        if file_path not in current_files:
+            print(f"[INFO] PDF eliminado del disco: {file_path}, borrando chunks")
+            delete_chunks(file_path)
 
 # ===========================
 # Main
