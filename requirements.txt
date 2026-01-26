@@ -1,0 +1,8 @@
+openai
+psycopg2-binary
+pgvector
+pandas
+pdfplumber
+tiktoken
+python-dotenv
+pypdf
