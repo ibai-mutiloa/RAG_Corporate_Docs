@@ -2,6 +2,7 @@
 import os
 import numpy as np
 from flask import Flask, request, jsonify
+import re
 from flask_cors import CORS
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -40,6 +41,9 @@ TOP_K = int(os.getenv("TOP_K", "5"))  # Número de chunks similares a retornar
 MIN_SIMILARITY = float(os.getenv("MIN_SIMILARITY", "0.65"))  # Umbral mínimo de similitud
 MIN_SIMILARITY_WARNING = float(os.getenv("MIN_SIMILARITY_WARNING", "0.55"))  # Umbral zona gris
 REWRITE_QUERY = os.getenv("REWRITE_QUERY", "True").lower() == "true"  # Reescribir preguntas
+CONTEXT_SUMMARY_MODE = os.getenv("CONTEXT_SUMMARY_MODE", "heuristic").lower()  # model | heuristic
+CONTEXT_MAX_SOURCES = int(os.getenv("CONTEXT_MAX_SOURCES", str(TOP_K)))
+CONTEXT_MAX_BULLETS = int(os.getenv("CONTEXT_MAX_BULLETS", "2"))
 
 # Cliente de Azure OpenAI para embeddings
 azure_client = None
@@ -146,6 +150,96 @@ Formato: devuelve SOLO las preguntas reformuladas, una por línea, sin numeraci�
         print(f"[WARN] Error reescribiendo pregunta: {e}")
         return [question]
 
+def _normalize_text(text):
+    if not text:
+        return ""
+    text = text.replace("\r", "\n")
+    text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)
+    text = re.sub(r"\n{2,}", "\n\n", text)
+    text = re.sub(r"(?<!\n)\n(?!\n)", " ", text)
+    text = re.sub(r"[ \t]{2,}", " ", text)
+    return text.strip()
+
+def _extract_article_title(text):
+    if not text:
+        return None
+    match = re.search(r"\b(ART[IÍ]CULO|Art\.?|Artículo)\s+\d+[A-Za-zºª\-]*[^\n\.]*", text)
+    if match:
+        return match.group(0).strip()
+    return None
+
+def _heuristic_summary(text, max_bullets=2):
+    if not text:
+        return []
+    sentences = re.split(r"(?<=[\.!\?])\s+", text)
+    bullets = [s.strip() for s in sentences if s.strip()]
+    return bullets[:max_bullets]
+
+def build_clean_context(question, chunks):
+    sources = []
+    for chunk in chunks[:CONTEXT_MAX_SOURCES]:
+        cleaned_text = _normalize_text(chunk.get('text', ''))
+        article = _extract_article_title(cleaned_text)
+        sources.append({
+            'file_name': chunk.get('file_name', 'Documento'),
+            'article': article,
+            'text': cleaned_text,
+            'similarity': chunk.get('similarity', 0.0)
+        })
+
+    if not sources:
+        return ""
+
+    if CONTEXT_SUMMARY_MODE == "model" and azure_client_text:
+        try:
+            source_blocks = []
+            for i, s in enumerate(sources, start=1):
+                header = f"Fuente {i}: {s['file_name']}"
+                if s['article']:
+                    header += f" ({s['article']})"
+                source_blocks.append(f"{header}\nTexto: {s['text']}")
+
+            prompt = f"""Eres un analista documental. Resume de forma breve y fiel cada fuente para responder la pregunta del usuario.
+
+Pregunta: {question}
+
+Instrucciones:
+- Devuelve SOLO resúmenes por fuente en el siguiente formato:
+  Fuente N: <Documento> (<Artículo si existe>)
+  Resumen del fragmento:
+  - ...
+  - ...
+- No inventes datos ni porcentajes.
+- Si el fragmento no es concluyente, indícalo.
+
+Fuentes:
+""" + "\n\n".join(source_blocks)
+
+            response = azure_client_text.chat.completions.create(
+                model=AZURE_DEPLOYMENT_NAME_TEXT,
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.2,
+                max_tokens=700
+            )
+            return response.choices[0].message.content.strip()
+        except Exception as e:
+            print(f"[WARN] Error creando contexto con modelo: {e}")
+
+    # Fallback heurístico
+    parts = []
+    for i, s in enumerate(sources, start=1):
+        header = f"Fuente {i}: {s['file_name']}"
+        if s['article']:
+            header += f" ({s['article']})"
+        bullets = _heuristic_summary(s['text'], CONTEXT_MAX_BULLETS)
+        if not bullets:
+            bullets = ["Fragmento sin contenido textual útil."]
+        bullets_text = "\n".join([f"- {b}" for b in bullets])
+        parts.append(f"{header}\nResumen del fragmento:\n{bullets_text}")
+    return "\n\n".join(parts)
+
 def generate_answer_from_chunks(question, chunks, max_similarity):
     """
     Genera una respuesta usando el modelo de texto de Azure OpenAI
@@ -167,62 +261,47 @@ def generate_answer_from_chunks(question, chunks, max_similarity):
     is_gray_zone = max_similarity < MIN_SIMILARITY
     
     try:
-        # Construir el contexto a partir de los chunks
-        context = "\n\n".join([
-            f"[Documento: {chunk['file_name']}, Relevancia: {chunk['similarity']:.0%}]\n{chunk['text']}"
-            for chunk in chunks
-        ])
-        
+        # Construir el contexto limpio a partir de los chunks
+        clean_context = build_clean_context(question, chunks)
+
         # Crear el prompt para el modelo
         if is_gray_zone:
             # Prompt para zona gris: más cauteloso
-            system_prompt = """Eres un asistente experto en normativas y regulaciones internas. 
-Tu tarea es:
-1. Analizar la información de los documentos proporcionados
-2. Sintetizar y reformular la respuesta en lenguaje claro y accesible
-3. NO copiar textualmente el contenido de los documentos
-4. Explicar de forma natural y conversacional
-5. IMPORTANTE: La información encontrada es parcialmente relevante pero no perfectamente coincidente
-6. Debes AVISAR al usuario que la información puede no ser exactamente lo que busca
-7. NUNCA inventar leyes, números o permisos que no estén en los documentos
-8. Recomendar verificación adicional cuando sea necesario
+            system_prompt = """Eres el asistente oficial de la intranet corporativa.
+Utiliza únicamente la información proporcionada en las fuentes.
+Redacta una respuesta clara, completa y prudente.
+Si la información no es concluyente, indícalo explícitamente.
+No muestres fragmentos de texto sin explicar."""
 
-Reformula el contenido técnico/legal en un lenguaje que cualquier empleado pueda entender."""
-            
-            user_prompt = f"""Pregunta del usuario: {question}
+            user_prompt = f"""Pregunta:
+{question}
 
-Información relevante encontrada en los documentos (relevancia media: {max_similarity:.0%}):
-{context}
+Fuentes (resumidas):
+{clean_context}
 
-IMPORTANTE: La información encontrada tiene relevancia media/moderada. 
-Por favor, sintetiza lo encontrado PERO indica claramente al usuario que:
-- La información puede no ser exactamente lo que busca
-- Se recomienda verificar con el artículo o reglamento específico
-- Puede necesitar consultar con RRHH para confirmación definitiva
-
-Proporciona lo que encuentres de forma útil pero prudente."""
+Instrucciones:
+- Sintetiza y redacta una respuesta clara y profesional.
+- Indica que la información puede no ser exactamente la requerida.
+- Sugiere verificar el artículo o documento específico si hay dudas.
+- No inventes datos, porcentajes ni requisitos que no estén en las fuentes."""
         else:
             # Prompt normal: alta confianza
-            system_prompt = """Eres un asistente experto en normativas y regulaciones internas. 
-Tu tarea es:
-1. Analizar la información de los documentos proporcionados
-2. Sintetizar y reformular la respuesta en lenguaje claro y accesible
-3. NO copiar textualmente el contenido de los documentos
-4. Explicar de forma natural y conversacional
-5. Si la información no está clara, indicarlo explícitamente
-6. NUNCA inventar leyes, números o permisos que no estén en los documentos
-7. Mencionar el documento de referencia cuando sea relevante
+            system_prompt = """Eres el asistente oficial de la intranet corporativa.
+Utiliza únicamente la información proporcionada en las fuentes.
+Redacta una respuesta clara y completa.
+Si la información no es totalmente concluyente, indícalo explícitamente.
+No muestres fragmentos de texto sin explicar."""
 
-Reformula el contenido técnico/legal en un lenguaje que cualquier empleado pueda entender."""
-            
-            user_prompt = f"""Pregunta del usuario: {question}
+            user_prompt = f"""Pregunta:
+{question}
 
-Información relevante encontrada en los documentos:
-{context}
+Fuentes (resumidas):
+{clean_context}
 
-Por favor, sintetiza y reformula esta información para responder la pregunta de forma clara y natural.
-NO copies textualmente el contenido. Explícalo con tus propias palabras manteniendo la precisión.
-Si no hay información suficiente, indícalo claramente."""
+Instrucciones:
+- Sintetiza y redacta la respuesta en lenguaje claro.
+- No copies textualmente las fuentes.
+- Si falta información específica, indícalo de forma transparente."""
         
         # Llamar al modelo de texto
         response = azure_client_text.chat.completions.create(

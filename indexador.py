@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import hashlib
+import re
 import psycopg2
 from psycopg2.extras import execute_values
 from pypdf import PdfReader
@@ -73,14 +74,116 @@ def extract_text_from_pdf(pdf_path):
         print(f"[ERROR] No se pudo leer {pdf_path}: {e}")
     return text
 
-def chunk_text(text, chunk_size=CHUNK_SIZE, overlap=CHUNK_OVERLAP):
+def normalize_pdf_text(text):
+    """Limpia saltos de línea y cortes de palabra típicos de PDF."""
+    if not text:
+        return ""
+    text = text.replace("\r", "\n")
+    text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)
+    text = re.sub(r"\n{2,}", "\n\n", text)
+    text = re.sub(r"(?<!\n)\n(?!\n)", " ", text)
+    text = re.sub(r"[ \t]{2,}", " ", text)
+    return text.strip()
+
+def extract_article_title(text):
+    if not text:
+        return None
+    match = re.search(
+        r"(?im)^\s*(ART[IÍ]CULO\s+\d+[A-Za-zºª\-]*[^\n]*)",
+        text,
+    )
+    if match:
+        return match.group(1).strip()
+    return None
+
+def split_by_structure(text):
+    if not text:
+        return []
+    pattern = (
+        r"(?im)(?=^\s*(?:"
+        r"ART[IÍ]CULO\s+\d+[A-Za-zºª\-]*|"
+        r"DISPOSICION(?:ES)?\s+\w+|"
+        r"T[ÍI]TULO\s+\w+|"
+        r"CAP[IÍ]TULO\s+\w+|"
+        r"SECCI[ÓO]N\s+\w+|"
+        r"Uno\.|Dos\.|Tres\.|Cuatro\.|Cinco\.|Seis\.|Siete\.|Ocho\.|Nueve\.|Diez\."
+        r"))"
+    )
+    parts = [p.strip() for p in re.split(pattern, text) if p.strip()]
+    return parts
+
+def split_by_sentences(text, max_len=CHUNK_SIZE):
+    if not text:
+        return []
+    sentences = re.split(r"(?<=[\.!\?])\s+", text)
     chunks = []
-    start = 0
-    while start < len(text):
-        end = start + chunk_size
-        chunks.append(text[start:end])
-        start += chunk_size - overlap
+    current = ""
+    for s in sentences:
+        s = s.strip()
+        if not s:
+            continue
+        if not current:
+            current = s
+            continue
+        if len(current) + len(s) + 1 <= max_len:
+            current = f"{current} {s}"
+        else:
+            chunks.append(current)
+            current = s
+    if current:
+        chunks.append(current)
     return chunks
+
+def chunk_text(text, chunk_size=CHUNK_SIZE, overlap=CHUNK_OVERLAP):
+    """Chunking por estructura legal con fallback a frases/tamaño fijo."""
+    if not text:
+        return []
+
+    structured = split_by_structure(text)
+    chunks = []
+
+    if structured:
+        for part in structured:
+            if len(part) <= chunk_size:
+                chunks.append(part)
+            else:
+                chunks.extend(split_by_sentences(part, max_len=chunk_size))
+        return chunks
+
+    # Fallback por párrafos si no hay estructura detectada
+    paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+    current = ""
+    for p in paragraphs:
+        if not current:
+            if len(p) <= chunk_size:
+                current = p
+                continue
+        if len(current) + len(p) + 2 <= chunk_size:
+            current = f"{current}\n\n{p}" if current else p
+        else:
+            if current:
+                chunks.append(current)
+            if len(p) > chunk_size:
+                start = 0
+                while start < len(p):
+                    end = start + chunk_size
+                    chunks.append(p[start:end])
+                    start += chunk_size - overlap
+                current = ""
+            else:
+                current = p
+    if current:
+        chunks.append(current)
+
+    return chunks
+
+def enrich_chunk_with_metadata(file_name, chunk_text_value):
+    article = extract_article_title(chunk_text_value)
+    header_lines = [f"Documento: {file_name}"]
+    if article:
+        header_lines.append(f"Artículo: {article}")
+    header = "\n".join(header_lines)
+    return f"{header}\nTexto:\n{chunk_text_value}".strip()
 
 def connect_db():
     return psycopg2.connect(
@@ -169,6 +272,8 @@ def calculate_embeddings(chunks):
 
 def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
     """Inserta chunks con sus embeddings en la base de datos."""
+    # Añadir metadatos al texto del chunk
+    chunks = [enrich_chunk_with_metadata(file_name, c) for c in chunks]
     # Calcular embeddings para todos los chunks
     embeddings = calculate_embeddings(chunks)
     
@@ -281,6 +386,7 @@ def process_pdfs():
                         delete_chunks(relative_path)
                     print(f"[INFO] Procesando PDF nuevo o modificado: {relative_path}")
                     text = extract_text_from_pdf(full_path)
+                    text = normalize_pdf_text(text)
                     if text.strip() == "":
                         print(f"[WARN] {full_path} está vacío")
                         continue
