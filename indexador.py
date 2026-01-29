@@ -31,6 +31,7 @@ IGNORE_DIRS = [d.strip() for d in os.getenv("IGNORE_DIRS", "NormativasAPP").spli
 # ===========================
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "1000"))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "200"))
+FORCE_REINDEX = os.getenv("FORCE_REINDEX", "False").lower() == "true"
 
 # ===========================
 # Azure OpenAI Configuration
@@ -237,8 +238,19 @@ def delete_chunks(file_path):
                 cur.execute("DELETE FROM chunks WHERE file_path = %s", (file_path,))
     conn.close()
 
+def delete_all_chunks():
+    """Borra todos los chunks de la base de datos."""
+    conn = connect_db()
+    with conn:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM chunks")
+    conn.close()
+
 def process_pdfs():
     """Procesa todos los PDFs, detectando cambios"""
+    if FORCE_REINDEX:
+        print("[INFO] FORCE_REINDEX activo: eliminando todos los chunks antes de reindexar")
+        delete_all_chunks()
     # Lista de PDFs actuales usando ruta relativa para evitar colisiones de nombres
     current_files = {}
     for root, dirs, files in os.walk(BASE_DIR):

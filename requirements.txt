@@ -7,3 +7,6 @@ tiktoken
 python-dotenv
 pypdf
 azure-core
+flask
+flask-cors
+numpy
