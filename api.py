@@ -40,6 +40,8 @@ AZURE_ENDPOINT_TEXT = os.getenv("AZURE_ENDPOINT_TEXT", "")  # Opcional, usa AZUR
 TOP_K = int(os.getenv("TOP_K", "5"))  # Número de chunks similares a retornar
 MIN_SIMILARITY = float(os.getenv("MIN_SIMILARITY", "0.65"))  # Umbral mínimo de similitud
 MIN_SIMILARITY_WARNING = float(os.getenv("MIN_SIMILARITY_WARNING", "0.55"))  # Umbral zona gris
+MIN_SIMILARITY_ABSOLUTE = float(os.getenv("MIN_SIMILARITY_ABSOLUTE", "0.50"))  # Umbral de silencio semántico
+MIN_SIMILARITY_SECOND_PASS = float(os.getenv("MIN_SIMILARITY_SECOND_PASS", "0.45"))  # Mínimo para segundo pase
 REWRITE_QUERY = os.getenv("REWRITE_QUERY", "True").lower() == "true"  # Reescribir preguntas
 CONTEXT_SUMMARY_MODE = os.getenv("CONTEXT_SUMMARY_MODE", "heuristic").lower()  # model | heuristic
 CONTEXT_MAX_SOURCES = int(os.getenv("CONTEXT_MAX_SOURCES", str(TOP_K)))
@@ -245,17 +247,23 @@ def generate_answer_from_chunks(question, chunks, max_similarity):
     Genera una respuesta usando el modelo de texto de Azure OpenAI
     basándose en los chunks relevantes encontrados.
     
-    Tres niveles de confianza:
-    - max_similarity >= MIN_SIMILARITY: respuesta normal
-    - MIN_SIMILARITY_WARNING <= max_similarity < MIN_SIMILARITY: respuesta con aviso (zona gris)
-    - max_similarity < MIN_SIMILARITY_WARNING: no hay información suficiente
+    Cuatro niveles de confianza:
+    - max_similarity >= MIN_SIMILARITY (0.65): respuesta normal (alta confianza)
+    - MIN_SIMILARITY_WARNING <= max_similarity < MIN_SIMILARITY (0.55-0.65): respuesta con aviso (zona gris)
+    - MIN_SIMILARITY_ABSOLUTE <= max_similarity < MIN_SIMILARITY_WARNING (0.50-0.55): aviso de baja confianza
+    - max_similarity < MIN_SIMILARITY_ABSOLUTE (< 0.50): silencio semántico, no hay información
     """
     if not azure_client_text:
         return None
     
-    # Nivel 1: Sin información suficiente
+    # Nivel 0: Silencio semántico (< 0.50) - CORTE SECO
+    # "Eco semántico" - coincidencias accidentales, no es conocimiento real
+    if max_similarity < MIN_SIMILARITY_ABSOLUTE:
+        return "No se ha encontrado información relacionada en la normativa consultada. La consulta no tiene suficiente relación semántica con los documentos disponibles."
+    
+    # Nivel 1: Baja confianza (0.50-0.55) - respuesta muy cautelosa
     if max_similarity < MIN_SIMILARITY_WARNING:
-        return f"No he encontrado en la documentación disponible información relevante sobre tu pregunta (confianza: {max_similarity:.0%}). Te recomiendo consultar con RRHH o revisar el reglamento completo en el portal."
+        return f"No he encontrado en la documentación disponible información suficientemente relevante sobre tu pregunta (similitud: {max_similarity:.0%}). Te recomiendo consultar con RRHH o revisar el reglamento completo en el portal."
     
     # Nivel 2: Zona gris - respuesta con aviso (0.55-0.65)
     is_gray_zone = max_similarity < MIN_SIMILARITY
@@ -320,6 +328,88 @@ Instrucciones:
         print(f"[ERROR] Error generando respuesta: {e}")
         return None
 
+def contains_expected_keywords(text):
+    """
+    Valida si el texto contiene palabras clave esperadas para respuestas sobre normativas.
+    
+    Palabras clave esperadas:
+    - Mayoría (mayoría, dos tercios, absoluta, simple)
+    - Porcentajes (%, porcentaje)
+    - Quórum (quórum, quorum)
+    - Aprobación (aprobación, aprobado)
+    - Modificación (modificación, modificar, cambio)
+    
+    Retorna:
+    - True: contiene al menos una palabra clave
+    - False: no contiene palabras clave (requiere segundo pase)
+    """
+    if not text:
+        return False
+    
+    text_lower = text.lower()
+    
+    # Palabras clave de diferentes categorías
+    keywords = {
+        'mayoría': [r'\bmayoría\b', r'\bmayor[ií]a\b', r'\bdos\s+tercios\b', r'\btercios\b', r'\babsoluta\b', r'\bsimple\b'],
+        'porcentaje': [r'\b\d+\s*%\b', r'\bporcentaje', r'\bporcent'],
+        'quórum': [r'\bqu[óo]rum\b', r'\bquorum\b'],
+        'aprobación': [r'\baprobaci[óo]n\b', r'\baprobado', r'\baprueba'],
+        'modificación': [r'\bmodificaci[óo]n\b', r'\bmodificar\b', r'\bcambio\b', r'\breglamento\b'],
+    }
+    
+    for category, patterns in keywords.items():
+        for pattern in patterns:
+            if re.search(pattern, text_lower):
+                return True
+    
+    return False
+
+def check_answer_completeness(chunks, question):
+    """
+    Determina si la respuesta está completa verificando:
+    1. Que los chunks contengan palabras clave esperadas
+    2. Que haya suficiente contexto
+    
+    Retorna un dict con:
+    - answer_complete: bool
+    - missing_keywords: bool
+    - completeness_score: float (0-1)
+    """
+    if not chunks:
+        return {
+            'answer_complete': False,
+            'missing_keywords': True,
+            'completeness_score': 0.0,
+            'reason': 'No se encontraron chunks relevantes'
+        }
+    
+    # Combinar todos los textos
+    combined_text = ' '.join([c.get('text', '') for c in chunks])
+    
+    # Verificar palabras clave
+    has_keywords = contains_expected_keywords(combined_text)
+    
+    # Verificar longitud del contexto (heurística simple)
+    word_count = len(combined_text.split())
+    has_sufficient_context = word_count >= 100  # Al menos 100 palabras
+    
+    # Calcular score de completitud
+    completeness_score = 0.0
+    if has_keywords:
+        completeness_score += 0.6
+    if has_sufficient_context:
+        completeness_score += 0.4
+    
+    answer_complete = has_keywords and has_sufficient_context
+    
+    return {
+        'answer_complete': answer_complete,
+        'missing_keywords': not has_keywords,
+        'has_sufficient_context': has_sufficient_context,
+        'completeness_score': completeness_score,
+        'reason': 'OK' if answer_complete else ('Faltan palabras clave normativas' if not has_keywords else 'Contexto insuficiente')
+    }
+
 def find_similar_chunks(query_embedding, top_k=TOP_K):
     """
     Encuentra los chunks más similares usando similitud del coseno
@@ -364,6 +454,64 @@ def find_similar_chunks(query_embedding, top_k=TOP_K):
     finally:
         conn.close()
 
+def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top_k=TOP_K):
+    """
+    Segunda pasada: busca chunks que contengan palabras clave específicas.
+    Útil cuando la primera búsqueda no encuentra términos normativos esperados.
+    
+    Args:
+        query_embedding: vector de embeddings de la pregunta
+        forced_keywords: lista de palabras clave a buscar (ej: ['mayoría', 'quórum'])
+        top_k: número de resultados a retornar
+    
+    Retorna: lista de chunks ordenados por similitud que contengan las keywords
+    """
+    if not forced_keywords:
+        forced_keywords = ['mayoría', 'quórum', 'aprobación', 'modificación', 'reglamento', 'artículo', '%']
+    
+    conn = connect_db()
+    
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            # Obtener todos los chunks con embeddings
+            cur.execute("""
+                SELECT id, file_name, file_path, folder_name, chunk_index, text, embedding
+                FROM chunks
+                WHERE embedding IS NOT NULL
+                ORDER BY chunk_index DESC
+            """)
+            chunks = cur.fetchall()
+        
+        # Filtrar chunks que contengan palabras clave
+        filtered_chunks = []
+        for chunk in chunks:
+            text_lower = chunk['text'].lower()
+            # Verificar si contiene al menos una palabra clave
+            if any(keyword.lower() in text_lower for keyword in forced_keywords):
+                embedding = chunk['embedding']
+                if embedding:
+                    if isinstance(embedding, str):
+                        embedding = [float(x) for x in embedding.strip('[]').split(',')]
+                    
+                    similarity = cosine_similarity(query_embedding, embedding)
+                    filtered_chunks.append({
+                        'id': chunk['id'],
+                        'file_name': chunk['file_name'],
+                        'file_path': chunk['file_path'],
+                        'folder_name': chunk['folder_name'],
+                        'chunk_index': chunk['chunk_index'],
+                        'text': chunk['text'],
+                        'similarity': float(similarity),
+                        'found_keywords': [kw for kw in forced_keywords if kw.lower() in text_lower]
+                    })
+        
+        # Ordenar por similitud descendente
+        filtered_chunks.sort(key=lambda x: x['similarity'], reverse=True)
+        return filtered_chunks[:top_k]
+    
+    finally:
+        conn.close()
+
 # ===========================
 # Rutas de la API
 # ===========================
@@ -381,6 +529,12 @@ def search():
     """
     Endpoint principal para buscar normativas similares a una pregunta
     
+    Implementa heurística inteligente:
+    - Primer pase: búsqueda semántica normal
+    - Validación: verifica si hay palabras clave normativas (mayoría, quórum, %, etc.)
+    - Segundo pase: si no hay keywords, relanza con términos forzados
+    - Confianza variable: ajusta según completitud de respuesta
+    
     Body esperado:
     {
         "question": "¿Cuál es la normativa sobre...?",
@@ -392,6 +546,9 @@ def search():
     {
         "question": "pregunta original",
         "answer": "respuesta generada por el modelo (si generate_answer=true)",
+        "answer_complete": boolean,  # Indica si la respuesta contiene info completa
+        "confidence": "alta|media|baja",  # Nivel de confianza
+        "search_passes": int,  # Número de pases realizados (1 o 2)
         "results": [
             {
                 "id": 123,
@@ -428,6 +585,7 @@ def search():
                 'error': 'Azure OpenAI no configurado. Verifica las variables de entorno.'
             }), 500
         
+        # ==================== PRIMER PASE: BÚSQUEDA SEMÁNTICA NORMAL ====================
         # Reescribir pregunta para mejor matching semántico
         query_variants = rewrite_query(question)
         
@@ -449,14 +607,122 @@ def search():
         similar_chunks = sorted(all_similar.values(), key=lambda x: x['similarity'], reverse=True)[:top_k]
         max_similarity = similar_chunks[0]['similarity'] if similar_chunks else 0
         
+        # ==================== VALIDACIÓN: VERIFICAR COMPLETITUD ====================
+        completeness = check_answer_completeness(similar_chunks, question)
+        search_passes = 1
+        second_pass_performed = False
+        
+        # ==================== SEGUNDO PASE: BÚSQUEDA CON KEYWORDS FORZADAS ====================
+        # Si la similitud es >= 0.45 pero faltan palabras clave, relanzar con términos forzados
+        # Entre 0.45-0.50: último intento antes del silencio semántico
+        # >= 0.50: búsqueda mejorada si faltan keywords
+        if (max_similarity >= MIN_SIMILARITY_SECOND_PASS and 
+            not completeness['answer_complete'] and 
+            completeness['missing_keywords']):
+            
+            print(f"[INFO] Segundo pase activado: similitud {max_similarity:.2f} pero faltan keywords")
+            
+            # Términos forzados para búsqueda dirigida
+            forced_keywords = ['mayoría', 'quórum', 'aprobación', 'modificación', 'reglamento']
+            
+            try:
+                # Buscar con primera variante + keywords
+                base_query = query_variants[0]
+                # Crear query con términos forzados
+                enhanced_query = f"{base_query} mayoría quórum aprobación modificación"
+                query_embedding = calculate_embedding(enhanced_query)
+                
+                # Segunda pasada con keywords forzadas
+                second_pass_chunks = find_similar_chunks_with_keywords(
+                    query_embedding, 
+                    forced_keywords=forced_keywords,
+                    top_k=top_k
+                )
+                
+                if second_pass_chunks:
+                    # Combinar resultados del segundo pase
+                    for chunk in second_pass_chunks:
+                        chunk_id = chunk['id']
+                        if chunk_id not in all_similar:
+                            all_similar[chunk_id] = chunk
+                        else:
+                            # Dar más peso al resultado del segundo pase si es diferente
+                            if chunk['similarity'] > all_similar[chunk_id]['similarity'] * 1.1:
+                                all_similar[chunk_id] = chunk
+                    
+                    # Re-ordenar después del segundo pase
+                    similar_chunks = sorted(all_similar.values(), key=lambda x: x['similarity'], reverse=True)[:top_k]
+                    
+                    # Re-validar completitud con nuevos resultados
+                    completeness = check_answer_completeness(similar_chunks, question)
+                    search_passes = 2
+                    second_pass_performed = True
+                    
+                    print(f"[INFO] Segundo pase completado. Keywords encontradas: {completeness['missing_keywords'] == False}")
+            
+            except Exception as e:
+                print(f"[WARN] Error en segundo pase: {e}")
+                # Continuar con los resultados del primer pase
+        
+        # Actualizar max_similarity después de ambos pases
+        max_similarity = similar_chunks[0]['similarity'] if similar_chunks else 0
+        
+        # ==================== DETERMINAR CONFIANZA FINAL ====================
+        # Lógica de confianza (colores semafóricos):
+        # - alta (verde 🟢): similitud >= 0.65 Y respuesta completa
+        # - media (amarillo 🟡): similitud >= 0.55 pero faltan keywords
+        # - baja (naranja 🟠): similitud 0.50-0.55 (cerca del silencio semántico)
+        # - muy-baja (rojo 🔴): similitud < 0.50 (silencio semántico - no responder)
+        
+        if max_similarity >= MIN_SIMILARITY:
+            if completeness['answer_complete']:
+                final_confidence = 'alta'
+            else:
+                final_confidence = 'media'  # Keywords no encontrados pero similitud alta
+        elif max_similarity >= MIN_SIMILARITY_WARNING:
+            final_confidence = 'media'
+        elif max_similarity >= MIN_SIMILARITY_ABSOLUTE:
+            final_confidence = 'baja'
+        else:
+            final_confidence = 'muy-baja'  # Silencio semántico - eco accidental
+        
         # Preparar respuesta
+        # Determinar zona y color UI
+        if max_similarity >= MIN_SIMILARITY:
+            zone = 'high'
+            ui_color = 'green'
+            ui_message = 'Información encontrada con alta confianza'
+        elif max_similarity >= MIN_SIMILARITY_WARNING:
+            zone = 'gray'
+            ui_color = 'yellow'
+            ui_message = 'Información encontrada con confianza media - verificar con fuente oficial'
+        elif max_similarity >= MIN_SIMILARITY_ABSOLUTE:
+            zone = 'low'
+            ui_color = 'orange'
+            ui_message = 'Información de baja confianza - se recomienda consultar directamente'
+        else:
+            zone = 'very-low'
+            ui_color = 'red'
+            ui_message = 'No se ha encontrado información relevante para esta consulta'
+        
         response_data = {
             'question': question,
             'query_variants_used': len(query_variants),
             'max_similarity': float(max_similarity),
             'min_similarity_threshold': MIN_SIMILARITY,
             'min_similarity_warning': MIN_SIMILARITY_WARNING,
-            'zone': 'high' if max_similarity >= MIN_SIMILARITY else 'gray' if max_similarity >= MIN_SIMILARITY_WARNING else 'low',
+            'min_similarity_absolute': MIN_SIMILARITY_ABSOLUTE,
+            'min_similarity_second_pass': MIN_SIMILARITY_SECOND_PASS,
+            'zone': zone,
+            'ui_confidence_color': ui_color,
+            'ui_message': ui_message,
+            'answer_complete': completeness['answer_complete'],
+            'completeness_score': completeness['completeness_score'],
+            'completeness_reason': completeness['reason'],
+            'missing_keywords': completeness['missing_keywords'],
+            'search_passes': search_passes,
+            'second_pass_performed': second_pass_performed,
+            'confidence': final_confidence,
             'results': similar_chunks,
             'count': len(similar_chunks)
         }
@@ -467,13 +733,6 @@ def search():
                 answer = generate_answer_from_chunks(question, similar_chunks, max_similarity)
                 response_data['answer'] = answer
                 response_data['answer_generated'] = True
-                # Confianza: alta (>=0.65), media-con-aviso (0.55-0.65), baja (<0.55)
-                if max_similarity >= MIN_SIMILARITY:
-                    response_data['confidence'] = 'alta'
-                elif max_similarity >= MIN_SIMILARITY_WARNING:
-                    response_data['confidence'] = 'media-con-aviso'
-                else:
-                    response_data['confidence'] = 'baja'
             else:
                 response_data['answer'] = None
                 response_data['answer_generated'] = False
@@ -539,10 +798,12 @@ if __name__ == '__main__':
     print(f"[INFO] Azure OpenAI (Texto) configurado: {'Sí' if azure_client_text else 'No'}")
     if azure_client_text:
         print(f"[INFO] Modelo de texto: {AZURE_DEPLOYMENT_NAME_TEXT}")
-    print(f"[INFO] Umbrales de similitud:")
-    print(f"       - Alta confianza: >= {MIN_SIMILARITY}")
-    print(f"       - Zona gris (con aviso): {MIN_SIMILARITY_WARNING} - {MIN_SIMILARITY}")
-    print(f"       - Sin información: < {MIN_SIMILARITY_WARNING}")
+    print(f"[INFO] Umbrales de similitud (sistema semafórico):")
+    print(f"       🟢 Alta confianza (verde): >= {MIN_SIMILARITY}")
+    print(f"       🟡 Zona gris (amarillo): {MIN_SIMILARITY_WARNING} - {MIN_SIMILARITY}")
+    print(f"       🟠 Baja confianza (naranja): {MIN_SIMILARITY_ABSOLUTE} - {MIN_SIMILARITY_WARNING}")
+    print(f"       🔴 Silencio semántico (rojo): < {MIN_SIMILARITY_ABSOLUTE}")
+    print(f"[INFO] Segundo pase activado para: >= {MIN_SIMILARITY_SECOND_PASS}")
     print(f"[INFO] Reescritura de preguntas activa: {'Sí' if REWRITE_QUERY else 'No'}")
     print(f"[INFO] Base de datos: {DB_HOST}:{DB_PORT}/{DB_NAME}")
     

@@ -8,6 +8,7 @@ from pypdf import PdfReader
 from dotenv import load_dotenv
 from openai import AzureOpenAI
 from azure.core.credentials import AzureKeyCredential
+import tiktoken
 
 # Cargar variables de entorno desde .env
 load_dotenv()
@@ -33,6 +34,14 @@ IGNORE_DIRS = [d.strip() for d in os.getenv("IGNORE_DIRS", "NormativasAPP").spli
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "1000"))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "200"))
 FORCE_REINDEX = os.getenv("FORCE_REINDEX", "False").lower() == "true"
+MAX_TOKENS_PER_CHUNK = int(os.getenv("MAX_TOKENS_PER_CHUNK", "2000"))  # Máximo de tokens por chunk
+
+# Inicializar tokenizer de OpenAI
+try:
+    tokenizer = tiktoken.get_encoding("cl100k_base")
+except Exception as e:
+    print(f"[WARN] No se pudo inicializar tiktoken: {e}, se usará estimación por caracteres")
+    tokenizer = None
 
 # ===========================
 # Azure OpenAI Configuration
@@ -190,6 +199,77 @@ def connect_db():
         host=DB_HOST, port=DB_PORT, dbname=DB_NAME, user=DB_USER, password=DB_PASS
     )
 
+def count_tokens(text):
+    """Cuenta el número de tokens en un texto usando tiktoken"""
+    if not text:
+        return 0
+    
+    if tokenizer:
+        try:
+            return len(tokenizer.encode(text))
+        except Exception as e:
+            print(f"[WARN] Error contando tokens: {e}")
+            # Fallback: estimación aproximada (1 token ≈ 4 caracteres)
+            return len(text) // 4
+    else:
+        # Estimación aproximada si no hay tokenizer
+        return len(text) // 4
+
+def split_large_chunk(text, max_tokens=MAX_TOKENS_PER_CHUNK):
+    """Divide un chunk grande en sub-chunks más pequeños"""
+    if not text:
+        return []
+    
+    # Intentar dividir por párrafos primero
+    paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+    sub_chunks = []
+    current_chunk = ""
+    
+    for paragraph in paragraphs:
+        test_chunk = f"{current_chunk}\n\n{paragraph}".strip() if current_chunk else paragraph
+        
+        if count_tokens(test_chunk) <= max_tokens:
+            current_chunk = test_chunk
+        else:
+            # Si el chunk actual no está vacío, guardarlo
+            if current_chunk:
+                sub_chunks.append(current_chunk)
+                current_chunk = ""
+            
+            # Si el párrafo solo es demasiado grande, dividirlo por frases
+            if count_tokens(paragraph) > max_tokens:
+                sentences = re.split(r'(?<=[.!?])\s+', paragraph)
+                temp_chunk = ""
+                
+                for sentence in sentences:
+                    test_sentence = f"{temp_chunk} {sentence}".strip() if temp_chunk else sentence
+                    
+                    if count_tokens(test_sentence) <= max_tokens:
+                        temp_chunk = test_sentence
+                    else:
+                        if temp_chunk:
+                            sub_chunks.append(temp_chunk)
+                        
+                        # Si una sola frase es muy grande, dividir por caracteres
+                        if count_tokens(sentence) > max_tokens:
+                            # Dividir en trozos de aproximadamente max_tokens/4 caracteres
+                            chunk_size = max_tokens * 3  # ~750 caracteres por cada 250 tokens
+                            for i in range(0, len(sentence), chunk_size):
+                                sub_chunks.append(sentence[i:i + chunk_size])
+                            temp_chunk = ""
+                        else:
+                            temp_chunk = sentence
+                
+                if temp_chunk:
+                    sub_chunks.append(temp_chunk)
+            else:
+                current_chunk = paragraph
+    
+    if current_chunk:
+        sub_chunks.append(current_chunk)
+    
+    return sub_chunks if sub_chunks else [text]
+
 def create_table():
     """Tabla de chunks + hash para versionado y esquemas nuevos."""
     create_sql = """
@@ -253,17 +333,78 @@ def calculate_embeddings(chunks):
     try:
         # Azure OpenAI permite hasta 2048 inputs por request, procesamos en lotes
         batch_size = 2048
-        all_embeddings = []
+        all_embeddings = [None] * len(chunks)  # Inicializar con None para todos los índices
+        valid_chunks_count = 0
         
         for i in range(0, len(chunks), batch_size):
             batch = chunks[i:i + batch_size]
-            response = azure_client.embeddings.create(
-                input=batch,
-                model=AZURE_DEPLOYMENT_NAME
-            )
-            batch_embeddings = [item.embedding for item in response.data]
-            all_embeddings.extend(batch_embeddings)
-            print(f"[INFO] Embeddings calculados: {i + len(batch)}/{len(chunks)}")
+            batch_end = i + len(batch)
+            
+            # Validar tamaño de tokens para cada chunk en el batch
+            filtered_batch = []
+            filtered_indices = []
+            
+            for idx, chunk in enumerate(batch):
+                actual_idx = i + idx  # Índice real en el array chunks
+                char_count = len(chunk)
+                token_count = count_tokens(chunk)
+                
+                if token_count > MAX_TOKENS_PER_CHUNK:
+                    print(f"[ERROR] Chunk {actual_idx} demasiado grande:")
+                    print(f"        • {char_count} caracteres")
+                    print(f"        • {token_count} tokens (límite: {MAX_TOKENS_PER_CHUNK})")
+                    print(f"        • Ratio: {token_count/char_count:.3f} tokens/char")
+                    
+                    # Intentar dividir el chunk
+                    print(f"[INFO] Intentando dividir chunk {actual_idx}...")
+                    sub_chunks = split_large_chunk(chunk, MAX_TOKENS_PER_CHUNK)
+                    
+                    if len(sub_chunks) > 1:
+                        print(f"[INFO] Chunk dividido en {len(sub_chunks)} sub-chunks")
+                        # Procesar cada sub-chunk y tomar el primero válido
+                        best_embedding = None
+                        best_token_count = 0
+                        
+                        for sub_idx, sub_chunk in enumerate(sub_chunks):
+                            sub_token_count = count_tokens(sub_chunk)
+                            if sub_token_count <= MAX_TOKENS_PER_CHUNK:
+                                print(f"[DEBUG] Sub-chunk {actual_idx}.{sub_idx} → {sub_token_count} tokens")
+                                # Tomar el sub-chunk más largo como representante
+                                if sub_token_count > best_token_count:
+                                    best_embedding = sub_chunk
+                                    best_token_count = sub_token_count
+                            else:
+                                print(f"[WARN] Sub-chunk {actual_idx}.{sub_idx} aún muy grande ({sub_token_count} tokens) → omitido")
+                        
+                        if best_embedding:
+                            # Usar el mejor sub-chunk encontrado
+                            filtered_batch.append(best_embedding)
+                            filtered_indices.append(actual_idx)
+                        else:
+                            print(f"[ERROR] Ningún sub-chunk válido para chunk {actual_idx} → SIN EMBEDDING")
+                            all_embeddings[actual_idx] = None
+                    else:
+                        print(f"[ERROR] No se pudo dividir el chunk {actual_idx} → SIN EMBEDDING")
+                        all_embeddings[actual_idx] = None
+                else:
+                    print(f"[DEBUG] Embedding chunk {actual_idx} → {token_count} tokens ({char_count} chars)")
+                    filtered_batch.append(chunk)
+                    filtered_indices.append(actual_idx)
+            
+            # Si hay chunks válidos en el batch, procesar
+            if filtered_batch:
+                response = azure_client.embeddings.create(
+                    input=filtered_batch,
+                    model=AZURE_DEPLOYMENT_NAME
+                )
+                batch_embeddings = [item.embedding for item in response.data]
+                
+                # Asignar embeddings a los índices correctos
+                for local_idx, embedding in zip(filtered_indices, batch_embeddings):
+                    all_embeddings[local_idx] = embedding
+                    valid_chunks_count += 1
+                
+                print(f"[INFO] Embeddings procesados: {batch_end}/{len(chunks)} (válidos: {valid_chunks_count})")
         
         return all_embeddings
     except Exception as e:
@@ -277,11 +418,22 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
     # Calcular embeddings para todos los chunks
     embeddings = calculate_embeddings(chunks)
     
+    # Filtrar: solo insertar chunks con embeddings válidos (no None)
+    valid_data = []
+    skipped_count = 0
+    
+    for i, chunk in enumerate(chunks):
+        if embeddings[i] is None:
+            print(f"[WARN] Chunk {i} sin embedding → NO se insertará")
+            skipped_count += 1
+        else:
+            valid_data.append((file_name, file_path, folder_name, i, chunk, embeddings[i], file_hash))
+    
+    if not valid_data:
+        print(f"[ERROR] Ningún chunk válido con embedding para {file_path}")
+        return
+    
     conn = connect_db()
-    data = [
-        (file_name, file_path, folder_name, i, chunk, embeddings[i], file_hash)
-        for i, chunk in enumerate(chunks)
-    ]
     sql = """
     INSERT INTO chunks (
         file_name,
@@ -295,8 +447,10 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
     """
     with conn:
         with conn.cursor() as cur:
-            execute_values(cur, sql, data)
+            execute_values(cur, sql, valid_data)
     conn.close()
+    
+    print(f"[INFO] {len(valid_data)} chunks insertados, {skipped_count} omitidos (sin embedding)")
 
 def update_missing_embeddings(file_path):
     """Calcula y actualiza embeddings NULL para un PDF."""
@@ -318,8 +472,9 @@ def update_missing_embeddings(file_path):
     print(f"[INFO] Calculando {len(chunk_texts)} embeddings faltantes para {file_path}")
     embeddings = calculate_embeddings(chunk_texts)
     
-    # Actualizar embeddings en la base de datos
+    # Actualizar embeddings en la base de datos (solo los que no son None)
     conn = connect_db()
+    updated_count = 0
     with conn:
         with conn.cursor() as cur:
             for chunk_id, embedding in zip(chunk_ids, embeddings):
@@ -328,9 +483,43 @@ def update_missing_embeddings(file_path):
                         "UPDATE chunks SET embedding = %s WHERE id = %s",
                         (embedding, chunk_id)
                     )
+                    updated_count += 1
+                else:
+                    print(f"[WARN] Chunk {chunk_id} sin embedding → NO se actualizará")
     conn.close()
     
-    return len(chunk_ids)
+    return updated_count
+
+def update_all_missing_embeddings():
+    """Calcula y actualiza TODOS los embeddings NULL en la base de datos."""
+    conn = connect_db()
+    with conn.cursor() as cur:
+        # Obtener lista de archivos con chunks sin embedding
+        cur.execute("""
+            SELECT DISTINCT file_path 
+            FROM chunks 
+            WHERE embedding IS NULL
+            ORDER BY file_path
+        """)
+        files_with_missing = [row[0] for row in cur.fetchall()]
+    conn.close()
+    
+    if not files_with_missing:
+        print("[INFO] ✅ No hay chunks sin embedding")
+        return 0
+    
+    print(f"\n[INFO] 🔄 Actualizando embeddings para {len(files_with_missing)} archivos...")
+    print("="*70)
+    
+    total_updated = 0
+    for file_path in files_with_missing:
+        updated = update_missing_embeddings(file_path)
+        total_updated += updated
+    
+    print("="*70)
+    print(f"[INFO] ✅ Total chunks actualizados: {total_updated}\n")
+    
+    return total_updated
 
 def delete_chunks(file_path):
     """Borra todos los chunks de un PDF (ruta relativa)."""
@@ -350,6 +539,63 @@ def delete_all_chunks():
         with conn.cursor() as cur:
             cur.execute("DELETE FROM chunks")
     conn.close()
+
+def check_null_embeddings():
+    """Valida post-indexación: verifica si hay chunks con embedding NULL"""
+    conn = connect_db()
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT file_name, COUNT(*) as count
+            FROM chunks
+            WHERE embedding IS NULL
+            GROUP BY file_name
+            ORDER BY count DESC
+        """)
+        rows = cur.fetchall()
+    conn.close()
+    
+    if rows:
+        print("\n" + "="*70)
+        print("🚨 [ALARMA] Chunks sin embedding detectados:")
+        print("="*70)
+        for file_name, count in rows:
+            print(f"  • {file_name}: {count} chunks sin embedding")
+        print("="*70 + "\n")
+        return False
+    else:
+        print("\n" + "="*70)
+        print("✅ [VALIDACIÓN] Todos los chunks tienen embeddings")
+        print("="*70 + "\n")
+        return True
+
+def diagnose_problematic_chunks():
+    """Muestra información detallada sobre chunks sin embedding"""
+    conn = connect_db()
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT id, file_path, chunk_index, 
+                   LENGTH(text) as char_count,
+                   LEFT(text, 200) as preview
+            FROM chunks
+            WHERE embedding IS NULL
+            ORDER BY LENGTH(text) DESC
+            LIMIT 5
+        """)
+        rows = cur.fetchall()
+    conn.close()
+    
+    if rows:
+        print("\n" + "="*70)
+        print("🔍 [DIAGNÓSTICO] Top 5 chunks problemáticos:")
+        print("="*70)
+        for chunk_id, file_path, chunk_idx, char_count, preview in rows:
+            token_estimate = count_tokens(preview) * (char_count / len(preview)) if preview else 0
+            print(f"\nChunk ID: {chunk_id}")
+            print(f"  Archivo: {file_path}")
+            print(f"  Índice: {chunk_idx}")
+            print(f"  Tamaño: {char_count} caracteres (~{int(token_estimate)} tokens estimados)")
+            print(f"  Preview: {preview[:100]}...")
+        print("="*70 + "\n")
 
 def process_pdfs():
     """Procesa todos los PDFs, detectando cambios"""
@@ -417,3 +663,39 @@ if __name__ == "__main__":
     create_table()
     process_pdfs()
     print("[INFO] Indexación completada con verificación de cambios.")
+    
+    # Validación post-indexación
+    print("\n[INFO] Ejecutando validación post-indexación...")
+    all_valid = check_null_embeddings()
+    
+    # Si hay chunks sin embedding, mostrar diagnóstico e intentar reparar
+    if not all_valid:
+        diagnose_problematic_chunks()
+        print("[INFO] 🔧 Intentando corregir embeddings faltantes...")
+        update_all_missing_embeddings()
+        # Re-validar después de actualizar
+        print("[INFO] Re-validando después de actualización...")
+        still_invalid = not check_null_embeddings()
+        
+        if still_invalid:
+            print("[WARN] ⚠️  Algunos chunks siguen sin embedding después del intento de reparación")
+            diagnose_problematic_chunks()
+    
+    # Mostrar estadísticas finales
+    conn = connect_db()
+    with conn.cursor() as cur:
+        cur.execute("SELECT COUNT(*) FROM chunks")
+        total_chunks = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(*) FROM chunks WHERE embedding IS NOT NULL")
+        chunks_with_embedding = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(DISTINCT file_path) FROM chunks")
+        total_files = cur.fetchone()[0]
+    conn.close()
+    
+    print(f"\n📊 Estadísticas finales:")
+    print(f"  • Total chunks: {total_chunks}")
+    print(f"  • Chunks con embedding: {chunks_with_embedding}")
+    print(f"  • Archivos indexados: {total_files}")
+    if total_chunks > 0:
+        percentage = (chunks_with_embedding / total_chunks) * 100
+        print(f"  • Cobertura de embeddings: {percentage:.1f}%")

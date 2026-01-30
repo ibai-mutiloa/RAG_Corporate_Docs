@@ -1,3 +1,488 @@
 [INFO] Indexación completada con verificación de cambios.
 [INFO] Indexación completada con verificación de cambios.
 [INFO] Indexación completada con verificación de cambios.
+[INFO] FORCE_REINDEX activo: eliminando todos los chunks antes de reindexar
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/Estatutos.pdf
+[INFO] Embeddings calculados: 303/303
+[INFO] 303 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/Estatutos.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/Reglamento de régimen interno.pdf
+[INFO] Embeddings calculados: 222/222
+[INFO] 222 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/Reglamento de régimen interno.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/1 Anticipos y retribución.pdf
+[INFO] Embeddings calculados: 9/9
+[INFO] 9 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/1 Anticipos y retribución.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/2 Horario de trabajo.pdf
+[INFO] Embeddings calculados: 29/29
+[INFO] 29 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/2 Horario de trabajo.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/3 Compensación gastos desplazamiento y manutención.pdf
+[INFO] Embeddings calculados: 32/32
+[INFO] 32 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/3 Compensación gastos desplazamiento y manutención.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/4 Compensación por cambio de campus base.pdf
+[INFO] Embeddings calculados: 8/8
+[INFO] 8 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/4 Compensación por cambio de campus base.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/5 Compensación de daños en vehículos.pdf
+[INFO] Embeddings calculados: 14/14
+[INFO] 14 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/5 Compensación de daños en vehículos.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/6 Garaje subterráneo.pdf
+[INFO] Embeddings calculados: 15/15
+[INFO] 15 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/6 Garaje subterráneo.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/7 Ayudas por cese de la actividad laboral.pdf
+[INFO] Embeddings calculados: 52/52
+[INFO] 52 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/7 Ayudas por cese de la actividad laboral.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/Normativa laboral.pdf
+[ERROR] Error calculando embeddings: Error code: 400 - {'error': {'message': "This model's maximum context length is 8192 tokens, however you requested 106425 tokens (106425 in your prompt; 0 for the completion). Please reduce your prompt; or completion length.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+[INFO] 21 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/1.Normativas Laborales.L/Normativa laboral.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Código ético.pdf
+[INFO] Embeddings calculados: 40/40
+[INFO] 40 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Código ético.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Manual Prevención Riesgos Penales.pdf
+[INFO] Embeddings calculados: 35/35
+[INFO] 35 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Manual Prevención Riesgos Penales.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política anticorrupción.pdf
+[INFO] Embeddings calculados: 15/15
+[INFO] 15 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política anticorrupción.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política compras.pdf
+[INFO] Embeddings calculados: 14/14
+[INFO] 14 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política compras.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política conflicto interés.pdf
+[INFO] Embeddings calculados: 17/17
+[INFO] 17 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política conflicto interés.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política de acceso abierto a datos de investigación.pdf
+[INFO] Embeddings calculados: 15/15
+[INFO] 15 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política de acceso abierto a datos de investigación.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política de acceso abierto a documentos científicos y materiales docentes.pdf
+[INFO] Embeddings calculados: 19/19
+[INFO] 19 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política de acceso abierto a documentos científicos y materiales docentes.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política de conflicto acoso laboral y acoso sexual.pdf
+[INFO] Embeddings calculados: 102/102
+[INFO] 102 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política de conflicto acoso laboral y acoso sexual.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política de uso para los sistemas de información y soportes de dat.pdf
+[INFO] Embeddings calculados: 41/41
+[INFO] 41 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política de uso para los sistemas de información y soportes de dat.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política gestión de confidencialidad.pdf
+[INFO] Embeddings calculados: 12/12
+[INFO] 12 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política gestión de confidencialidad.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política propiedad intelectual e industrial.pdf
+[INFO] Embeddings calculados: 11/11
+[INFO] 11 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política propiedad intelectual e industrial.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política subvenciones.pdf
+[INFO] Embeddings calculados: 16/16
+[INFO] 16 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Política subvenciones.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Resumen - decálogo código ético.pdf
+[INFO] Embeddings calculados: 18/18
+[INFO] 18 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/2.Normativa de Prevención de Riesgos Penales.L/Resumen - decálogo código ético.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Año sabático.pdf
+[INFO] Embeddings calculados: 36/36
+[INFO] 36 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Año sabático.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Criterios de asignación de móviles y líneas.pdf
+[INFO] Embeddings calculados: 12/12
+[INFO] 12 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Criterios de asignación de móviles y líneas.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Criterios de compra y renovación de equipamiento informático y software.pdf
+[INFO] Embeddings calculados: 12/12
+[INFO] 12 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Criterios de compra y renovación de equipamiento informático y software.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Estacionamiento zonas interiores campus Arrasate.pdf
+[INFO] Embeddings calculados: 13/13
+[INFO] 13 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Estacionamiento zonas interiores campus Arrasate.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Filiación MGEP y EPS-MU.pdf
+[INFO] Embeddings calculados: 26/26
+[INFO] 26 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Filiación MGEP y EPS-MU.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Huelga trabajadores.pdf
+[INFO] Embeddings calculados: 31/31
+[INFO] 31 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Huelga trabajadores.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Idiomas.pdf
+[INFO] Embeddings calculados: 19/19
+[INFO] 19 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Idiomas.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Manual de evaluación y retribución.pdf
+[INFO] Embeddings calculados: 306/306
+[INFO] 306 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Manual de evaluación y retribución.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Norma de seguridad para trabajos con nitrógeno líquido.pdf
+[INFO] Embeddings calculados: 41/41
+[INFO] 41 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Norma de seguridad para trabajos con nitrógeno líquido.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Norma Seguridad riesgo eléctrico.pdf
+[INFO] Embeddings calculados: 110/110
+[INFO] 110 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Norma Seguridad riesgo eléctrico.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Norma Seguridad riesgo químico.pdf
+[INFO] Embeddings calculados: 216/216
+[INFO] 216 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Norma Seguridad riesgo químico.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Normativa de apoyo a actividades de formación universitaria.pdf
+[INFO] Embeddings calculados: 13/13
+[INFO] 13 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Normativa de apoyo a actividades de formación universitaria.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Normativa de contratación y consolidación.pdf
+[INFO] Embeddings calculados: 23/23
+[INFO] 23 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Normativa de contratación y consolidación.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Normativa sobre horarios de acceso y la gestión de los servicios de emergencias en MGEP.pdf
+[INFO] Embeddings calculados: 26/26
+[INFO] 26 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Normativa sobre horarios de acceso y la gestión de los servicios de emergencias en MGEP.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Normativa uso Red i2bask.pdf
+[INFO] Embeddings calculados: 1/1
+[INFO] 1 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Normativa uso Red i2bask.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Normativa y acuerdo de teletrabajo.pdf
+[INFO] Embeddings calculados: 45/45
+[INFO] 45 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Normativa y acuerdo de teletrabajo.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Pautas para visitas de personas a MGEP.pdf
+[INFO] Embeddings calculados: 8/8
+[INFO] 8 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Pautas para visitas de personas a MGEP.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Permiso por cargo público.pdf
+[INFO] Embeddings calculados: 14/14
+[INFO] 14 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Permiso por cargo público.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Política comunicación contrataciones.pdf
+[INFO] Embeddings calculados: 7/7
+[INFO] 7 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Política comunicación contrataciones.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Política de acceso abierto a datos de investigación.pdf
+[INFO] Embeddings calculados: 15/15
+[INFO] 15 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Política de acceso abierto a datos de investigación.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Política de acceso abierto a documentos científicos y materiales docentes.pdf
+[INFO] Embeddings calculados: 19/19
+[INFO] 19 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Política de acceso abierto a documentos científicos y materiales docentes.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Política de uso para los sistemas de información y soportes de dat.pdf
+[INFO] Embeddings calculados: 41/41
+[INFO] 41 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Política de uso para los sistemas de información y soportes de dat.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Portátiles y otros elementos en bajas y excencias.pdf
+[INFO] Embeddings calculados: 3/3
+[INFO] 3 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Portátiles y otros elementos en bajas y excencias.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo en caso de fallecimiento de alumnado por enfermedad o accidente.pdf
+[INFO] Embeddings calculados: 8/8
+[INFO] 8 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo en caso de fallecimiento de alumnado por enfermedad o accidente.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf
+[INFO] Embeddings calculados: 12/12
+[INFO] 12 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo en caso de nevada.pdf
+[INFO] Embeddings calculados: 20/20
+[INFO] 20 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo en caso de nevada.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo en caso de temperaturas excesivas.pdf
+[INFO] Embeddings calculados: 26/26
+[INFO] 26 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo en caso de temperaturas excesivas.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo gestión trastorno baja psicosocial.pdf
+[INFO] Embeddings calculados: 21/21
+[INFO] 21 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo gestión trastorno baja psicosocial.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo protección de la maternidad.pdf
+[INFO] Embeddings calculados: 55/55
+[INFO] 55 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Protocolo protección de la maternidad.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Restricciones de horarios.pdf
+[INFO] Embeddings calculados: 20/20
+[INFO] 20 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Restricciones de horarios.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Robo de dispositivos.pdf
+[INFO] Embeddings calculados: 6/6
+[INFO] 6 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Robo de dispositivos.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Servicios de Sistemas de Información para profesores asociados y visitantes.pdf
+[INFO] Embeddings calculados: 4/4
+[INFO] 4 chunks insertados para 1.Mapa de normativas de MGEP/1.Normativas Generales/3.Otras Normativas Generales.L/Servicios de Sistemas de Información para profesores asociados y visitantes.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Alternancia Estudio Trabajo (AET) Guía académico-administrativa.pdf
+[INFO] Embeddings calculados: 54/54
+[INFO] 54 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Alternancia Estudio Trabajo (AET) Guía académico-administrativa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/CondicionesAdministrativas_laboralesPIF.pdf
+[INFO] Embeddings calculados: 22/22
+[INFO] 22 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/CondicionesAdministrativas_laboralesPIF.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Criterios movilidad investigadores.pdf
+[INFO] Embeddings calculados: 36/36
+[INFO] 36 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Criterios movilidad investigadores.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Guía académica Trabajo Fin de Grado.pdf
+[INFO] Embeddings calculados: 197/197
+[INFO] 197 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Guía académica Trabajo Fin de Grado.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Guía académica Trabajo Fin de Máster.pdf
+[INFO] Embeddings calculados: 189/189
+[INFO] 189 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Guía académica Trabajo Fin de Máster.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Guía académico-administrativa del Programa de Doctorado.pdf
+[INFO] Embeddings calculados: 376/376
+[INFO] 376 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Guía académico-administrativa del Programa de Doctorado.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Huelga del alumnado.pdf
+[INFO] Embeddings calculados: 23/23
+[INFO] 23 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Huelga del alumnado.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Modelo educativo de Grado.pdf
+[INFO] Embeddings calculados: 123/123
+[INFO] 123 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Modelo educativo de Grado.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Modelo Educativo.pdf
+[INFO] Embeddings calculados: 79/79
+[INFO] 79 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Modelo Educativo.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa académica de cursos de adaptación.pdf
+[INFO] Embeddings calculados: 69/69
+[INFO] 69 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa académica de cursos de adaptación.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa Académica de Formación Profesional.pdf
+[INFO] Embeddings calculados: 165/165
+[INFO] 165 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa Académica de Formación Profesional.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa académica de Grado.pdf
+[INFO] Embeddings calculados: 483/483
+[INFO] 483 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa académica de Grado.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa académica de Máster.pdf
+[INFO] Embeddings calculados: 402/402
+[INFO] 402 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa académica de Máster.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa del Colegio Mayor Biteri.pdf
+[INFO] Embeddings calculados: 121/121
+[INFO] 121 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa del Colegio Mayor Biteri.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa del Consejo del Alumnado.pdf
+[INFO] Embeddings calculados: 68/68
+[INFO] 68 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Normativa del Consejo del Alumnado.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Pacto de permanencia.pdf
+[INFO] Embeddings calculados: 7/7
+[INFO] 7 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Pacto de permanencia.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Pautas de actuación.pdf
+[INFO] Embeddings calculados: 27/27
+[INFO] 27 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Pautas de actuación.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Política de conflicto acoso laboral y acoso sexual.pdf
+[INFO] Embeddings calculados: 102/102
+[INFO] 102 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Política de conflicto acoso laboral y acoso sexual.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Profesor visitante y asociado.pdf
+[INFO] Embeddings calculados: 49/49
+[INFO] 49 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Profesor visitante y asociado.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Protocolo en caso de nevada.pdf
+[INFO] Embeddings calculados: 20/20
+[INFO] 20 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Protocolo en caso de nevada.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Proyecto Curricular Centro MGEP.pdf
+[INFO] Embeddings calculados: 27/27
+[INFO] 27 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Proyecto Curricular Centro MGEP.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Proyecto Educativo Centro MGEP.pdf
+[INFO] Embeddings calculados: 82/82
+[INFO] 82 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Proyecto Educativo Centro MGEP.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/SeguimientoProgresoPDI_PhD.pdf
+[INFO] Embeddings calculados: 12/12
+[INFO] 12 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/SeguimientoProgresoPDI_PhD.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Sistema de evaluación TFM.pdf
+[INFO] Embeddings calculados: 52/52
+[INFO] 52 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Sistema de evaluación TFM.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Sistema de evaluación Trabajo Fin de Grado.pdf
+[INFO] Embeddings calculados: 43/43
+[INFO] 43 chunks insertados para 1.Mapa de normativas de MGEP/2.Normativas de Negocio/Sistema de evaluación Trabajo Fin de Grado.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/Barne araudia.pdf
+[INFO] Embeddings calculados: 193/193
+[INFO] 193 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/Barne araudia.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/Estatutuak.pdf
+[INFO] Embeddings calculados: 267/267
+[INFO] 267 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/Estatutuak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/1 Lan aurrerakinak eta ordainketa.pdf
+[INFO] Embeddings calculados: 10/10
+[INFO] 10 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/1 Lan aurrerakinak eta ordainketa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/2 Lan ordutegia.pdf
+[INFO] Embeddings calculados: 27/27
+[INFO] 27 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/2 Lan ordutegia.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/3 Desplazamendu eta mantenu gastuen konpentsazioa.pdf
+[INFO] Embeddings calculados: 31/31
+[INFO] 31 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/3 Desplazamendu eta mantenu gastuen konpentsazioa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/3 Kilometraje gastuen ordainketa.pdf
+[INFO] Embeddings calculados: 5/5
+[INFO] 5 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/3 Kilometraje gastuen ordainketa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/4 Campus nagusia aldatzeagatik konpentsazioa.pdf
+[INFO] Embeddings calculados: 7/7
+[INFO] 7 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/4 Campus nagusia aldatzeagatik konpentsazioa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/5 Ibilgailuetan kalteak izateagatik konpentsazioa.pdf
+[INFO] Embeddings calculados: 11/11
+[INFO] 11 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/5 Ibilgailuetan kalteak izateagatik konpentsazioa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/6 Lurpeko garajeak.pdf
+[INFO] Embeddings calculados: 14/14
+[INFO] 14 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/6 Lurpeko garajeak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/7 Lan jarduera uzteagatik laguntzak.pdf
+[INFO] Embeddings calculados: 46/46
+[INFO] 46 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/7 Lan jarduera uzteagatik laguntzak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/Lan arauak.pdf
+[ERROR] Error calculando embeddings: Error code: 400 - {'error': {'message': "This model's maximum context length is 8192 tokens, however you requested 106425 tokens (106425 in your prompt; 0 for the completion). Please reduce your prompt; or completion length.", 'type': 'invalid_request_error', 'param': None, 'code': None}}
+[INFO] 21 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/1.Lan Arauak.L/Lan arauak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Arrisku penalak prebenitzeko eskuliburua.pdf
+[INFO] Embeddings calculados: 29/29
+[INFO] 29 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Arrisku penalak prebenitzeko eskuliburua.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Dirulaguntzen politika.pdf
+[INFO] Embeddings calculados: 14/14
+[INFO] 14 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Dirulaguntzen politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Dokumentu zientifiko, irakaskuntza materialentzat sarbide irekiko politika.pdf
+[INFO] Embeddings calculados: 17/17
+[INFO] 17 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Dokumentu zientifiko, irakaskuntza materialentzat sarbide irekiko politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Erosketa politika.pdf
+[INFO] Embeddings calculados: 12/12
+[INFO] 12 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Erosketa politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Gatazka eta lan eta sexu jazarpen egoerak kudeatzeko politika.pdf
+[INFO] Embeddings calculados: 104/104
+[INFO] 104 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Gatazka eta lan eta sexu jazarpen egoerak kudeatzeko politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Ikerketa datuentzat sarbide irekiko politika.pdf
+[INFO] Embeddings calculados: 12/12
+[INFO] 12 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Ikerketa datuentzat sarbide irekiko politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Informazio sistemen eta datuen euskarrien erabilera politika.pdf
+[INFO] Embeddings calculados: 39/39
+[INFO] 39 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Informazio sistemen eta datuen euskarrien erabilera politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Interes gatazka politika.pdf
+[INFO] Embeddings calculados: 14/14
+[INFO] 14 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Interes gatazka politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Jabetza intelektualaren eta industrialaren kudeaketa politika.pdf
+[INFO] Embeddings calculados: 11/11
+[INFO] 11 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Jabetza intelektualaren eta industrialaren kudeaketa politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Kode etikoa.pdf
+[INFO] Embeddings calculados: 36/36
+[INFO] 36 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Kode etikoa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Konfidentzialtasuna kudeatzeko politika.pdf
+[INFO] Embeddings calculados: 10/10
+[INFO] 10 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Konfidentzialtasuna kudeatzeko politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Laburpena - dekalogoa kode etikoa.pdf
+[INFO] Embeddings calculados: 17/17
+[INFO] 17 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Laburpena - dekalogoa kode etikoa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Ustelkeriaren aurkako politika.pdf
+[INFO] Embeddings calculados: 14/14
+[INFO] 14 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/2.Arrisku Penalen Prebentziorako Araudia.L/Ustelkeriaren aurkako politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Amatasuna babesteko protokoloa.pdf
+[INFO] Embeddings calculados: 55/55
+[INFO] 55 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Amatasuna babesteko protokoloa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Arrasate campus barruko aparkalekuen erabilera.pdf
+[INFO] Embeddings calculados: 11/11
+[INFO] 11 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Arrasate campus barruko aparkalekuen erabilera.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Dokumentu zientifiko, irakaskuntza materialentzat sarbide irekiko politika.pdf
+[INFO] Embeddings calculados: 17/17
+[INFO] 17 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Dokumentu zientifiko, irakaskuntza materialentzat sarbide irekiko politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Ekipamendu informatikoa eta softwarea erosteko eta berritzeko irizpideak.pdf
+[INFO] Embeddings calculados: 10/10
+[INFO] 10 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Ekipamendu informatikoa eta softwarea erosteko eta berritzeko irizpideak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Elurtea denean jarraitzeko protokoloa.pdf
+[INFO] Embeddings calculados: 19/19
+[INFO] 19 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Elurtea denean jarraitzeko protokoloa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Filiazioa MGEP eta EPS-MU.pdf
+[INFO] Embeddings calculados: 26/26
+[INFO] 26 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Filiazioa MGEP eta EPS-MU.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Gailuen lapurreta.pdf
+[INFO] Embeddings calculados: 6/6
+[INFO] 6 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Gailuen lapurreta.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Gaixotasun edo istripuz ikasleen heriotza gertatzen denean jarraitzkeo protokoloa.pdf
+[INFO] Embeddings calculados: 8/8
+[INFO] 8 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Gaixotasun edo istripuz ikasleen heriotza gertatzen denean jarraitzkeo protokoloa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Gehiegizko bero egunetarako protokoloa.pdf
+[INFO] Embeddings calculados: 23/23
+[INFO] 23 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Gehiegizko bero egunetarako protokoloa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Hizkuntzak ikasteko.pdf
+[INFO] Embeddings calculados: 17/17
+[INFO] 17 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Hizkuntzak ikasteko.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Ikerketa datuentzat sarbide irekiko politika.pdf
+[INFO] Embeddings calculados: 12/12
+[INFO] 12 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Ikerketa datuentzat sarbide irekiko politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Informazio sistemen eta datuen euskarrien erabilera politika.pdf
+[INFO] Embeddings calculados: 39/39
+[INFO] 39 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Informazio sistemen eta datuen euskarrien erabilera politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Irakasle elkartu eta bisitariei eskaintzen zaien Informazio Sistemen zerbitzuen arauak.pdf
+[INFO] Embeddings calculados: 5/5
+[INFO] 5 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Irakasle elkartu eta bisitariei eskaintzen zaien Informazio Sistemen zerbitzuen arauak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Jardueraren ebaluazio eta ordainsari sistema.pdf
+[INFO] Embeddings calculados: 299/299
+[INFO] 299 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Jardueraren ebaluazio eta ordainsari sistema.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Kargu publikoa izateagatik baimenak.pdf
+[INFO] Embeddings calculados: 13/13
+[INFO] 13 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Kargu publikoa izateagatik baimenak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Kontratatzeko eta bazkide egiteko araudia.pdf
+[INFO] Embeddings calculados: 24/24
+[INFO] 24 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Kontratatzeko eta bazkide egiteko araudia.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Kontratazioak komunikatzeko politika.pdf
+[INFO] Embeddings calculados: 7/7
+[INFO] 7 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Kontratazioak komunikatzeko politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Langilearen edo langilearen familiarteko baten heriotz kasurako protokoloa.pdf
+[INFO] Embeddings calculados: 11/11
+[INFO] 11 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Langilearen edo langilearen familiarteko baten heriotz kasurako protokoloa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Langileen greba.pdf
+[INFO] Embeddings calculados: 28/28
+[INFO] 28 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Langileen greba.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/MGEPen sartzeko ordutegiei eta larrialdi zerbitzuen kudeaketari buruzko araudia.pdf
+[INFO] Embeddings calculados: 23/23
+[INFO] 23 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/MGEPen sartzeko ordutegiei eta larrialdi zerbitzuen kudeaketari buruzko araudia.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/MGEPera datozen bisitetarako araudia.pdf
+[INFO] Embeddings calculados: 8/8
+[INFO] 8 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/MGEPera datozen bisitetarako araudia.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Mugikorrak eta lineak esleitzeko irizpideak.pdf
+[INFO] Embeddings calculados: 10/10
+[INFO] 10 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Mugikorrak eta lineak esleitzeko irizpideak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Nahaste edota baja psikosozialak kudeatzeko protokoloa.pdf
+[INFO] Embeddings calculados: 20/20
+[INFO] 20 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Nahaste edota baja psikosozialak kudeatzeko protokoloa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Nitrogeno likidoarekin lana egiteko segurtasun araua.pdf
+[INFO] Embeddings calculados: 41/41
+[INFO] 41 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Nitrogeno likidoarekin lana egiteko segurtasun araua.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Ordutegian murrizketak.pdf
+[INFO] Embeddings calculados: 20/20
+[INFO] 20 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Ordutegian murrizketak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Portatilak eta beste elementu batzuk baja eta eszedentzietan.pdf
+[INFO] Embeddings calculados: 3/3
+[INFO] 3 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Portatilak eta beste elementu batzuk baja eta eszedentzietan.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Red i2bask erabiltzeko arautegia.pdf
+[INFO] Embeddings calculados: 1/1
+[INFO] 1 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Red i2bask erabiltzeko arautegia.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Segurtasun araua arrisku elektrikoa duten laborategietan.pdf
+[INFO] Embeddings calculados: 110/110
+[INFO] 110 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Segurtasun araua arrisku elektrikoa duten laborategietan.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Segurtasun araua arrisku kimikoa duten laborategietan.pdf
+[INFO] Embeddings calculados: 216/216
+[INFO] 216 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Segurtasun araua arrisku kimikoa duten laborategietan.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Telelanaren araudia eta akordioa.pdf
+[INFO] Embeddings calculados: 42/42
+[INFO] 42 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Telelanaren araudia eta akordioa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Unibertsitate mailako ikasketak egiten laguntzeko araudia.pdf
+[INFO] Embeddings calculados: 13/13
+[INFO] 13 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Unibertsitate mailako ikasketak egiten laguntzeko araudia.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Urte sabatikoa.pdf
+[INFO] Embeddings calculados: 33/33
+[INFO] 33 chunks insertados para 1.MGEP-eko araudien mapa/1.Araudi Orokorrak/3.Beste Arau Orokor Batzuk.L/Urte sabatikoa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Biteri Ikastetxe Nagusiko araudia.pdf
+[INFO] Embeddings calculados: 112/112
+[INFO] 112 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Biteri Ikastetxe Nagusiko araudia.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Doktoregaien baldintza administratibo laboralak.pdf
+[INFO] Embeddings calculados: 20/20
+[INFO] 20 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Doktoregaien baldintza administratibo laboralak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Doktorego Programaren Gida akademiko-administratiboa.pdf
+[INFO] Embeddings calculados: 376/376
+[INFO] 376 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Doktorego Programaren Gida akademiko-administratiboa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Egokitzapen ikastaroen arautegi akademikoa.pdf
+[INFO] Embeddings calculados: 69/69
+[INFO] 69 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Egokitzapen ikastaroen arautegi akademikoa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Elurtea denean jarraitzeko protokoloa.pdf
+[INFO] Embeddings calculados: 19/19
+[INFO] 19 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Elurtea denean jarraitzeko protokoloa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Gatazka eta lan eta sexu jazarpen egoerak kudeatzeko politika.pdf
+[INFO] Embeddings calculados: 104/104
+[INFO] 104 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Gatazka eta lan eta sexu jazarpen egoerak kudeatzeko politika.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Gradu Bukaerako Lanen ebaluazio sistema.pdf
+[INFO] Embeddings calculados: 38/38
+[INFO] 38 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Gradu Bukaerako Lanen ebaluazio sistema.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Gradu Bukaerako Lanen gida akademikoa.pdf
+[INFO] Embeddings calculados: 182/182
+[INFO] 182 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Gradu Bukaerako Lanen gida akademikoa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Graduko Arautegi Akademikoa.pdf
+[INFO] Embeddings calculados: 419/419
+[INFO] 419 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Graduko Arautegi Akademikoa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Graduko hezkuntza eredua.pdf
+[INFO] Embeddings calculados: 123/123
+[INFO] 123 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Graduko hezkuntza eredua.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/GUIA ACADÉMICA TFG 24-25.pdf
+[INFO] Embeddings calculados: 197/197
+[INFO] 197 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/GUIA ACADÉMICA TFG 24-25.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Hezkuntza Eredua.pdf
+[INFO] Embeddings calculados: 69/69
+[INFO] 69 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Hezkuntza Eredua.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Ikasleen greba.pdf
+[INFO] Embeddings calculados: 21/21
+[INFO] 21 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Ikasleen greba.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Ikasleen Kontseiluaren araudia.pdf
+[INFO] Embeddings calculados: 64/64
+[INFO] 64 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Ikasleen Kontseiluaren araudia.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Irakasle bisitaria eta elkartua.pdf
+[INFO] Embeddings calculados: 49/49
+[INFO] 49 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Irakasle bisitaria eta elkartua.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Jokabide arauak - Pautas actuación.pdf
+[INFO] Embeddings calculados: 72/72
+[INFO] 72 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Jokabide arauak - Pautas actuación.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Jokabide arauak.pdf
+[INFO] Embeddings calculados: 24/24
+[INFO] 24 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Jokabide arauak.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Lan Ikaste Partekatzea (LIP) Gida akademikoa.pdf
+[INFO] Embeddings calculados: 54/54
+[INFO] 54 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Lan Ikaste Partekatzea (LIP) Gida akademikoa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Lanbide Heziketako Arautegi Akademikoa.pdf
+[INFO] Embeddings calculados: 166/166
+[INFO] 166 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Lanbide Heziketako Arautegi Akademikoa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Master Bukaerako Lanen gida akademikoa.pdf
+[INFO] Embeddings calculados: 173/173
+[INFO] 173 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Master Bukaerako Lanen gida akademikoa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Masterreko arautegi akademikoa.pdf
+[INFO] Embeddings calculados: 349/349
+[INFO] 349 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Masterreko arautegi akademikoa.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/MBLko ebaluazio sistema.pdf
+[INFO] Embeddings calculados: 45/45
+[INFO] 45 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/MBLko ebaluazio sistema.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Mugikortasun irizpideak ikerlarientzat.pdf
+[INFO] Embeddings calculados: 34/34
+[INFO] 34 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Mugikortasun irizpideak ikerlarientzat.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Permanentzia hitzarmena.pdf
+[INFO] Embeddings calculados: 7/7
+[INFO] 7 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Permanentzia hitzarmena.pdf
+[INFO] Procesando PDF nuevo o modificado: 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Tesien garapenari jarraipena PDI_PhD.pdf
+[INFO] Embeddings calculados: 14/14
+[INFO] 14 chunks insertados para 1.MGEP-eko araudien mapa/2.Negozioetako Araudiak/Tesien garapenari jarraipena PDI_PhD.pdf
+[INFO] Indexación completada con verificación de cambios.
