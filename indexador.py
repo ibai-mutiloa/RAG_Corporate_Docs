@@ -270,6 +270,56 @@ def split_large_chunk(text, max_tokens=MAX_TOKENS_PER_CHUNK):
     
     return sub_chunks if sub_chunks else [text]
 
+def is_page_index_chunk(text):
+    stripped = text.strip()
+    if not stripped:
+        return True
+    if len(stripped) <= 6 and stripped.isdigit():
+        return True
+    if re.fullmatch(r"\d+\s*/\s*\d+", stripped):
+        return True
+    if re.fullmatch(r"(?:p(?:a|á)g(?:ina)?\.?\s*)?\d+(?:\s*(?:de|/)\s*\d+)?", stripped, re.IGNORECASE):
+        return True
+    if re.fullmatch(r"[ivxlcdm]+", stripped, re.IGNORECASE):
+        return True
+    return False
+
+def is_title_like(text):
+    stripped = re.sub(r"\s+", " ", text.strip())
+    if not stripped:
+        return True
+    words = stripped.split()
+    if len(words) > 12:
+        return False
+    if re.search(r"[.!?;:]", stripped):
+        return False
+    letters = [c for c in stripped if c.isalpha()]
+    if not letters:
+        return False
+    upper_ratio = sum(1 for c in letters if c.isupper()) / len(letters)
+    return upper_ratio >= 0.6
+
+def is_non_relevant_title_chunk(text):
+    stripped = re.sub(r"\s+", " ", text.strip())
+    if not stripped:
+        return True
+    if not is_title_like(stripped):
+        return False
+
+    keyword_pattern = r"\b(INDICE|[ÍI]NDICE|TABLA DE CONTENIDOS?|CONTENIDOS?|SUMARIO|LISTA DE FIGURAS|LISTA DE TABLAS)\b"
+    if re.search(keyword_pattern, stripped, re.IGNORECASE):
+        return True
+
+    heading_pattern = r"^(T[ÍI]TULO|CAP[ÍI]TULO|SECCI[ÓO]N|ANEXO|AP[ÉE]NDICE)\s+[\wIVXLCDM]+\.?$"
+    return re.fullmatch(heading_pattern, stripped, re.IGNORECASE) is not None
+
+def is_noise_chunk(text):
+    if is_page_index_chunk(text):
+        return True
+    if is_non_relevant_title_chunk(text):
+        return True
+    return False
+
 def create_table():
     """Tabla de chunks + hash para versionado y esquemas nuevos."""
     create_sql = """
@@ -413,8 +463,21 @@ def calculate_embeddings(chunks):
 
 def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
     """Inserta chunks con sus embeddings en la base de datos."""
+    # Filtrar chunks poco informativos (indices de pagina, titulos sin contenido)
+    filtered_chunks = []
+    skipped_noise = 0
+    for c in chunks:
+        if is_noise_chunk(c):
+            skipped_noise += 1
+        else:
+            filtered_chunks.append(c)
+
+    if not filtered_chunks:
+        print(f"[WARN] Todos los chunks filtrados por ruido para {file_path}")
+        return
+
     # Añadir metadatos al texto del chunk
-    chunks = [enrich_chunk_with_metadata(file_name, c) for c in chunks]
+    chunks = [enrich_chunk_with_metadata(file_name, c) for c in filtered_chunks]
     # Calcular embeddings para todos los chunks
     embeddings = calculate_embeddings(chunks)
     
@@ -450,7 +513,7 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
             execute_values(cur, sql, valid_data)
     conn.close()
     
-    print(f"[INFO] {len(valid_data)} chunks insertados, {skipped_count} omitidos (sin embedding)")
+    print(f"[INFO] {len(valid_data)} chunks insertados, {skipped_count} omitidos (sin embedding), {skipped_noise} filtrados por ruido")
 
 def update_missing_embeddings(file_path):
     """Calcula y actualiza embeddings NULL para un PDF."""
