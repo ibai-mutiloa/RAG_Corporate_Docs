@@ -31,10 +31,11 @@ IGNORE_DIRS = [d.strip() for d in os.getenv("IGNORE_DIRS", "NormativasAPP").spli
 # ===========================
 # Parámetros de chunking
 # ===========================
-CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "1000"))
-CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "200"))
+CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "700"))
+CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "120"))
 FORCE_REINDEX = os.getenv("FORCE_REINDEX", "False").lower() == "true"
 MAX_TOKENS_PER_CHUNK = int(os.getenv("MAX_TOKENS_PER_CHUNK", "2000"))  # Máximo de tokens por chunk
+TOC_DOTTED_ALWAYS_SKIP = os.getenv("TOC_DOTTED_ALWAYS_SKIP", "True").lower() == "true"
 
 # Inicializar tokenizer de OpenAI
 try:
@@ -89,9 +90,17 @@ def normalize_pdf_text(text):
         return ""
     text = text.replace("\r", "\n")
     text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)
+    # Preservar saltos antes de encabezados legales para mejorar el chunking estructural
+    text = re.sub(
+        r"\n(?=\s*(?:ART[IÍ]CULO\s+\d+[A-Za-zºª\-]*|DISPOSICION(?:ES)?\s+\w+|T[ÍI]TULO\s+\w+|CAP[IÍ]TULO\s+\w+|SECCI[ÓO]N\s+\w+|ANEXO\s+\w+))",
+        "§§HEADER_BREAK§§",
+        text,
+        flags=re.IGNORECASE,
+    )
     text = re.sub(r"\n{2,}", "\n\n", text)
     text = re.sub(r"(?<!\n)\n(?!\n)", " ", text)
     text = re.sub(r"[ \t]{2,}", " ", text)
+    text = text.replace("§§HEADER_BREAK§§", "\n\n")
     return text.strip()
 
 def extract_article_title(text):
@@ -115,6 +124,7 @@ def split_by_structure(text):
         r"T[ÍI]TULO\s+\w+|"
         r"CAP[IÍ]TULO\s+\w+|"
         r"SECCI[ÓO]N\s+\w+|"
+        r"ANEXO\s+\w+|"
         r"Uno\.|Dos\.|Tres\.|Cuatro\.|Cinco\.|Seis\.|Siete\.|Ocho\.|Nueve\.|Diez\."
         r"))"
     )
@@ -130,6 +140,17 @@ def split_by_sentences(text, max_len=CHUNK_SIZE):
     for s in sentences:
         s = s.strip()
         if not s:
+            continue
+        if len(s) > max_len:
+            if current:
+                chunks.append(current)
+                current = ""
+            start = 0
+            step = max(max_len - CHUNK_OVERLAP, 1)
+            while start < len(s):
+                end = start + max_len
+                chunks.append(s[start:end].strip())
+                start += step
             continue
         if not current:
             current = s
@@ -187,11 +208,7 @@ def chunk_text(text, chunk_size=CHUNK_SIZE, overlap=CHUNK_OVERLAP):
     return chunks
 
 def enrich_chunk_with_metadata(file_name, chunk_text_value):
-    article = extract_article_title(chunk_text_value)
-    header_lines = [f"Documento: {file_name}"]
-    if article:
-        header_lines.append(f"Artículo: {article}")
-    header = "\n".join(header_lines)
+    header = f"Documento: {file_name}"
     return f"{header}\nTexto:\n{chunk_text_value}".strip()
 
 def connect_db():
@@ -313,10 +330,37 @@ def is_non_relevant_title_chunk(text):
     heading_pattern = r"^(T[ÍI]TULO|CAP[ÍI]TULO|SECCI[ÓO]N|ANEXO|AP[ÉE]NDICE)\s+[\wIVXLCDM]+\.?$"
     return re.fullmatch(heading_pattern, stripped, re.IGNORECASE) is not None
 
+def is_toc_like_chunk(text):
+    stripped = text.strip()
+    if not stripped:
+        return True
+
+    # Patrones típicos de tabla de contenidos/índice
+    has_toc_word = re.search(r"\b([ÍI]NDICE|SUMARIO|TABLA DE CONTENIDOS?|CONTENIDOS?)\b", stripped, re.IGNORECASE) is not None
+    dotted_leaders = len(re.findall(r"\.{2,}\s*\d+\b", stripped))
+    dotted_leaders_generic = len(re.findall(r"\.{4,}", stripped))
+    heading_refs = len(re.findall(r"\b(art[ií]culo|art\.?|cap[ií]tulo|secci[óo]n|t[íi]tulo|anexo)\b", stripped, re.IGNORECASE))
+    page_numbers = len(re.findall(r"\b\d{1,4}\b", stripped))
+
+    # Modo estricto: si detectamos líderes de puntos tipo "....", tratarlo siempre como índice
+    if TOC_DOTTED_ALWAYS_SKIP and (dotted_leaders >= 1 or dotted_leaders_generic >= 1):
+        return True
+
+    if has_toc_word and (dotted_leaders >= 1 or heading_refs >= 3):
+        return True
+    if dotted_leaders >= 2 and page_numbers >= 4:
+        return True
+    if heading_refs >= 6 and page_numbers >= 6 and len(stripped) < 1800:
+        return True
+
+    return False
+
 def is_noise_chunk(text):
     if is_page_index_chunk(text):
         return True
     if is_non_relevant_title_chunk(text):
+        return True
+    if is_toc_like_chunk(text):
         return True
     return False
 

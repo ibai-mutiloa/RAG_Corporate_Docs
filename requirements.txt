@@ -10,3 +10,4 @@ azure-core
 flask
 flask-cors
 numpy
+langdetect

@@ -8,6 +8,10 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 from openai import AzureOpenAI
+from langdetect import detect, DetectorFactory
+
+# Fijar seed para garantizar consistencia en detección de idioma
+DetectorFactory.seed = 0
 
 # Cargar variables de entorno desde .env
 load_dotenv()
@@ -46,6 +50,8 @@ REWRITE_QUERY = os.getenv("REWRITE_QUERY", "True").lower() == "true"  # Reescrib
 CONTEXT_SUMMARY_MODE = os.getenv("CONTEXT_SUMMARY_MODE", "heuristic").lower()  # model | heuristic
 CONTEXT_MAX_SOURCES = int(os.getenv("CONTEXT_MAX_SOURCES", str(TOP_K)))
 CONTEXT_MAX_BULLETS = int(os.getenv("CONTEXT_MAX_BULLETS", "2"))
+DEFAULT_GENERATE_ANSWER = os.getenv("DEFAULT_GENERATE_ANSWER", "True").lower() == "true"
+LANGUAGE_DETECTION_ENABLED = os.getenv("LANGUAGE_DETECTION_ENABLED", "True").lower() == "true"
 
 # Cliente de Azure OpenAI para embeddings
 azure_client = None
@@ -152,6 +158,72 @@ Formato: devuelve SOLO las preguntas reformuladas, una por línea, sin numeraci�
         print(f"[WARN] Error reescribiendo pregunta: {e}")
         return [question]
 
+def detect_language(text):
+    """
+    Detecta el idioma de un texto (español/euzkera).
+    Retorna 'es' para español, 'eu' para euskera, 'es' por defecto si falla.
+    """
+    if not LANGUAGE_DETECTION_ENABLED or not text:
+        return 'es'
+    
+    try:
+        lang = detect(text[:200])  # Usar primeros 200 caracteres
+        
+        # Mapear a códigos conocidos
+        lang_map = {
+            'es': 'es',
+            'eu': 'eu',
+            'en': 'es',  # Si detecta inglés, asumir español por defecto
+        }
+        
+        return lang_map.get(lang, 'es')
+    except Exception as e:
+        print(f"[WARN] Error detectando idioma: {e}, usando español por defecto")
+        return 'es'
+
+def rewrite_query_bilingual(question, detected_lang):
+    """
+    Reescribe la pregunta en el idioma detectado para mejorar matching semántico.
+    Soporta español (es) y euskera (eu).
+    """
+    if not azure_client_text or not REWRITE_QUERY:
+        return [question]
+    
+    try:
+        if detected_lang == 'eu':
+            # Reformular en euskera
+            prompt = f"""Asistente legala zara. Emandako galdera zuzenean ebatziko dituzu antzeko nola legezko bilaketan.
+
+Jatorrizko galdera: {question}
+
+Formatua: itzuli SOILIK reformulatutako galderak, batez bat, lineaz lineaz, zenbaketa eta kutxik gabe."""
+        else:
+            # Reformular en español (por defecto)
+            prompt = f"""Eres un asistente legal. Dada la siguiente pregunta en lenguaje natural, 
+genera 2-3 variantes que usen lenguaje jurídico/técnico para mejorar búsquedas semánticas.
+
+Pregunta original: {question}
+
+Formato: devuelve SOLO las preguntas reformuladas, una por línea, sin numeración ni comillas."""
+        
+        response = azure_client_text.chat.completions.create(
+            model=AZURE_DEPLOYMENT_NAME_TEXT,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=200
+        )
+        
+        rewritten = response.choices[0].message.content.strip().split('\n')
+        rewritten = [q.strip() for q in rewritten if q.strip()]
+        
+        return [question] + rewritten[:2]
+    
+    except Exception as e:
+        print(f"[WARN] Error reescribiendo pregunta en {detected_lang}: {e}")
+        return [question]
+
 def _normalize_text(text):
     if not text:
         return ""
@@ -161,6 +233,30 @@ def _normalize_text(text):
     text = re.sub(r"(?<!\n)\n(?!\n)", " ", text)
     text = re.sub(r"[ \t]{2,}", " ", text)
     return text.strip()
+
+def _strip_chunk_metadata(text):
+    if not text:
+        return ""
+    cleaned = text.strip()
+    
+    # Eliminar encabezados de metadatos del formato enriquecido
+    # Patrón multilinea: captura "Documento: <filename>\nTexto:\n<contenido>"
+    cleaned = re.sub(
+        r"(?sim)^Documento\s*:\s*.*?\n(Texto\s*:\s*)?",
+        "",
+        cleaned,
+        flags=re.IGNORECASE | re.MULTILINE
+    )
+    
+    # Línea de seguridad: si sigue habiendo "Documento:" o "Texto:" al inicio, quitarla
+    cleaned = re.sub(r"(?im)^[^\n]*Documento[^\n]*\n", "", cleaned)
+    cleaned = re.sub(r"(?im)^[^\n]*Texto[^\n]*:\s*", "", cleaned)
+    
+    # También quitar si aparecen después (por si el modelo reintroduce)
+    cleaned = re.sub(r"\n[^\n]*Documento[^\n]*\n", "\n", cleaned)
+    cleaned = re.sub(r"\n[^\n]*Texto[^\n]*:\s*", "\n", cleaned)
+    
+    return _normalize_text(cleaned)
 
 def _extract_article_title(text):
     if not text:
@@ -174,13 +270,18 @@ def _heuristic_summary(text, max_bullets=2):
     if not text:
         return []
     sentences = re.split(r"(?<=[\.!\?])\s+", text)
-    bullets = [s.strip() for s in sentences if s.strip()]
+    # Descartar líneas muy cortas y limitar longitud de bullet
+    bullets = [s.strip() for s in sentences if s.strip() and len(s.strip()) > 10]
+    bullets = [b[:150] + "..." if len(b) > 150 else b for b in bullets]
     return bullets[:max_bullets]
 
 def build_clean_context(question, chunks):
+    """Construye contexto limpio y conciso para evitar que el modelo copie texto crudo."""
     sources = []
     for chunk in chunks[:CONTEXT_MAX_SOURCES]:
-        cleaned_text = _normalize_text(chunk.get('text', ''))
+        cleaned_text = _strip_chunk_metadata(chunk.get('text', ''))
+        # Truncar a máximo 600 caracteres para evitar exceso de contexto
+        cleaned_text = cleaned_text[:600] if len(cleaned_text) > 600 else cleaned_text
         article = _extract_article_title(cleaned_text)
         sources.append({
             'file_name': chunk.get('file_name', 'Documento'),
@@ -192,44 +293,8 @@ def build_clean_context(question, chunks):
     if not sources:
         return ""
 
-    if CONTEXT_SUMMARY_MODE == "model" and azure_client_text:
-        try:
-            source_blocks = []
-            for i, s in enumerate(sources, start=1):
-                header = f"Fuente {i}: {s['file_name']}"
-                if s['article']:
-                    header += f" ({s['article']})"
-                source_blocks.append(f"{header}\nTexto: {s['text']}")
-
-            prompt = f"""Eres un analista documental. Resume de forma breve y fiel cada fuente para responder la pregunta del usuario.
-
-Pregunta: {question}
-
-Instrucciones:
-- Devuelve SOLO resúmenes por fuente en el siguiente formato:
-  Fuente N: <Documento> (<Artículo si existe>)
-  Resumen del fragmento:
-  - ...
-  - ...
-- No inventes datos ni porcentajes.
-- Si el fragmento no es concluyente, indícalo.
-
-Fuentes:
-""" + "\n\n".join(source_blocks)
-
-            response = azure_client_text.chat.completions.create(
-                model=AZURE_DEPLOYMENT_NAME_TEXT,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ],
-                temperature=0.2,
-                max_tokens=700
-            )
-            return response.choices[0].message.content.strip()
-        except Exception as e:
-            print(f"[WARN] Error creando contexto con modelo: {e}")
-
-    # Fallback heurístico
+    # Usar siempre modo heurístico para mantener resúmenes concisos
+    # y evitar que el LLM copie fragmentos largos del PDF
     parts = []
     for i, s in enumerate(sources, start=1):
         header = f"Fuente {i}: {s['file_name']}"
@@ -240,12 +305,47 @@ Fuentes:
             bullets = ["Fragmento sin contenido textual útil."]
         bullets_text = "\n".join([f"- {b}" for b in bullets])
         parts.append(f"{header}\nResumen del fragmento:\n{bullets_text}")
+    
     return "\n\n".join(parts)
 
-def generate_answer_from_chunks(question, chunks, max_similarity):
+def _looks_like_context_summary(text):
+    if not text:
+        return False
+    patterns = [
+        r"(?im)^\s*fuente\s+\d+\s*:",
+        r"(?im)^\s*resumen\s+del\s+fragmento\s*:",
+        r"(?im)^\s*-\s*fragmento",
+        r"(?im)^\s*documento\s*:",
+    ]
+    return any(re.search(pattern, text) for pattern in patterns)
+
+def _sanitize_answer_output(text):
+    if not text:
+        return text
+    cleaned = text.strip()
+    
+    # Eliminar completamente encabezados de metadatos
+    cleaned = re.sub(
+        r"(?sim)^Documento\s*:\s*.*?\n(Texto\s*:\s*)?",
+        "",
+        cleaned,
+        flags=re.IGNORECASE | re.MULTILINE
+    )
+    
+    # Líneas de seguridad para cualquier aparición de prefijos
+    cleaned = re.sub(r"(?Im)^[^\n]*?(?:Documento|Artículo|Texto)\s*:\s*[^\n]*\n", "", cleaned)
+    cleaned = re.sub(r"(?Im)(?:Documento|Artículo|Texto)\s*:\s*[^\n]*\.pdf", "", cleaned)
+    
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned.strip()
+
+def generate_answer_from_chunks(question, chunks, max_similarity, detected_lang='es'):
     """
     Genera una respuesta usando el modelo de texto de Azure OpenAI
     basándose en los chunks relevantes encontrados.
+    
+    Parámetros:
+    - detected_lang: 'es' para español (por defecto) o 'eu' para euskera
     
     Cuatro niveles de confianza:
     - max_similarity >= MIN_SIMILARITY (0.65): respuesta normal (alta confianza)
@@ -259,11 +359,17 @@ def generate_answer_from_chunks(question, chunks, max_similarity):
     # Nivel 0: Silencio semántico (< 0.50) - CORTE SECO
     # "Eco semántico" - coincidencias accidentales, no es conocimiento real
     if max_similarity < MIN_SIMILARITY_ABSOLUTE:
-        return "No se ha encontrado información relacionada en la normativa consultada. La consulta no tiene suficiente relación semántica con los documentos disponibles."
+        if detected_lang == 'eu':
+            return "Ez da informazio erlaziondadun aurkitu erregutaletan. Kontsulta ez du sufizienterik semantikoarekin dokumentuekin."
+        else:
+            return "No se ha encontrado información relacionada en la normativa consultada. La consulta no tiene suficiente relación semántica con los documentos disponibles."
     
     # Nivel 1: Baja confianza (0.50-0.55) - respuesta muy cautelosa
     if max_similarity < MIN_SIMILARITY_WARNING:
-        return f"No he encontrado en la documentación disponible información suficientemente relevante sobre tu pregunta (similitud: {max_similarity:.0%}). Te recomiendo consultar con RRHH o revisar el reglamento completo en el portal."
+        if detected_lang == 'eu':
+            return f"Ez dut aurkitu dokumentazioan informazio garrantzitsua zure galderari (antzekotasuna: {max_similarity:.0%}). Gomendio duzu Baliabide Humanekin kontsultatzea edo erregutalaren osoa portalen behatzeagatik."
+        else:
+            return f"No he encontrado en la documentación disponible información suficientemente relevante sobre tu pregunta (similitud: {max_similarity:.0%}). Te recomiendo consultar con RRHH o revisar el reglamento completo en el portal."
     
     # Nivel 2: Zona gris - respuesta con aviso (0.55-0.65)
     is_gray_zone = max_similarity < MIN_SIMILARITY
@@ -272,33 +378,67 @@ def generate_answer_from_chunks(question, chunks, max_similarity):
         # Construir el contexto limpio a partir de los chunks
         clean_context = build_clean_context(question, chunks)
 
-        # Crear el prompt para el modelo
-        if is_gray_zone:
-            # Prompt para zona gris: más cauteloso
-            system_prompt = """Eres el asistente oficial de la intranet corporativa.
-Utiliza únicamente la información proporcionada en las fuentes.
-Redacta una respuesta clara, completa y prudente.
-Si la información no es concluyente, indícalo explícitamente.
-No muestres fragmentos de texto sin explicar."""
-
-            user_prompt = f"""Pregunta:
-{question}
-
-Fuentes (resumidas):
-{clean_context}
-
-Instrucciones:
-- Sintetiza y redacta una respuesta clara y profesional.
-- Indica que la información puede no ser exactamente la requerida.
-- Sugiere verificar el artículo o documento específico si hay dudas.
-- No inventes datos, porcentajes ni requisitos que no estén en las fuentes."""
+        # Crear el prompt para el modelo según idioma detectado
+        if detected_lang == 'eu':
+            # Prompts en euskera
+            if is_gray_zone:
+                system_prompt = """Zu gara corporizazioaren intraneta asistente ofiziala.
+Erabiltzaile-informazioa soilik, iturrietatik emaniko ereduan.
+Zuzenean erantzun galderauser galdera.
+Idatzi amaiera garbi, osoa eta zorrotzean.
+Baldin informazioa ez bada ziur, adieraz testunaren gabe.
+Az jaso iturrietako laburpena ez duen."""
+            else:
+                system_prompt = """Zu gara corporizazioaren intraneta asistente ofiziala.
+Erabiltzaile-informazioa soilik, iturrietatik emaniko ereduan.
+Zuzenean erantzun galderauser galdera.
+Idatzi amaiera garbi eta osoa.
+Baldin informazioa ez bada ziur, adieraz honetan.
+Az jaso iturrietako laburpena."""
         else:
-            # Prompt normal: alta confianza
-            system_prompt = """Eres el asistente oficial de la intranet corporativa.
+            # Prompts en español
+            if is_gray_zone:
+                system_prompt = """Eres el asistente oficial de la intranet corporativa.
 Utiliza únicamente la información proporcionada en las fuentes.
-Redacta una respuesta clara y completa.
+Responde DIRECTAMENTE la pregunta del usuario.
+Redacta una respuesta final clara, completa y prudente.
+Si la información no es concluyente, indícalo explícitamente.
+No muestres fragmentos de texto sin explicar.
+No devuelvas resúmenes por fuente ni encabezados como 'Fuente 1' o 'Resumen del fragmento'."""
+            else:
+                system_prompt = """Eres el asistente oficial de la intranet corporativa.
+Utiliza únicamente la información proporcionada en las fuentes.
+Responde DIRECTAMENTE la pregunta del usuario.
+Redacta una respuesta final clara y completa.
 Si la información no es totalmente concluyente, indícalo explícitamente.
-No muestres fragmentos de texto sin explicar."""
+No muestres fragmentos de texto sin explicar.
+No devuelvas resúmenes por fuente ni encabezados como 'Fuente 1' o 'Resumen del fragmento'."""
+
+            if detected_lang == 'eu':
+                user_prompt = f"""Galdera:
+{question}
+
+Iturriak (laburnegoekin):
+{clean_context}
+
+Agindua:
+- Zuzenean erantzun user-ren galdera 1-3 paragrafokoen batean.
+- Aipatuz informazio ez bada gustatu beharrezko.
+- Gomendio ariketa edo dokumentuaren zehaztarpena egitea dubiren batean.
+- Astakatu ez datua, ehunekoa edo eskakizuna ez iturrieetan.
+- Itzuli SOILIK amaierako erantzuna user-raren (iturrien hautapena ez, labur talaren erakundea ez)."""
+            else:
+                user_prompt = f"""Pregunta:
+{question}
+
+Fuentes (resumidas):
+{clean_context}
+
+Instrucciones:
+- Responde directamente la pregunta del usuario en 1-3 párrafos.
+- No copies textualmente las fuentes.
+- Si falta información específica, indícalo de forma transparente.
+- Devuelve SOLO la respuesta final para el usuario (sin listar fuentes ni secciones de resumen)."""
 
             user_prompt = f"""Pregunta:
 {question}
@@ -307,9 +447,10 @@ Fuentes (resumidas):
 {clean_context}
 
 Instrucciones:
-- Sintetiza y redacta la respuesta en lenguaje claro.
+- Responde directamente la pregunta del usuario en 1-3 párrafos.
 - No copies textualmente las fuentes.
-- Si falta información específica, indícalo de forma transparente."""
+- Si falta información específica, indícalo de forma transparente.
+- Devuelve SOLO la respuesta final para el usuario (sin listar fuentes ni secciones de resumen)."""
         
         # Llamar al modelo de texto
         response = azure_client_text.chat.completions.create(
@@ -318,11 +459,44 @@ Instrucciones:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.7,  # Temperatura balanceada para respuestas naturales pero precisas
+            temperature=0.3,
             max_tokens=1000
         )
-        
-        return response.choices[0].message.content
+
+        answer_text = (response.choices[0].message.content or "").strip()
+
+        # Reparación: si el modelo devuelve un resumen por fuente, convertirlo a respuesta directa
+        if _looks_like_context_summary(answer_text):
+            repair_prompt = f"""Convierte el siguiente borrador en una RESPUESTA DIRECTA a la pregunta del usuario.
+
+Pregunta del usuario:
+{question}
+
+Borrador actual (incorrecto porque resume fuentes):
+{answer_text}
+
+Contexto disponible:
+{clean_context}
+
+Reglas:
+- Responde la pregunta en 1-3 párrafos, en lenguaje claro y profesional.
+- No incluyas encabezados tipo 'Fuente 1', 'Resumen del fragmento' ni listas por fuente.
+- No inventes información fuera del contexto disponible.
+- Si falta evidencia concluyente, indícalo explícitamente.
+- Devuelve SOLO la respuesta final para el usuario."""
+
+            repaired = azure_client_text.chat.completions.create(
+                model=AZURE_DEPLOYMENT_NAME_TEXT,
+                messages=[
+                    {"role": "system", "content": "Responde preguntas de forma directa y sin formato de resumen por fuentes."},
+                    {"role": "user", "content": repair_prompt}
+                ],
+                temperature=0.2,
+                max_tokens=900
+            )
+            answer_text = (repaired.choices[0].message.content or "").strip()
+
+        return _sanitize_answer_output(answer_text)
     
     except Exception as e:
         print(f"[ERROR] Error generando respuesta: {e}")
@@ -531,7 +705,7 @@ def search():
     
     Implementa heurística inteligente:
     - Primer pase: búsqueda semántica normal
-    - Validación: verifica si hay palabras clave normativas (mayoría, quórum, %, etc.)
+    - Validación: verifica si hay palabras clave esperadas (mayoría, quórum, %, etc.)
     - Segundo pase: si no hay keywords, relanza con términos forzados
     - Confianza variable: ajusta según completitud de respuesta
     
@@ -577,7 +751,7 @@ def search():
             }), 400
         
         top_k = request.json.get('top_k', TOP_K)
-        generate_answer = request.json.get('generate_answer', False)
+        generate_answer = request.json.get('generate_answer', DEFAULT_GENERATE_ANSWER)
         
         # Validar Azure OpenAI
         if not azure_client:
@@ -585,9 +759,22 @@ def search():
                 'error': 'Azure OpenAI no configurado. Verifica las variables de entorno.'
             }), 500
         
+        # ==================== DETECTAR IDIOMA: PRIORIZAR COOKIE ====================
+        # Leer cookie de idioma de la página si está disponible
+        cookie_lang = request.cookies.get('idioma', '').lower().strip()
+        
+        # Mapear valores comunes de cookie a códigos ISO 639-1
+        if cookie_lang in ['eu', 'eus', 'euskera', 'basque', 'euskeri']:
+            detected_lang = 'eu'
+        elif cookie_lang in ['es', 'es-es', 'spanish', 'español', 'cas', 'cast']:
+            detected_lang = 'es'
+        else:
+            # Si no hay cookie válida, detectar automáticamente del texto de la pregunta
+            detected_lang = detect_language(question)
+        
+        query_variants = rewrite_query_bilingual(question, detected_lang)
+        
         # ==================== PRIMER PASE: BÚSQUEDA SEMÁNTICA NORMAL ====================
-        # Reescribir pregunta para mejor matching semántico
-        query_variants = rewrite_query(question)
         
         # Buscar con todas las variantes y combinar resultados
         all_similar = {}
@@ -705,8 +892,24 @@ def search():
             ui_color = 'red'
             ui_message = 'No se ha encontrado información relevante para esta consulta'
         
+        response_results = []
+        for item in similar_chunks:
+            clean_item = dict(item)
+            clean_item['text'] = _strip_chunk_metadata(item.get('text', ''))
+            response_results.append(clean_item)
+
+        # Construir lista de fuentes con archivo y similitud
+        sources = []
+        for item in similar_chunks:
+            source_entry = {
+                'file': item.get('file_name', 'Documento desconocido'),
+                'similarity': round(float(item.get('similarity', 0)) * 100, 1)  # Porcentaje
+            }
+            sources.append(source_entry)
+
         response_data = {
             'question': question,
+            'detected_language': detected_lang,
             'query_variants_used': len(query_variants),
             'max_similarity': float(max_similarity),
             'min_similarity_threshold': MIN_SIMILARITY,
@@ -723,20 +926,26 @@ def search():
             'search_passes': search_passes,
             'second_pass_performed': second_pass_performed,
             'confidence': final_confidence,
-            'results': similar_chunks,
-            'count': len(similar_chunks)
+            'sources': sources,
+            'results': response_results,
+            'count': len(response_results)
         }
         
         # Generar respuesta con el modelo de texto si se solicita
         if generate_answer:
             if azure_client_text:
-                answer = generate_answer_from_chunks(question, similar_chunks, max_similarity)
+                answer = generate_answer_from_chunks(question, similar_chunks, max_similarity, detected_lang)
                 response_data['answer'] = answer
                 response_data['answer_generated'] = True
+                # Si se generó respuesta, indicar al frontend que la use
+                response_data['display_mode'] = 'answer' if answer else 'results'
             else:
                 response_data['answer'] = None
                 response_data['answer_generated'] = False
                 response_data['answer_error'] = 'Modelo de texto no configurado. Configure AZURE_DEPLOYMENT_NAME_TEXT.'
+                response_data['display_mode'] = 'results'
+        else:
+            response_data['display_mode'] = 'results'
         
         # Retornar resultados
         return jsonify(response_data), 200
