@@ -218,7 +218,7 @@ A separate system handles a different use case: a corporate telephony assistant 
 ## Related projects
 
 - **[rag_using_azure](https://github.com/ibai-mutiloa/rag_using_azure)** — Azure AI Search variant of this pipeline
-- **[ibaimutiloa.es](https://ibaimutiloa.es)** — Portfolio with full project writeup
+- **[ibaimutiloa.es](https://ibaimutiloa.vercel.app/)** — Portfolio with full project writeup
 
 ---
 
