@@ -38,7 +38,7 @@ PDF documents
 
 ## Architecture
 
-![System architecture](docs/architecture.png)
+![System architecture](/intraneta.eps.mondragon.edu.png)
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────┐
