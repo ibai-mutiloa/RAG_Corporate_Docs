@@ -226,4 +226,4 @@ A separate system handles a different use case: a corporate telephony assistant 
 
 **Ibai Mutiloa Aliaga** — Backend Engineer · AI Systems · Cloud Infrastructure
 
-[LinkedIn](https://linkedin.com/in/ibai-mutiloa-aliaga) · [Portfolio](https://ibaimutiloa.es) · [GitHub](https://github.com/ibai-mutiloa)
+[LinkedIn](https://linkedin.com/in/ibai-mutiloa-aliaga) · [Portfolio](https://ibaimutiloa.vercel.app/) · [GitHub](https://github.com/ibai-mutiloa)
