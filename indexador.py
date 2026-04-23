@@ -2,13 +2,19 @@
 import os
 import hashlib
 import re
+import importlib
 import psycopg2
 from psycopg2.extras import execute_values
 from pypdf import PdfReader
+import pdfplumber
 from dotenv import load_dotenv
 from openai import AzureOpenAI
-from azure.core.credentials import AzureKeyCredential
 import tiktoken
+
+try:
+    camelot = importlib.import_module("camelot")
+except Exception:
+    camelot = None
 
 # Cargar variables de entorno desde .env
 load_dotenv()
@@ -36,6 +42,14 @@ CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "120"))
 FORCE_REINDEX = os.getenv("FORCE_REINDEX", "False").lower() == "true"
 MAX_TOKENS_PER_CHUNK = int(os.getenv("MAX_TOKENS_PER_CHUNK", "2000"))  # Máximo de tokens por chunk
 TOC_DOTTED_ALWAYS_SKIP = os.getenv("TOC_DOTTED_ALWAYS_SKIP", "True").lower() == "true"
+TABLE_CRITICAL_KEYWORDS = [
+    kw.strip().lower()
+    for kw in os.getenv(
+        "TABLE_CRITICAL_KEYWORDS",
+        "irpf,retencion,retención,km,kilometraje,calendario,laborable,festivo"
+    ).split(",")
+    if kw.strip()
+]
 
 # Inicializar tokenizer de OpenAI
 try:
@@ -113,6 +127,150 @@ def extract_article_title(text):
     if match:
         return match.group(1).strip()
     return None
+
+def extract_section_label(text):
+    """Extrae una etiqueta de sección para enriquecer metadatos."""
+    if not text:
+        return "general"
+
+    patterns = [
+        r"(?im)^\s*(\d{1,2}\.\s+[A-ZÁÉÍÓÚÜÑ][^\n]{0,120})",
+        r"(?im)^\s*(ART[IÍ]CULO\s+\d+[A-Za-zºª\-]*)",
+        r"(?im)^\s*(DISPOSICION(?:ES)?\s+\w+)",
+        r"(?im)^\s*(T[ÍI]TULO\s+\w+)",
+        r"(?im)^\s*(CAP[IÍ]TULO\s+\w+)",
+        r"(?im)^\s*(SECCI[ÓO]N\s+\w+)",
+        r"(?im)^\s*(ANEXO\s+\w+)",
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, text)
+        if match:
+            return re.sub(r"\s+", " ", match.group(1).strip())
+    return "general"
+
+def normalize_cell(value):
+    if value is None:
+        return ""
+    text = str(value).strip()
+    text = re.sub(r"\s+", " ", text)
+    return text
+
+def clean_table_rows(raw_rows):
+    if not raw_rows:
+        return []
+    cleaned = []
+    for row in raw_rows:
+        if not row:
+            continue
+        normalized_row = [normalize_cell(cell) for cell in row]
+        if any(cell for cell in normalized_row):
+            cleaned.append(normalized_row)
+    return cleaned
+
+def table_contains_critical_keywords(rows):
+    if not rows:
+        return False
+    flat_text = " ".join(" ".join(r) for r in rows).lower()
+    return any(keyword in flat_text for keyword in TABLE_CRITICAL_KEYWORDS)
+
+def table_to_row_chunks(file_name, table_id, page_number, section, rows):
+    """Genera un chunk por fila de tabla con metadatos."""
+    if not rows:
+        return []
+
+    headers = rows[0]
+    body_rows = rows[1:] if len(rows) > 1 else rows
+    row_chunks = []
+
+    for row_index, row in enumerate(body_rows):
+        max_cols = max(len(headers), len(row))
+        pairs = []
+        for col_idx in range(max_cols):
+            header = headers[col_idx] if col_idx < len(headers) else f"col_{col_idx + 1}"
+            value = row[col_idx] if col_idx < len(row) else ""
+            header = normalize_cell(header) or f"col_{col_idx + 1}"
+            value = normalize_cell(value)
+            if value:
+                pairs.append(f"{header}: {value}")
+
+        if not pairs:
+            continue
+
+        row_text = " | ".join(pairs)
+        chunk_text = (
+            f"Tabla crítica detectada\n"
+            f"Documento: {file_name}\n"
+            f"Sección: {section}\n"
+            f"Página: {page_number}\n"
+            f"Tabla: {table_id}\n"
+            f"Fila: {row_index}\n"
+            f"Datos: {row_text}"
+        )
+
+        row_chunks.append({
+            'text': chunk_text,
+            'is_table': True,
+            'table_id': table_id,
+            'row_index': row_index,
+            'page_number': page_number,
+            'section': section,
+        })
+
+    return row_chunks
+
+def extract_tables_with_pdfplumber(page):
+    try:
+        return page.extract_tables() or []
+    except Exception:
+        return []
+
+def extract_tables_with_camelot(pdf_path, page_number):
+    if camelot is None:
+        return []
+    try:
+        parsed = camelot.read_pdf(pdf_path, pages=str(page_number), flavor='stream')
+        rows = []
+        for table in parsed:
+            rows.append(table.df.values.tolist())
+        return rows
+    except Exception:
+        return []
+
+def extract_critical_table_row_chunks(pdf_path, file_name):
+    """Extrae filas de tablas críticas con pdfplumber y fallback a camelot."""
+    all_table_chunks = []
+    try:
+        with pdfplumber.open(pdf_path) as pdf:
+            for page_idx, page in enumerate(pdf.pages, start=1):
+                page_text = normalize_pdf_text(page.extract_text() or "")
+                section = extract_section_label(page_text)
+
+                raw_tables = extract_tables_with_pdfplumber(page)
+                source = "pdfplumber"
+                if not raw_tables:
+                    raw_tables = extract_tables_with_camelot(pdf_path, page_idx)
+                    source = "camelot"
+
+                for table_idx, raw_table in enumerate(raw_tables, start=1):
+                    rows = clean_table_rows(raw_table)
+                    if not rows or not table_contains_critical_keywords(rows):
+                        continue
+
+                    table_id = f"p{page_idx}_t{table_idx}_{source}"
+                    all_table_chunks.extend(
+                        table_to_row_chunks(
+                            file_name=file_name,
+                            table_id=table_id,
+                            page_number=page_idx,
+                            section=section,
+                            rows=rows,
+                        )
+                    )
+    except Exception as e:
+        print(f"[WARN] Error extrayendo tablas en {pdf_path}: {e}")
+
+    return all_table_chunks
 
 def split_by_structure(text):
     if not text:
@@ -373,6 +531,11 @@ def create_table():
         file_path TEXT,
         folder_name TEXT,
         chunk_index INT,
+        is_table BOOLEAN DEFAULT FALSE,
+        table_id TEXT,
+        row_index INT,
+        page_number INT,
+        section TEXT,
         text TEXT,
         embedding vector(1536),
         file_hash TEXT
@@ -388,6 +551,41 @@ def create_table():
             WHERE table_name = 'chunks' AND column_name = 'file_path'
         ) THEN
             ALTER TABLE chunks ADD COLUMN file_path TEXT;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT 1 FROM information_schema.columns
+            WHERE table_name = 'chunks' AND column_name = 'is_table'
+        ) THEN
+            ALTER TABLE chunks ADD COLUMN is_table BOOLEAN DEFAULT FALSE;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT 1 FROM information_schema.columns
+            WHERE table_name = 'chunks' AND column_name = 'table_id'
+        ) THEN
+            ALTER TABLE chunks ADD COLUMN table_id TEXT;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT 1 FROM information_schema.columns
+            WHERE table_name = 'chunks' AND column_name = 'row_index'
+        ) THEN
+            ALTER TABLE chunks ADD COLUMN row_index INT;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT 1 FROM information_schema.columns
+            WHERE table_name = 'chunks' AND column_name = 'page_number'
+        ) THEN
+            ALTER TABLE chunks ADD COLUMN page_number INT;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT 1 FROM information_schema.columns
+            WHERE table_name = 'chunks' AND column_name = 'section'
+        ) THEN
+            ALTER TABLE chunks ADD COLUMN section TEXT;
         END IF;
 
         -- Índice para búsquedas por ruta
@@ -534,7 +732,20 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
             print(f"[WARN] Chunk {i} sin embedding → NO se insertará")
             skipped_count += 1
         else:
-            valid_data.append((file_name, file_path, folder_name, i, chunk, embeddings[i], file_hash))
+            valid_data.append((
+                file_name,
+                file_path,
+                folder_name,
+                i,
+                False,
+                None,
+                None,
+                None,
+                None,
+                chunk,
+                embeddings[i],
+                file_hash,
+            ))
     
     if not valid_data:
         print(f"[ERROR] Ningún chunk válido con embedding para {file_path}")
@@ -547,6 +758,11 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
         file_path,
         folder_name,
         chunk_index,
+        is_table,
+        table_id,
+        row_index,
+        page_number,
+        section,
         text,
         embedding,
         file_hash
@@ -558,6 +774,95 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
     conn.close()
     
     print(f"[INFO] {len(valid_data)} chunks insertados, {skipped_count} omitidos (sin embedding), {skipped_noise} filtrados por ruido")
+
+def delete_table_chunks(file_path):
+    """Borra solo chunks de tablas para un PDF, preservando chunks narrativos."""
+    conn = connect_db()
+    with conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM chunks WHERE file_path = %s AND COALESCE(is_table, FALSE) = TRUE",
+                (file_path,),
+            )
+    conn.close()
+
+def insert_table_chunks(file_name, file_path, folder_name, table_chunks, file_hash):
+    """Inserta chunks tabulares (un chunk por fila) con metadatos."""
+    if not table_chunks:
+        return 0
+
+    table_texts = [chunk['text'] for chunk in table_chunks]
+    embeddings = calculate_embeddings(table_texts)
+
+    if not embeddings:
+        return 0
+
+    valid_data = []
+    skipped_count = 0
+    base_chunk_index = 1_000_000
+
+    for idx, item in enumerate(table_chunks):
+        embedding = embeddings[idx]
+        if embedding is None:
+            skipped_count += 1
+            continue
+
+        page_number = item.get('page_number')
+        row_index = item.get('row_index')
+        derived_index = base_chunk_index + idx
+
+        valid_data.append((
+            file_name,
+            file_path,
+            folder_name,
+            derived_index,
+            True,
+            item.get('table_id'),
+            row_index,
+            page_number,
+            item.get('section', 'general'),
+            enrich_chunk_with_metadata(file_name, item['text']),
+            embedding,
+            file_hash,
+        ))
+
+    if not valid_data:
+        print(f"[WARN] No hay chunks tabulares válidos para {file_path}")
+        return 0
+
+    conn = connect_db()
+    sql = """
+    INSERT INTO chunks (
+        file_name,
+        file_path,
+        folder_name,
+        chunk_index,
+        is_table,
+        table_id,
+        row_index,
+        page_number,
+        section,
+        text,
+        embedding,
+        file_hash
+    ) VALUES %s
+    ON CONFLICT (file_path, chunk_index) DO UPDATE SET
+        is_table = EXCLUDED.is_table,
+        table_id = EXCLUDED.table_id,
+        row_index = EXCLUDED.row_index,
+        page_number = EXCLUDED.page_number,
+        section = EXCLUDED.section,
+        text = EXCLUDED.text,
+        embedding = EXCLUDED.embedding,
+        file_hash = EXCLUDED.file_hash
+    """
+    with conn:
+        with conn.cursor() as cur:
+            execute_values(cur, sql, valid_data)
+    conn.close()
+
+    print(f"[INFO] {len(valid_data)} chunks tabulares insertados, {skipped_count} omitidos (sin embedding)")
+    return len(valid_data)
 
 def update_missing_embeddings(file_path):
     """Calcula y actualiza embeddings NULL para un PDF."""
@@ -751,6 +1056,22 @@ def process_pdfs():
                     missing_count = update_missing_embeddings(relative_path)
                     if missing_count > 0:
                         print(f"[INFO] {missing_count} embeddings actualizados para {relative_path}")
+
+                # Reindexación selectiva de tablas críticas (sin tocar chunks narrativos)
+                table_chunks = extract_critical_table_row_chunks(full_path, f)
+                if table_chunks:
+                    delete_table_chunks(relative_path)
+                    inserted_table_chunks = insert_table_chunks(
+                        file_name=f,
+                        file_path=relative_path,
+                        folder_name=folder_name,
+                        table_chunks=table_chunks,
+                        file_hash=file_hash,
+                    )
+                    print(
+                        f"[INFO] Reindexación selectiva de tablas críticas en {relative_path}: "
+                        f"{inserted_table_chunks} filas indexadas"
+                    )
 
     # Borrar de DB PDFs que ya no existen
     conn = connect_db()
