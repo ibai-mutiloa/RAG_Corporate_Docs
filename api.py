@@ -42,10 +42,13 @@ AZURE_ENDPOINT_TEXT = os.getenv("AZURE_ENDPOINT_TEXT", "")  # Opcional, usa AZUR
 # Configuración de búsqueda
 # ===========================
 TOP_K = int(os.getenv("TOP_K", "5"))  # Número de chunks similares a retornar
-MIN_SIMILARITY = float(os.getenv("MIN_SIMILARITY", "0.65"))  # Umbral mínimo de similitud
-MIN_SIMILARITY_WARNING = float(os.getenv("MIN_SIMILARITY_WARNING", "0.55"))  # Umbral zona gris
-MIN_SIMILARITY_ABSOLUTE = float(os.getenv("MIN_SIMILARITY_ABSOLUTE", "0.50"))  # Umbral de silencio semántico
-MIN_SIMILARITY_SECOND_PASS = float(os.getenv("MIN_SIMILARITY_SECOND_PASS", "0.45"))  # Mínimo para segundo pase
+MIN_SIMILARITY = float(os.getenv("MIN_SIMILARITY", "0.35"))  # Umbral mínimo de similitud
+MIN_SIMILARITY_WARNING = float(os.getenv("MIN_SIMILARITY_WARNING", "0.30"))  # Umbral zona gris
+MIN_SIMILARITY_ABSOLUTE = float(os.getenv("MIN_SIMILARITY_ABSOLUTE", "0.25"))  # Umbral de silencio semántico
+MIN_SIMILARITY_SECOND_PASS = float(os.getenv("MIN_SIMILARITY_SECOND_PASS", "0.20"))  # Mínimo para segundo pase
+RETRIEVAL_CANDIDATE_LIMIT = int(os.getenv("RETRIEVAL_CANDIDATE_LIMIT", "40"))
+HYBRID_VECTOR_WEIGHT = float(os.getenv("HYBRID_VECTOR_WEIGHT", "0.82"))
+HYBRID_LEXICAL_WEIGHT = float(os.getenv("HYBRID_LEXICAL_WEIGHT", "0.18"))
 REWRITE_QUERY = os.getenv("REWRITE_QUERY", "True").lower() == "true"  # Reescribir preguntas
 CONTEXT_SUMMARY_MODE = os.getenv("CONTEXT_SUMMARY_MODE", "heuristic").lower()  # model | heuristic
 CONTEXT_MAX_SOURCES = int(os.getenv("CONTEXT_MAX_SOURCES", str(TOP_K)))
@@ -123,6 +126,24 @@ def cosine_similarity(vec1, vec2):
     
     return dot_product / (norm_vec1 * norm_vec2)
 
+def _embedding_to_pgvector_literal(embedding):
+    """Convierte un embedding a literal compatible con el tipo vector de pgvector."""
+    return '[' + ','.join(f'{float(value):.8f}' for value in embedding) + ']'
+
+def _normalize_search_query(text):
+    """Normaliza una consulta para búsqueda lexical simple."""
+    if not text:
+        return ''
+    cleaned = text.lower()
+    cleaned = re.sub(r"[^\w\sáéíóúüñçàèìòùäëïöüâêîôû0-9%]+", " ", cleaned)
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    return cleaned.strip()
+
+def _hybrid_score(vector_similarity, lexical_rank):
+    """Combina similitud vectorial y lexical en una sola puntuación."""
+    lexical_boost = min(float(lexical_rank) * 8.0, 1.0)
+    return (HYBRID_VECTOR_WEIGHT * float(vector_similarity)) + (HYBRID_LEXICAL_WEIGHT * lexical_boost)
+
 def rewrite_query(question):
     """
     Reescribe la pregunta para mejorar el matching semántico
@@ -181,13 +202,66 @@ def detect_language(text):
         print(f"[WARN] Error detectando idioma: {e}, usando español por defecto")
         return 'es'
 
+def apply_normative_synonyms(question):
+    """
+    Mapea términos coloquiales a sinónimos normativos para mejorar búsqueda.
+    Ejemplo: 'denuncia' -> 'denuncia comisión ética canal reporte'
+    """
+    synonyms_map = {
+        # Denuncias y quejas
+        'denuncia': 'denuncia comisión ética canal reporte procedimiento',
+        'canal denuncia': 'denuncia comisión ética código ético procedimiento',
+        'queja': 'denuncia comisión reclamación procedimiento',
+        'reclamación': 'denuncia comisión procedimiento recurso',
+        'cómo reportar': 'denuncia comisión ética procedimiento canal',
+        'reportar': 'denuncia comisión ética código ético',
+        
+        # Permisos y derechos
+        'permiso': 'licencia autorización permiso procedimiento',
+        'vacaciones': 'vacaciones permiso descanso prestaciones',
+        'baja': 'baja licencia incapacidad descanso',
+        'excedencia': 'excedencia baja permiso procedimiento',
+        'año sabático': 'año sabático excedencia permiso',
+        
+        # Horarios y trabajos
+        'horario': 'jornada horario flexible trabajo presencial',
+        'teletrabajo': 'trabajo remoto teletrabajo presencial flexible',
+        'turno': 'turno jornada horario flexible',
+        
+        # Compensaciones
+        'dinero': 'compensación retribución paga salario prestación',
+        'compensación': 'compensación indemnización resarcimiento retribución',
+        'gastos': 'gastos dietas manutención desplazamiento reembolso',
+        'desplazamiento': 'desplazamiento gastos dietas viático',
+        
+        # Procedimientos generales
+        'cómo': 'procedimiento pasos proceso requisitos normativa',
+        'debo': 'obligación deber requisito normativa',
+        'puedo': 'derecho permiso autorización normativa',
+        'se puede': 'derecho permiso autorización normativa',
+    }
+    
+    question_lower = question.lower()
+    expanded = [question]
+    
+    for key, value in synonyms_map.items():
+        if key in question_lower:
+            expanded.append(value)
+            break
+    
+    return expanded
+
 def rewrite_query_bilingual(question, detected_lang):
     """
     Reescribe la pregunta en el idioma detectado para mejorar matching semántico.
     Soporta español (es) y euskera (eu).
+    Ahora incluye mapeo de sinónimos normativos.
     """
+    # Primero aplicar sinónimos locales (más rápido, sin API)
+    synonyms_variants = apply_normative_synonyms(question)
+    
     if not azure_client_text or not REWRITE_QUERY:
-        return [question]
+        return synonyms_variants
     
     try:
         if detected_lang == 'eu':
@@ -218,11 +292,12 @@ Formato: devuelve SOLO las preguntas reformuladas, una por línea, sin numeraci�
         rewritten = response.choices[0].message.content.strip().split('\n')
         rewritten = [q.strip() for q in rewritten if q.strip()]
         
-        return [question] + rewritten[:2]
+        # Combinar sinónimos locales + LLM reescrituras
+        return synonyms_variants + rewritten[:2]
     
     except Exception as e:
         print(f"[WARN] Error reescribiendo pregunta en {detected_lang}: {e}")
-        return [question]
+        return synonyms_variants
 
 def _normalize_text(text):
     if not text:
@@ -584,53 +659,213 @@ def check_answer_completeness(chunks, question):
         'reason': 'OK' if answer_complete else ('Faltan palabras clave normativas' if not has_keywords else 'Contexto insuficiente')
     }
 
-def find_similar_chunks(query_embedding, top_k=TOP_K):
+def find_similar_chunks(query_embedding, query_text=None, top_k=TOP_K, candidate_limit=None):
     """
-    Encuentra los chunks más similares usando similitud del coseno
+    Encuentra los chunks más similares usando un ranking híbrido.
     """
+    if candidate_limit is None:
+        candidate_limit = max(RETRIEVAL_CANDIDATE_LIMIT, top_k * 8)
+
+    lexical_query = _normalize_search_query(query_text)
+    vector_literal = _embedding_to_pgvector_literal(query_embedding)
     conn = connect_db()
     
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            # Obtener todos los chunks con embeddings
+            # Pedir solo los candidatos más prometedores al motor de PostgreSQL
             cur.execute("""
-                SELECT id, file_name, file_path, folder_name, chunk_index, text, embedding
+                SELECT
+                    id,
+                    file_name,
+                    file_path,
+                    folder_name,
+                    chunk_index,
+                    text,
+                    1 - (embedding <=> %s::vector(1536)) AS vector_similarity,
+                    COALESCE(ts_rank_cd(search_tsv, websearch_to_tsquery('simple', NULLIF(%s, ''))), 0) AS lexical_rank
                 FROM chunks
                 WHERE embedding IS NOT NULL
-            """)
+                ORDER BY embedding <=> %s::vector(1536)
+                LIMIT %s
+            """, (vector_literal, lexical_query, vector_literal, candidate_limit))
             chunks = cur.fetchall()
-        
-        # Calcular similitud del coseno para cada chunk
+
         similarities = []
         for chunk in chunks:
-            embedding = chunk['embedding']
-            if embedding:
-                # Convertir embedding de string a lista si es necesario
-                if isinstance(embedding, str):
-                    # El formato es "[0.1, 0.2, ...]"
-                    embedding = [float(x) for x in embedding.strip('[]').split(',')]
-                
-                similarity = cosine_similarity(query_embedding, embedding)
-                similarities.append({
-                    'id': chunk['id'],
-                    'file_name': chunk['file_name'],
-                    'file_path': chunk['file_path'],
-                    'folder_name': chunk['folder_name'],
-                    'chunk_index': chunk['chunk_index'],
-                    'text': chunk['text'],
-                    'similarity': float(similarity)
-                })
-        
-        # Ordenar por similitud descendente y retornar los top_k
+            vector_similarity = float(chunk['vector_similarity'] or 0.0)
+            lexical_rank = float(chunk['lexical_rank'] or 0.0)
+            similarities.append({
+                'id': chunk['id'],
+                'file_name': chunk['file_name'],
+                'file_path': chunk['file_path'],
+                'folder_name': chunk['folder_name'],
+                'chunk_index': chunk['chunk_index'],
+                'text': chunk['text'],
+                'vector_similarity': vector_similarity,
+                'lexical_rank': lexical_rank,
+                'similarity': _hybrid_score(vector_similarity, lexical_rank)
+            })
+
         similarities.sort(key=lambda x: x['similarity'], reverse=True)
         return similarities[:top_k]
     
     finally:
         conn.close()
 
+def calculate_keyword_density(text, keywords=None):
+    """
+    Calcula la densidad de palabras clave en un texto.
+    Mayor densidad = chunk más relevante para normativas.
+    """
+    if not keywords:
+        keywords = ['artículo', 'mayoría', 'quórum', 'aprobación', 'modificación', 'reglamento', 'norma', 'disposición', 'inciso', 'párrafo', '%']
+    
+    if not text:
+        return 0.0
+    
+    text_lower = text.lower()
+    word_count = len(text_lower.split())
+    
+    if word_count == 0:
+        return 0.0
+    
+    keyword_count = 0
+    for keyword in keywords:
+        keyword_lower = keyword.lower()
+        keyword_count += text_lower.count(keyword_lower)
+    
+    density = min(keyword_count / max(word_count / 10, 1), 1.0)
+    return density
+
+def deduplicate_chunks(chunks, similarity_threshold=0.90):
+    """
+    Elimina chunks casi-duplicados (sim de texto > threshold).
+    Mantiene el chunk con mayor score cuando encuentra duplicados.
+    """
+    if len(chunks) <= 1:
+        return chunks
+    
+    deduplicated = []
+    seen_texts = {}
+    
+    for chunk in chunks:
+        text = chunk.get('text', '').lower().strip()
+        normalized = re.sub(r'[^\w\s]', '', text)
+        normalized = re.sub(r'\s+', ' ', normalized).strip()
+        
+        is_duplicate = False
+        for seen_norm, seen_chunk in seen_texts.items():
+            seen_words = set(seen_norm.split())
+            current_words = set(normalized.split())
+            
+            if len(seen_words) > 0 and len(current_words) > 0:
+                intersection = len(seen_words & current_words)
+                union = len(seen_words | current_words)
+                jaccard = intersection / union if union > 0 else 0.0
+                
+                if jaccard >= similarity_threshold:
+                    is_duplicate = True
+                    if chunk.get('similarity', 0) > seen_chunk.get('similarity', 0):
+                        deduplicated.remove(seen_chunk)
+                        deduplicated.append(chunk)
+                        seen_texts[normalized] = chunk
+                    break
+        
+        if not is_duplicate:
+            deduplicated.append(chunk)
+            seen_texts[normalized] = chunk
+    
+    return deduplicated
+
+def expand_context_with_neighbors(chunks):
+    """
+    Expande el contexto de cada chunk añadiendo vecinos (anterior y posterior)
+    del mismo archivo para darle al LLM más información continua.
+    
+    Parámetros:
+        chunks: lista de chunks encontrados (ya ordenados por similitud)
+    
+    Retorna:
+        Lista expandida con vecinos insertados de forma inteligente.
+    """
+    if not chunks:
+        return chunks
+    
+    # Agrupar por archivo y chunk_index para buscar vecinos
+    chunk_ids_by_file = {}
+    for chunk in chunks:
+        file_path = chunk.get('file_path', '')
+        chunk_index = chunk.get('chunk_index', -1)
+        if file_path:
+            if file_path not in chunk_ids_by_file:
+                chunk_ids_by_file[file_path] = []
+            chunk_ids_by_file[file_path].append((chunk_index, chunk))
+    
+    # Traer vecinos de la BD
+    expanded_chunks = []
+    neighbor_cache = {}  # Caché local para evitar queries repetidas
+    
+    conn = connect_db()
+    
+    try:
+        for chunk in chunks:
+            file_path = chunk.get('file_path', '')
+            chunk_index = chunk.get('chunk_index', -1)
+            
+            expanded_chunks.append(chunk)
+            
+            # Traer vecino anterior (chunk_index - 1)
+            if chunk_index > 0:
+                cache_key = (file_path, chunk_index - 1)
+                if cache_key not in neighbor_cache:
+                    with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                        cur.execute("""
+                            SELECT id, file_name, file_path, folder_name, chunk_index, text
+                            FROM chunks
+                            WHERE file_path = %s AND chunk_index = %s AND embedding IS NOT NULL
+                            LIMIT 1
+                        """, (file_path, chunk_index - 1))
+                        result = cur.fetchone()
+                        neighbor_cache[cache_key] = result
+                
+                prev_chunk = neighbor_cache[cache_key]
+                if prev_chunk:
+                    prev_chunk_dict = dict(prev_chunk)
+                    prev_chunk_dict['similarity'] = chunk.get('similarity', 0.0) * 0.7  # Reducir score del vecino
+                    prev_chunk_dict['is_neighbor'] = True
+                    prev_chunk_dict['neighbor_type'] = 'anterior'
+                    # Insertar ANTES del chunk principal
+                    expanded_chunks.insert(len(expanded_chunks) - 1, prev_chunk_dict)
+            
+            # Traer vecino posterior (chunk_index + 1)
+            cache_key = (file_path, chunk_index + 1)
+            if cache_key not in neighbor_cache:
+                with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                    cur.execute("""
+                        SELECT id, file_name, file_path, folder_name, chunk_index, text
+                        FROM chunks
+                        WHERE file_path = %s AND chunk_index = %s AND embedding IS NOT NULL
+                        LIMIT 1
+                    """, (file_path, chunk_index + 1))
+                    result = cur.fetchone()
+                    neighbor_cache[cache_key] = result
+            
+            next_chunk = neighbor_cache[cache_key]
+            if next_chunk:
+                next_chunk_dict = dict(next_chunk)
+                next_chunk_dict['similarity'] = chunk.get('similarity', 0.0) * 0.7  # Reducir score del vecino
+                next_chunk_dict['is_neighbor'] = True
+                next_chunk_dict['neighbor_type'] = 'posterior'
+                expanded_chunks.append(next_chunk_dict)
+    
+    finally:
+        conn.close()
+    
+    return expanded_chunks
+
 def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top_k=TOP_K):
     """
-    Segunda pasada: busca chunks que contengan palabras clave específicas.
+    Segunda pasada: refuerza resultados que contengan palabras clave específicas.
     Útil cuando la primera búsqueda no encuentra términos normativos esperados.
     
     Args:
@@ -642,44 +877,51 @@ def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top
     """
     if not forced_keywords:
         forced_keywords = ['mayoría', 'quórum', 'aprobación', 'modificación', 'reglamento', 'artículo', '%']
+
+    lexical_query = _normalize_search_query(' '.join(kw for kw in forced_keywords if re.search(r'\w', kw)))
+    vector_literal = _embedding_to_pgvector_literal(query_embedding)
     
     conn = connect_db()
     
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            # Obtener todos los chunks con embeddings
+            # Traer solo una ventana pequeña de candidatos por similitud vectorial
             cur.execute("""
-                SELECT id, file_name, file_path, folder_name, chunk_index, text, embedding
+                SELECT
+                    id,
+                    file_name,
+                    file_path,
+                    folder_name,
+                    chunk_index,
+                    text,
+                    1 - (embedding <=> %s::vector(1536)) AS vector_similarity,
+                    COALESCE(ts_rank_cd(search_tsv, websearch_to_tsquery('simple', NULLIF(%s, ''))), 0) AS lexical_rank
                 FROM chunks
                 WHERE embedding IS NOT NULL
-                ORDER BY chunk_index DESC
-            """)
+                ORDER BY embedding <=> %s::vector(1536)
+                LIMIT %s
+            """, (vector_literal, lexical_query, vector_literal, max(RETRIEVAL_CANDIDATE_LIMIT, top_k * 10)))
             chunks = cur.fetchall()
-        
-        # Filtrar chunks que contengan palabras clave
+
         filtered_chunks = []
         for chunk in chunks:
             text_lower = chunk['text'].lower()
-            # Verificar si contiene al menos una palabra clave
             if any(keyword.lower() in text_lower for keyword in forced_keywords):
-                embedding = chunk['embedding']
-                if embedding:
-                    if isinstance(embedding, str):
-                        embedding = [float(x) for x in embedding.strip('[]').split(',')]
-                    
-                    similarity = cosine_similarity(query_embedding, embedding)
-                    filtered_chunks.append({
-                        'id': chunk['id'],
-                        'file_name': chunk['file_name'],
-                        'file_path': chunk['file_path'],
-                        'folder_name': chunk['folder_name'],
-                        'chunk_index': chunk['chunk_index'],
-                        'text': chunk['text'],
-                        'similarity': float(similarity),
-                        'found_keywords': [kw for kw in forced_keywords if kw.lower() in text_lower]
-                    })
-        
-        # Ordenar por similitud descendente
+                vector_similarity = float(chunk['vector_similarity'] or 0.0)
+                lexical_rank = float(chunk['lexical_rank'] or 0.0)
+                filtered_chunks.append({
+                    'id': chunk['id'],
+                    'file_name': chunk['file_name'],
+                    'file_path': chunk['file_path'],
+                    'folder_name': chunk['folder_name'],
+                    'chunk_index': chunk['chunk_index'],
+                    'text': chunk['text'],
+                    'vector_similarity': vector_similarity,
+                    'lexical_rank': lexical_rank,
+                    'similarity': _hybrid_score(vector_similarity, lexical_rank),
+                    'found_keywords': [kw for kw in forced_keywords if kw.lower() in text_lower]
+                })
+
         filtered_chunks.sort(key=lambda x: x['similarity'], reverse=True)
         return filtered_chunks[:top_k]
     
@@ -780,7 +1022,7 @@ def search():
         all_similar = {}
         for query_variant in query_variants:
             query_embedding = calculate_embedding(query_variant)
-            similar_chunks = find_similar_chunks(query_embedding, top_k)
+            similar_chunks = find_similar_chunks(query_embedding, query_variant, top_k)
             
             for chunk in similar_chunks:
                 chunk_id = chunk['id']
@@ -792,6 +1034,16 @@ def search():
         
         # Ordenar por similitud
         similar_chunks = sorted(all_similar.values(), key=lambda x: x['similarity'], reverse=True)[:top_k]
+        
+        # Aplicar densidad de palabras clave para re-ranking
+        for chunk in similar_chunks:
+            keyword_density = calculate_keyword_density(chunk.get('text', ''))
+            chunk['keyword_density'] = keyword_density
+            chunk['similarity'] = (chunk['similarity'] * 0.9) + (keyword_density * 0.1)
+        
+        similar_chunks = sorted(similar_chunks, key=lambda x: x['similarity'], reverse=True)
+        similar_chunks = deduplicate_chunks(similar_chunks, similarity_threshold=0.82)
+        
         max_similarity = similar_chunks[0]['similarity'] if similar_chunks else 0
         
         # ==================== VALIDACIÓN: VERIFICAR COMPLETITUD ====================
@@ -854,6 +1106,10 @@ def search():
         # Actualizar max_similarity después de ambos pases
         max_similarity = similar_chunks[0]['similarity'] if similar_chunks else 0
         
+        # ==================== EXPANDIR CONTEXTO CON VECINOS ====================
+        # Traer chunks vecinos (anterior y posterior) del mismo archivo para enriquecer contexto
+        similar_chunks_expanded = expand_context_with_neighbors(similar_chunks)
+        
         # ==================== DETERMINAR CONFIANZA FINAL ====================
         # Lógica de confianza (colores semafóricos):
         # - alta (verde 🟢): similitud >= 0.65 Y respuesta completa
@@ -898,7 +1154,7 @@ def search():
             clean_item['text'] = _strip_chunk_metadata(item.get('text', ''))
             response_results.append(clean_item)
 
-        # Construir lista de fuentes con archivo y similitud
+        # Construir lista de fuentes con archivo y similitud (solo chunks principales, sin vecinos)
         sources = []
         for item in similar_chunks:
             source_entry = {
@@ -932,9 +1188,10 @@ def search():
         }
         
         # Generar respuesta con el modelo de texto si se solicita
+        # Usar chunks expandidos para darle al LLM más contexto continuo
         if generate_answer:
             if azure_client_text:
-                answer = generate_answer_from_chunks(question, similar_chunks, max_similarity, detected_lang)
+                answer = generate_answer_from_chunks(question, similar_chunks_expanded, max_similarity, detected_lang)
                 response_data['answer'] = answer
                 response_data['answer_generated'] = True
                 # Si se generó respuesta, indicar al frontend que la use

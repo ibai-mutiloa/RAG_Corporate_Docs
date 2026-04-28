@@ -79,7 +79,9 @@ def extract_text_from_pdf(pdf_path):
     try:
         reader = PdfReader(pdf_path)
         for page in reader.pages:
-            text += page.extract_text() + "\n"
+            page_text = page.extract_text() or ""
+            if page_text:
+                text += page_text + "\n"
     except Exception as e:
         print(f"[ERROR] No se pudo leer {pdf_path}: {e}")
     return text
@@ -90,6 +92,54 @@ def normalize_pdf_text(text):
         return ""
     text = text.replace("\r", "\n")
     text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)
+
+    # PDF extraction can split words across lines without hyphenation.
+    # Join only tiny fragments when the next line clearly continues the word.
+    short_fragment_stopwords = {
+        "a",
+        "al",
+        "de",
+        "del",
+        "el",
+        "en",
+        "la",
+        "las",
+        "lo",
+        "los",
+        "o",
+        "por",
+        "que",
+        "se",
+        "su",
+        "sus",
+        "un",
+        "una",
+        "y",
+    }
+    merged_lines = []
+    for raw_line in text.split("\n"):
+        line = re.sub(r"[ \t]{2,}", " ", raw_line).strip()
+        if not line:
+            if merged_lines and merged_lines[-1] != "":
+                merged_lines.append("")
+            continue
+
+        if merged_lines:
+            previous_line = merged_lines[-1].rstrip()
+            previous_word_match = re.search(r"(\S+)$", previous_line)
+            previous_word = previous_word_match.group(1) if previous_word_match else ""
+            previous_fragment = re.sub(r"[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ]", "", previous_word)
+            if (
+                1 <= len(previous_fragment) <= 2
+                and previous_fragment.lower() not in short_fragment_stopwords
+                and line[:1].islower()
+            ):
+                merged_lines[-1] = previous_line + line.lstrip()
+                continue
+
+        merged_lines.append(line)
+
+    text = "\n".join(merged_lines)
     # Preservar saltos antes de encabezados legales para mejorar el chunking estructural
     text = re.sub(
         r"\n(?=\s*(?:ART[IÍ]CULO\s+\d+[A-Za-zºª\-]*|DISPOSICION(?:ES)?\s+\w+|T[ÍI]TULO\s+\w+|CAP[IÍ]TULO\s+\w+|SECCI[ÓO]N\s+\w+|ANEXO\s+\w+))",
@@ -336,14 +386,18 @@ def is_toc_like_chunk(text):
         return True
 
     # Patrones típicos de tabla de contenidos/índice
-    has_toc_word = re.search(r"\b([ÍI]NDICE|SUMARIO|TABLA DE CONTENIDOS?|CONTENIDOS?)\b", stripped, re.IGNORECASE) is not None
+    has_toc_word = re.search(r"\b(?:[ÍI]NDICE|SUMARIO|TABLA DE CONTENIDOS|CONTENIDOS)\b", stripped, re.IGNORECASE) is not None
     dotted_leaders = len(re.findall(r"\.{2,}\s*\d+\b", stripped))
     dotted_leaders_generic = len(re.findall(r"\.{4,}", stripped))
     heading_refs = len(re.findall(r"\b(art[ií]culo|art\.?|cap[ií]tulo|secci[óo]n|t[íi]tulo|anexo)\b", stripped, re.IGNORECASE))
     page_numbers = len(re.findall(r"\b\d{1,4}\b", stripped))
 
     # Modo estricto: si detectamos líderes de puntos tipo "....", tratarlo siempre como índice
-    if TOC_DOTTED_ALWAYS_SKIP and (dotted_leaders >= 1 or dotted_leaders_generic >= 1):
+    if TOC_DOTTED_ALWAYS_SKIP and (dotted_leaders >= 2 or dotted_leaders_generic >= 2):
+        if has_toc_word or heading_refs >= 3 or page_numbers >= 4 or len(stripped) < 1800:
+            return True
+
+    if TOC_DOTTED_ALWAYS_SKIP and has_toc_word and (dotted_leaders >= 1 or dotted_leaders_generic >= 1):
         return True
 
     if has_toc_word and (dotted_leaders >= 1 or heading_refs >= 3):
@@ -375,6 +429,7 @@ def create_table():
         chunk_index INT,
         text TEXT,
         embedding vector(1536),
+        search_tsv tsvector,
         file_hash TEXT
     );
     """
@@ -388,6 +443,13 @@ def create_table():
             WHERE table_name = 'chunks' AND column_name = 'file_path'
         ) THEN
             ALTER TABLE chunks ADD COLUMN file_path TEXT;
+        END IF;
+
+        IF NOT EXISTS (
+            SELECT 1 FROM information_schema.columns
+            WHERE table_name = 'chunks' AND column_name = 'search_tsv'
+        ) THEN
+            ALTER TABLE chunks ADD COLUMN search_tsv tsvector;
         END IF;
 
         -- Índice para búsquedas por ruta
@@ -407,6 +469,30 @@ def create_table():
         ) THEN
             CREATE UNIQUE INDEX ux_chunks_file_path_chunk_index ON chunks(file_path, chunk_index);
         END IF;
+
+        -- Índice GIN para búsqueda lexical híbrida
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_class c
+            JOIN pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relname = 'idx_chunks_search_tsv' AND n.nspname = 'public'
+        ) THEN
+            CREATE INDEX idx_chunks_search_tsv ON chunks USING GIN (search_tsv);
+        END IF;
+
+        -- Índice vectorial para acelerar la búsqueda por similitud
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_class c
+            JOIN pg_namespace n ON n.oid = c.relnamespace
+            WHERE c.relname = 'idx_chunks_embedding_ivfflat' AND n.nspname = 'public'
+        ) THEN
+            CREATE INDEX idx_chunks_embedding_ivfflat
+            ON chunks USING ivfflat (embedding vector_cosine_ops)
+            WITH (lists = 100);
+        END IF;
+
+        UPDATE chunks
+        SET search_tsv = to_tsvector('simple', COALESCE(text, ''))
+        WHERE search_tsv IS NULL;
     END
     $$;
     """
@@ -534,7 +620,7 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
             print(f"[WARN] Chunk {i} sin embedding → NO se insertará")
             skipped_count += 1
         else:
-            valid_data.append((file_name, file_path, folder_name, i, chunk, embeddings[i], file_hash))
+            valid_data.append((file_name, file_path, folder_name, i, chunk, embeddings[i], chunk, file_hash))
     
     if not valid_data:
         print(f"[ERROR] Ningún chunk válido con embedding para {file_path}")
@@ -549,12 +635,18 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
         chunk_index,
         text,
         embedding,
+        search_tsv,
         file_hash
     ) VALUES %s
     """
     with conn:
         with conn.cursor() as cur:
-            execute_values(cur, sql, valid_data)
+            execute_values(
+                cur,
+                sql,
+                valid_data,
+                template="(%s, %s, %s, %s, %s, %s, to_tsvector('simple', %s), %s)"
+            )
     conn.close()
     
     print(f"[INFO] {len(valid_data)} chunks insertados, {skipped_count} omitidos (sin embedding), {skipped_noise} filtrados por ruido")
