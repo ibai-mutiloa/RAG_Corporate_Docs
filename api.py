@@ -145,6 +145,30 @@ def _hybrid_score(vector_similarity, lexical_rank):
     lexical_boost = min(float(lexical_rank) * 8.0, 1.0)
     return (HYBRID_VECTOR_WEIGHT * float(vector_similarity)) + (HYBRID_LEXICAL_WEIGHT * lexical_boost)
 
+def is_front_matter_chunk(text):
+    """Detecta portada, índice o sumario para excluirlo de recuperación."""
+    if not text:
+        return True
+
+    stripped = re.sub(r"\s+", " ", text).strip()
+    if not stripped:
+        return True
+
+    if len(stripped) <= 220 and not re.search(r"\bART[IÍ]CULO\s+\d+\b", stripped, re.IGNORECASE):
+        return True
+
+    if re.search(r"\b(?:ÍNDICE|INDICE|SUMARIO|TABLA DE CONTENIDOS|CONTENIDOS)\b", stripped, re.IGNORECASE):
+        return True
+
+    if re.search(r"\.{2,}\s*\d+\b", stripped):
+        return True
+
+    return False
+
+def filter_front_matter_chunks(chunks):
+    """Elimina resultados de portada/índice antes del ranking final."""
+    return [chunk for chunk in chunks if not is_front_matter_chunk(chunk.get('text', ''))]
+
 def rewrite_query(question):
     """
     Reescribe la pregunta para mejorar el matching semántico
@@ -703,7 +727,7 @@ def find_similar_chunks(query_embedding, query_text=None, top_k=TOP_K, candidate
                     1 - (embedding <=> %s::vector(1536)) AS vector_similarity,
                     COALESCE(ts_rank_cd(search_tsv, websearch_to_tsquery('simple', NULLIF(%s, ''))), 0) AS lexical_rank
                 FROM chunks
-                WHERE embedding IS NOT NULL
+                WHERE embedding IS NOT NULL AND COALESCE(is_front_matter, FALSE) = FALSE
                 ORDER BY embedding <=> %s::vector(1536)
                 LIMIT %s
             """, (vector_literal, lexical_query, vector_literal, candidate_limit))
@@ -725,6 +749,7 @@ def find_similar_chunks(query_embedding, query_text=None, top_k=TOP_K, candidate
                 'similarity': _hybrid_score(vector_similarity, lexical_rank)
             })
 
+        similarities = filter_front_matter_chunks(similarities)
         similarities.sort(key=lambda x: x['similarity'], reverse=True)
         return similarities[:top_k]
     
@@ -769,6 +794,72 @@ def calculate_keyword_density(text, keywords=None):
     # Normalizar a rango [0, 1] considerando que esperamos 1-2 keywords por chunk
     density = min(weighted_score / max(word_count / 5, 1), 1.0)
     return density
+
+def _extract_query_terms(question):
+    """Extrae términos útiles de la consulta para medir solapamiento semántico superficial."""
+    if not question:
+        return set()
+
+    stopwords = {
+        'de', 'la', 'el', 'los', 'las', 'un', 'una', 'unos', 'unas', 'y', 'o', 'u',
+        'en', 'con', 'por', 'para', 'del', 'al', 'que', 'como', 'cuál', 'cual',
+        'cuando', 'donde', 'qué', 'es', 'se', 'mi', 'tu', 'su', 'sobre'
+    }
+    tokens = re.findall(r"[a-záéíóúüñ0-9%]{3,}", question.lower())
+    return {t for t in tokens if t not in stopwords}
+
+def calculate_query_overlap(text, query_terms):
+    """Calcula qué fracción de términos relevantes de la pregunta aparece en el chunk."""
+    if not text or not query_terms:
+        return 0.0
+
+    text_terms = set(re.findall(r"[a-záéíóúüñ0-9%]{3,}", text.lower()))
+    if not text_terms:
+        return 0.0
+
+    hits = sum(1 for term in query_terms if term in text_terms)
+    return min(hits / max(len(query_terms), 1), 1.0)
+
+def rerank_chunks_for_question(chunks, question):
+    """Reranking final: combina score híbrido, densidad normativa y overlap léxico con la pregunta."""
+    if not chunks:
+        return []
+
+    query_terms = _extract_query_terms(question)
+    reranked = []
+
+    for chunk in chunks:
+        base_similarity = float(chunk.get('similarity', 0.0))
+        keyword_density = calculate_keyword_density(chunk.get('text', ''))
+        query_overlap = calculate_query_overlap(chunk.get('text', ''), query_terms)
+
+        combined = (base_similarity * 0.78) + (keyword_density * 0.12) + (query_overlap * 0.10)
+        if query_overlap < 0.08:
+            combined *= 0.92
+
+        chunk['keyword_density'] = keyword_density
+        chunk['query_overlap'] = query_overlap
+        chunk['similarity'] = combined
+        reranked.append(chunk)
+
+    reranked.sort(key=lambda x: x['similarity'], reverse=True)
+    return reranked
+
+def prune_low_relevance_chunks(chunks, top_k):
+    """Recorta cola de baja relevancia para mejorar precisión de contexto."""
+    if not chunks:
+        return []
+
+    ordered = sorted(chunks, key=lambda x: x.get('similarity', 0.0), reverse=True)
+    best = float(ordered[0].get('similarity', 0.0))
+    dynamic_cutoff = max(MIN_SIMILARITY_ABSOLUTE, best * 0.78)
+    pruned = [c for c in ordered if float(c.get('similarity', 0.0)) >= dynamic_cutoff]
+
+    minimum_keep = min(max(2, top_k // 2), len(ordered))
+    if len(pruned) < minimum_keep:
+        pruned = ordered[:minimum_keep]
+
+    return pruned[:top_k]
 
 def deduplicate_chunks(chunks, similarity_threshold=0.90):
     """
@@ -854,15 +945,15 @@ def expand_context_with_neighbors(chunks):
                     with conn.cursor(cursor_factory=RealDictCursor) as cur:
                         cur.execute("""
                             SELECT id, file_name, file_path, folder_name, chunk_index, text
-                            FROM chunks
-                            WHERE file_path = %s AND chunk_index = %s AND embedding IS NOT NULL
+                                FROM chunks
+                                WHERE file_path = %s AND chunk_index = %s AND embedding IS NOT NULL AND COALESCE(is_front_matter, FALSE) = FALSE
                             LIMIT 1
                         """, (file_path, chunk_index - 1))
                         result = cur.fetchone()
                         neighbor_cache[cache_key] = result
                 
                 prev_chunk = neighbor_cache[cache_key]
-                if prev_chunk:
+                if prev_chunk and not is_front_matter_chunk(prev_chunk.get('text', '')):
                     prev_chunk_dict = dict(prev_chunk)
                     prev_chunk_dict['similarity'] = chunk.get('similarity', 0.0) * 0.7  # Reducir score del vecino
                     prev_chunk_dict['is_neighbor'] = True
@@ -877,14 +968,14 @@ def expand_context_with_neighbors(chunks):
                     cur.execute("""
                         SELECT id, file_name, file_path, folder_name, chunk_index, text
                         FROM chunks
-                        WHERE file_path = %s AND chunk_index = %s AND embedding IS NOT NULL
+                        WHERE file_path = %s AND chunk_index = %s AND embedding IS NOT NULL AND COALESCE(is_front_matter, FALSE) = FALSE
                         LIMIT 1
                     """, (file_path, chunk_index + 1))
                     result = cur.fetchone()
                     neighbor_cache[cache_key] = result
             
             next_chunk = neighbor_cache[cache_key]
-            if next_chunk:
+            if next_chunk and not is_front_matter_chunk(next_chunk.get('text', '')):
                 next_chunk_dict = dict(next_chunk)
                 next_chunk_dict['similarity'] = chunk.get('similarity', 0.0) * 0.7  # Reducir score del vecino
                 next_chunk_dict['is_neighbor'] = True
@@ -930,13 +1021,14 @@ def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top
                     1 - (embedding <=> %s::vector(1536)) AS vector_similarity,
                     COALESCE(ts_rank_cd(search_tsv, websearch_to_tsquery('simple', NULLIF(%s, ''))), 0) AS lexical_rank
                 FROM chunks
-                WHERE embedding IS NOT NULL
+                WHERE embedding IS NOT NULL AND COALESCE(is_front_matter, FALSE) = FALSE
                 ORDER BY embedding <=> %s::vector(1536)
                 LIMIT %s
             """, (vector_literal, lexical_query, vector_literal, max(RETRIEVAL_CANDIDATE_LIMIT * 2, top_k * 15)))
             chunks = cur.fetchall()
 
         filtered_chunks = []
+        query_terms = _extract_query_terms(' '.join(forced_keywords))
         for chunk in chunks:
             text_lower = chunk['text'].lower()
             found_kw = [kw for kw in forced_keywords if kw.lower() in text_lower]
@@ -946,9 +1038,10 @@ def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top
                 vector_similarity = float(chunk['vector_similarity'] or 0.0)
                 lexical_rank = float(chunk['lexical_rank'] or 0.0)
                 
-                # Bonus por cantidad de keywords encontradas
+                # Bonus por cantidad de keywords encontradas y por overlap con términos forzados
                 keyword_bonus = min(len(found_kw) * 0.05, 0.15)
-                combined_score = _hybrid_score(vector_similarity, lexical_rank) + keyword_bonus
+                overlap_bonus = calculate_query_overlap(chunk['text'], query_terms) * 0.08
+                combined_score = _hybrid_score(vector_similarity, lexical_rank) + keyword_bonus + overlap_bonus
                 
                 filtered_chunks.append({
                     'id': chunk['id'],
@@ -963,6 +1056,7 @@ def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top
                     'found_keywords': found_kw
                 })
 
+            filtered_chunks = filter_front_matter_chunks(filtered_chunks)
         filtered_chunks.sort(key=lambda x: x['similarity'], reverse=True)
         return filtered_chunks[:top_k]
     
@@ -1061,9 +1155,10 @@ def search():
         
         # Buscar con todas las variantes y combinar resultados
         all_similar = {}
+        retrieval_top_k = max(top_k * 3, top_k + 6)
         for query_variant in query_variants:
             query_embedding = calculate_embedding(query_variant)
-            similar_chunks = find_similar_chunks(query_embedding, query_variant, top_k)
+            similar_chunks = find_similar_chunks(query_embedding, query_variant, retrieval_top_k)
             
             for chunk in similar_chunks:
                 chunk_id = chunk['id']
@@ -1073,21 +1168,11 @@ def search():
                     # Si el mismo chunk aparece en múltiples búsquedas, aumentar su similitud
                     all_similar[chunk_id]['similarity'] = max(all_similar[chunk_id]['similarity'], chunk['similarity'])
         
-        # Ordenar por similitud
-        similar_chunks = sorted(all_similar.values(), key=lambda x: x['similarity'], reverse=True)[:top_k]
-        
-        # Aplicar densidad de palabras clave para re-ranking
-        for chunk in similar_chunks:
-            keyword_density = calculate_keyword_density(chunk.get('text', ''))
-            chunk['keyword_density'] = keyword_density
-            # Si hay keywords fuertes, amplificar la similitud
-            if keyword_density > 0.3:
-                chunk['similarity'] = (chunk['similarity'] * 0.85) + (keyword_density * 0.15)
-            else:
-                chunk['similarity'] = (chunk['similarity'] * 0.95) + (keyword_density * 0.05)
-        
-        similar_chunks = sorted(similar_chunks, key=lambda x: x['similarity'], reverse=True)
+        # Ordenar por similitud inicial, luego rerank orientado a precisión
+        similar_chunks = sorted(all_similar.values(), key=lambda x: x['similarity'], reverse=True)[:retrieval_top_k]
+        similar_chunks = rerank_chunks_for_question(similar_chunks, question)
         similar_chunks = deduplicate_chunks(similar_chunks, similarity_threshold=0.82)
+        similar_chunks = prune_low_relevance_chunks(similar_chunks, top_k)
         
         max_similarity = similar_chunks[0]['similarity'] if similar_chunks else 0
         
@@ -1140,8 +1225,11 @@ def search():
                             if chunk['similarity'] > all_similar[chunk_id]['similarity'] * 1.1:
                                 all_similar[chunk_id] = chunk
                     
-                    # Re-ordenar después del segundo pase
-                    similar_chunks = sorted(all_similar.values(), key=lambda x: x['similarity'], reverse=True)[:top_k]
+                    # Re-rank y poda después del segundo pase
+                    similar_chunks = sorted(all_similar.values(), key=lambda x: x['similarity'], reverse=True)[:retrieval_top_k]
+                    similar_chunks = rerank_chunks_for_question(similar_chunks, question)
+                    similar_chunks = deduplicate_chunks(similar_chunks, similarity_threshold=0.82)
+                    similar_chunks = prune_low_relevance_chunks(similar_chunks, top_k)
                     
                     # Re-validar completitud con nuevos resultados
                     completeness = check_answer_completeness(similar_chunks, question)

@@ -73,18 +73,78 @@ def hash_file(path):
             h.update(chunk)
     return h.hexdigest()
 
+def _page_has_body_marker(text):
+    if not text:
+        return False
+
+    normalized = re.sub(r"\s+", " ", text).strip()
+    if re.search(r"\b(?:ÍNDICE|INDICE|SUMARIO|TABLA DE CONTENIDOS|CONTENIDOS)\b", normalized, re.IGNORECASE):
+        return False
+    if re.search(r"\.{2,}\s*\d+\b", normalized):
+        return False
+
+    body_patterns = [
+        r"\bART[IÍ]CULO\s+1\b",
+        r"\bCAP[IÍ]TULO\s+I\b",
+        r"\bT[ÍI]TULO\s+I\b",
+        r"\bSECCI[ÓO]N\s+1\b",
+    ]
+    return any(re.search(pattern, normalized, re.IGNORECASE) for pattern in body_patterns)
+
+def _looks_like_front_matter_page(text):
+    if not text:
+        return True
+
+    stripped = re.sub(r"\s+", " ", text).strip()
+    if not stripped:
+        return True
+
+    if len(stripped) <= 220 and not _page_has_body_marker(stripped):
+        return True
+
+    if is_toc_like_chunk(stripped):
+        return True
+
+    if len(stripped) <= 220 and is_title_like(stripped):
+        return True
+
+    return bool(re.search(r"\b(?:ÍNDICE|INDICE|SUMARIO|TABLA DE CONTENIDOS|CONTENIDOS)\b", stripped, re.IGNORECASE))
+
+def strip_front_matter_pages(page_texts):
+    """Elimina portada e índice iniciales si el PDF tiene un cuerpo claro después."""
+    if not page_texts:
+        return page_texts
+
+    body_start = None
+    for idx, page_text in enumerate(page_texts):
+        if _page_has_body_marker(page_text):
+            body_start = idx
+            break
+
+    if body_start is None or body_start == 0:
+        return page_texts
+
+    leading_pages = page_texts[:body_start]
+    if leading_pages and all(_looks_like_front_matter_page(page) for page in leading_pages):
+        print(f"[INFO] Recortando {body_start} páginas de portada/índice antes del chunking")
+        return page_texts[body_start:]
+
+    return page_texts
+
 def extract_text_from_pdf(pdf_path):
     """Extrae texto de PDF"""
-    text = ""
+    page_texts = []
     try:
         reader = PdfReader(pdf_path)
         for page in reader.pages:
             page_text = page.extract_text() or ""
             if page_text:
-                text += page_text + "\n"
+                page_texts.append(page_text)
     except Exception as e:
         print(f"[ERROR] No se pudo leer {pdf_path}: {e}")
-    return text
+
+    page_texts = strip_front_matter_pages(page_texts)
+    return "\n".join(page_texts)
 
 def normalize_pdf_text(text):
     """Limpia saltos de línea y cortes de palabra típicos de PDF."""
@@ -430,6 +490,7 @@ def create_table():
         text TEXT,
         embedding vector(1536),
         search_tsv tsvector,
+        is_front_matter BOOLEAN DEFAULT FALSE,
         file_hash TEXT
     );
     """
@@ -493,6 +554,14 @@ def create_table():
         UPDATE chunks
         SET search_tsv = to_tsvector('simple', COALESCE(text, ''))
         WHERE search_tsv IS NULL;
+
+        -- Añadir columna is_front_matter si no existe
+        IF NOT EXISTS (
+            SELECT 1 FROM information_schema.columns
+            WHERE table_name = 'chunks' AND column_name = 'is_front_matter'
+        ) THEN
+            ALTER TABLE chunks ADD COLUMN is_front_matter BOOLEAN DEFAULT FALSE;
+        END IF;
     END
     $$;
     """
@@ -620,7 +689,9 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
             print(f"[WARN] Chunk {i} sin embedding → NO se insertará")
             skipped_count += 1
         else:
-            valid_data.append((file_name, file_path, folder_name, i, chunk, embeddings[i], chunk, file_hash))
+            # En este punto insertamos solo chunks filtrados (no considerados front-matter)
+            is_fm = False
+            valid_data.append((file_name, file_path, folder_name, i, chunk, embeddings[i], chunk, is_fm, file_hash))
     
     if not valid_data:
         print(f"[ERROR] Ningún chunk válido con embedding para {file_path}")
@@ -636,6 +707,7 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
         text,
         embedding,
         search_tsv,
+        is_front_matter,
         file_hash
     ) VALUES %s
     """
@@ -645,7 +717,7 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
                 cur,
                 sql,
                 valid_data,
-                template="(%s, %s, %s, %s, %s, %s, to_tsvector('simple', %s), %s)"
+                template="(%s, %s, %s, %s, %s, %s, to_tsvector('simple', %s), %s, %s)"
             )
     conn.close()
     

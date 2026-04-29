@@ -31,8 +31,18 @@ class TestChunking(unittest.TestCase):
         text = "ARTICULO 1\nUno.\nARTICULO 2\nDos."
         parts = indexador.split_by_structure(text)
         self.assertGreaterEqual(len(parts), 2)
-        self.assertTrue(parts[0].startswith("ARTICULO"))
-        self.assertTrue(parts[1].startswith("ARTICULO"))
+        self.assertTrue(any(part.startswith("ARTICULO 1") for part in parts))
+        self.assertTrue(any(part.startswith("ARTICULO 2") for part in parts))
+
+    def test_strip_front_matter_pages_discards_cover_and_index(self):
+        pages = [
+            "REGLAMENTO DE REGIMEN INTERNO\nPortada",
+            "INDICE\nCAPITULO I .... 3\nARTICULO 1 .... 4",
+            "CAPITULO I. DE LAS PERSONAS SOCIAS\nARTICULO 1. DE LAS PERSONAS SOCIAS\nContenido real",
+        ]
+        stripped = indexador.strip_front_matter_pages(pages)
+        self.assertEqual(len(stripped), 1)
+        self.assertTrue(stripped[0].startswith("CAPITULO I"))
 
     def test_split_by_sentences_max_len(self):
         text = "Uno. Dos. Tres."
