@@ -55,6 +55,7 @@ CONTEXT_MAX_SOURCES = int(os.getenv("CONTEXT_MAX_SOURCES", str(TOP_K)))
 CONTEXT_MAX_BULLETS = int(os.getenv("CONTEXT_MAX_BULLETS", "2"))
 DEFAULT_GENERATE_ANSWER = os.getenv("DEFAULT_GENERATE_ANSWER", "True").lower() == "true"
 LANGUAGE_DETECTION_ENABLED = os.getenv("LANGUAGE_DETECTION_ENABLED", "True").lower() == "true"
+ENABLE_NEIGHBOR_EXPANSION = os.getenv("ENABLE_NEIGHBOR_EXPANSION", "False").lower() == "true"
 
 # Cliente de Azure OpenAI para embeddings
 azure_client = None
@@ -408,8 +409,8 @@ def _sanitize_answer_output(text):
     )
     
     # Líneas de seguridad para cualquier aparición de prefijos
-    cleaned = re.sub(r"(?Im)^[^\n]*?(?:Documento|Artículo|Texto)\s*:\s*[^\n]*\n", "", cleaned)
-    cleaned = re.sub(r"(?Im)(?:Documento|Artículo|Texto)\s*:\s*[^\n]*\.pdf", "", cleaned)
+    cleaned = re.sub(r"(?im)^[^\n]*?(?:Documento|Artículo|Texto)\s*:\s*[^\n]*\n", "", cleaned)
+    cleaned = re.sub(r"(?im)(?:Documento|Artículo|Texto)\s*:\s*[^\n]*\.pdf", "", cleaned)
     
     cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
     return cleaned.strip()
@@ -471,23 +472,35 @@ Idatzi amaiera garbi eta osoa.
 Baldin informazioa ez bada ziur, adieraz honetan.
 Az jaso iturrietako laburpena."""
         else:
-            # Prompts en español
+            # Prompts en español - MEJORADOS PARA PRECISIÓN
             if is_gray_zone:
-                system_prompt = """Eres el asistente oficial de la intranet corporativa.
-Utiliza únicamente la información proporcionada en las fuentes.
-Responde DIRECTAMENTE la pregunta del usuario.
-Redacta una respuesta final clara, completa y prudente.
-Si la información no es concluyente, indícalo explícitamente.
-No muestres fragmentos de texto sin explicar.
-No devuelvas resúmenes por fuente ni encabezados como 'Fuente 1' o 'Resumen del fragmento'."""
+                system_prompt = """Eres el asistente oficial de la intranet corporativa. Tu tarea es responder preguntas sobre normativas y políticas.
+
+PRIORIDADES (en orden):
+1. Responde DIRECTAMENTE la pregunta sin rodeos.
+2. Cita el artículo, sección o procedimiento aplicable si es relevante.
+3. Usa lenguaje claro y profesional.
+4. Si faltan datos críticos, indícalo de forma transparente.
+
+PROHIBICIONES:
+- No copies párrafos enteros del documento.
+- No hagas resúmenes por fuente ni listas de fragmentos.
+- No incluyas encabezados como "Fuente 1", "Resumen del fragmento" o "Documento".
+- No inventes información no presente en las fuentes."""
             else:
-                system_prompt = """Eres el asistente oficial de la intranet corporativa.
-Utiliza únicamente la información proporcionada en las fuentes.
-Responde DIRECTAMENTE la pregunta del usuario.
-Redacta una respuesta final clara y completa.
-Si la información no es totalmente concluyente, indícalo explícitamente.
-No muestres fragmentos de texto sin explicar.
-No devuelvas resúmenes por fuente ni encabezados como 'Fuente 1' o 'Resumen del fragmento'."""
+                system_prompt = """Eres el asistente oficial de la intranet corporativa. Tu tarea es responder preguntas sobre normativas y políticas de forma precisa.
+
+PRIORIDADES (en orden):
+1. Responde DIRECTAMENTE la pregunta sin rodeos.
+2. Cita el artículo, sección o procedimiento aplicable.
+3. Usa lenguaje claro, profesional y conciso.
+4. Si hay dudas, indícalo explícitamente.
+
+PROHIBICIONES:
+- No copies párrafos enteros del documento.
+- No hagas resúmenes por fuente ni listas de fragmentos.
+- No incluyas encabezados como "Fuente 1", "Resumen del fragmento" o "Documento".
+- No inventes información no presente en las fuentes."""
 
             if detected_lang == 'eu':
                 user_prompt = f"""Galdera:
@@ -503,29 +516,13 @@ Agindua:
 - Astakatu ez datua, ehunekoa edo eskakizuna ez iturrieetan.
 - Itzuli SOILIK amaierako erantzuna user-raren (iturrien hautapena ez, labur talaren erakundea ez)."""
             else:
-                user_prompt = f"""Pregunta:
+                user_prompt = f"""Pregunta del usuario:
 {question}
 
-Fuentes (resumidas):
+Documentación disponible (resúmenes):
 {clean_context}
 
-Instrucciones:
-- Responde directamente la pregunta del usuario en 1-3 párrafos.
-- No copies textualmente las fuentes.
-- Si falta información específica, indícalo de forma transparente.
-- Devuelve SOLO la respuesta final para el usuario (sin listar fuentes ni secciones de resumen)."""
-
-            user_prompt = f"""Pregunta:
-{question}
-
-Fuentes (resumidas):
-{clean_context}
-
-Instrucciones:
-- Responde directamente la pregunta del usuario en 1-3 párrafos.
-- No copies textualmente las fuentes.
-- Si falta información específica, indícalo de forma transparente.
-- Devuelve SOLO la respuesta final para el usuario (sin listar fuentes ni secciones de resumen)."""
+Responde la pregunta de forma DIRECTA en 1-2 párrafos. No hagas resúmenes ni listas. Sé precisx y profesional."""
         
         # Llamar al modelo de texto
         response = azure_client_text.chat.completions.create(
@@ -576,6 +573,27 @@ Reglas:
     except Exception as e:
         print(f"[ERROR] Error generando respuesta: {e}")
         return None
+
+def requires_governance_keywords(question):
+    """
+    Determina si la pregunta requiere términos de gobernanza (mayoría, quórum, aprobación...).
+    Evita penalizar preguntas que no dependen de esas palabras clave.
+    """
+    if not question:
+        return False
+
+    q = question.lower()
+    patterns = [
+        r'\bmayor[ií]a\b',
+        r'\bqu[óo]rum\b',
+        r'\baprobaci[óo]n\b',
+        r'\bmodificaci[óo]n\b',
+        r'\breglamento\b',
+        r'\bart[ií]culo\b',
+        r'\bconsejo\s+rector\b',
+    ]
+    return any(re.search(p, q) for p in patterns)
+
 
 def contains_expected_keywords(text):
     """
@@ -635,8 +653,9 @@ def check_answer_completeness(chunks, question):
     # Combinar todos los textos
     combined_text = ' '.join([c.get('text', '') for c in chunks])
     
-    # Verificar palabras clave
-    has_keywords = contains_expected_keywords(combined_text)
+    # Verificar palabras clave solo si la pregunta realmente las requiere.
+    governance_required = requires_governance_keywords(question)
+    has_keywords = contains_expected_keywords(combined_text) if governance_required else True
     
     # Verificar longitud del contexto (heurística simple)
     word_count = len(combined_text.split())
@@ -653,10 +672,10 @@ def check_answer_completeness(chunks, question):
     
     return {
         'answer_complete': answer_complete,
-        'missing_keywords': not has_keywords,
+        'missing_keywords': governance_required and not has_keywords,
         'has_sufficient_context': has_sufficient_context,
         'completeness_score': completeness_score,
-        'reason': 'OK' if answer_complete else ('Faltan palabras clave normativas' if not has_keywords else 'Contexto insuficiente')
+        'reason': 'OK' if answer_complete else ('Faltan palabras clave normativas' if (governance_required and not has_keywords) else 'Contexto insuficiente')
     }
 
 def find_similar_chunks(query_embedding, query_text=None, top_k=TOP_K, candidate_limit=None):
@@ -714,11 +733,24 @@ def find_similar_chunks(query_embedding, query_text=None, top_k=TOP_K, candidate
 
 def calculate_keyword_density(text, keywords=None):
     """
-    Calcula la densidad de palabras clave en un texto.
-    Mayor densidad = chunk más relevante para normativas.
+    Calcula la densidad ponderada de palabras clave en un texto.
+    Palabras clave normativamente críticas tienen mayor peso.
     """
-    if not keywords:
-        keywords = ['artículo', 'mayoría', 'quórum', 'aprobación', 'modificación', 'reglamento', 'norma', 'disposición', 'inciso', 'párrafo', '%']
+    # Palabras clave ponderadas: (keyword, weight)
+    critical_keywords = [
+        ('mayoría', 2.0),
+        ('quórum', 2.0),
+        ('aprobación', 1.8),
+        ('artículo', 1.5),
+        ('procedimiento', 1.5),
+        ('modificación', 1.5),
+        ('reglamento', 1.3),
+        ('norma', 1.0),
+        ('disposición', 1.0),
+        ('inciso', 1.0),
+        ('párrafo', 1.0),
+        ('%', 1.2),
+    ]
     
     if not text:
         return 0.0
@@ -729,12 +761,13 @@ def calculate_keyword_density(text, keywords=None):
     if word_count == 0:
         return 0.0
     
-    keyword_count = 0
-    for keyword in keywords:
-        keyword_lower = keyword.lower()
-        keyword_count += text_lower.count(keyword_lower)
+    weighted_score = 0.0
+    for keyword, weight in critical_keywords:
+        count = text_lower.count(keyword.lower())
+        weighted_score += count * weight
     
-    density = min(keyword_count / max(word_count / 10, 1), 1.0)
+    # Normalizar a rango [0, 1] considerando que esperamos 1-2 keywords por chunk
+    density = min(weighted_score / max(word_count / 5, 1), 1.0)
     return density
 
 def deduplicate_chunks(chunks, similarity_threshold=0.90):
@@ -885,7 +918,7 @@ def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top
     
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            # Traer solo una ventana pequeña de candidatos por similitud vectorial
+            # Traer candidatos por similitud vectorial (segunda pasada)
             cur.execute("""
                 SELECT
                     id,
@@ -900,15 +933,23 @@ def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top
                 WHERE embedding IS NOT NULL
                 ORDER BY embedding <=> %s::vector(1536)
                 LIMIT %s
-            """, (vector_literal, lexical_query, vector_literal, max(RETRIEVAL_CANDIDATE_LIMIT, top_k * 10)))
+            """, (vector_literal, lexical_query, vector_literal, max(RETRIEVAL_CANDIDATE_LIMIT * 2, top_k * 15)))
             chunks = cur.fetchall()
 
         filtered_chunks = []
         for chunk in chunks:
             text_lower = chunk['text'].lower()
-            if any(keyword.lower() in text_lower for keyword in forced_keywords):
+            found_kw = [kw for kw in forced_keywords if kw.lower() in text_lower]
+            
+            # Ser más selectivo: requiere al menos una palabra clave
+            if found_kw:
                 vector_similarity = float(chunk['vector_similarity'] or 0.0)
                 lexical_rank = float(chunk['lexical_rank'] or 0.0)
+                
+                # Bonus por cantidad de keywords encontradas
+                keyword_bonus = min(len(found_kw) * 0.05, 0.15)
+                combined_score = _hybrid_score(vector_similarity, lexical_rank) + keyword_bonus
+                
                 filtered_chunks.append({
                     'id': chunk['id'],
                     'file_name': chunk['file_name'],
@@ -918,8 +959,8 @@ def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top
                     'text': chunk['text'],
                     'vector_similarity': vector_similarity,
                     'lexical_rank': lexical_rank,
-                    'similarity': _hybrid_score(vector_similarity, lexical_rank),
-                    'found_keywords': [kw for kw in forced_keywords if kw.lower() in text_lower]
+                    'similarity': combined_score,
+                    'found_keywords': found_kw
                 })
 
         filtered_chunks.sort(key=lambda x: x['similarity'], reverse=True)
@@ -1039,7 +1080,11 @@ def search():
         for chunk in similar_chunks:
             keyword_density = calculate_keyword_density(chunk.get('text', ''))
             chunk['keyword_density'] = keyword_density
-            chunk['similarity'] = (chunk['similarity'] * 0.9) + (keyword_density * 0.1)
+            # Si hay keywords fuertes, amplificar la similitud
+            if keyword_density > 0.3:
+                chunk['similarity'] = (chunk['similarity'] * 0.85) + (keyword_density * 0.15)
+            else:
+                chunk['similarity'] = (chunk['similarity'] * 0.95) + (keyword_density * 0.05)
         
         similar_chunks = sorted(similar_chunks, key=lambda x: x['similarity'], reverse=True)
         similar_chunks = deduplicate_chunks(similar_chunks, similarity_threshold=0.82)
@@ -1061,8 +1106,14 @@ def search():
             
             print(f"[INFO] Segundo pase activado: similitud {max_similarity:.2f} pero faltan keywords")
             
-            # Términos forzados para búsqueda dirigida
-            forced_keywords = ['mayoría', 'quórum', 'aprobación', 'modificación', 'reglamento']
+            # Términos forzados para búsqueda dirigida (prioriza términos presentes en la pregunta)
+            question_lower = question.lower()
+            forced_keywords = []
+            for kw in ['mayoría', 'quórum', 'aprobación', 'modificación', 'reglamento', 'artículo', 'procedimiento']:
+                if kw in question_lower:
+                    forced_keywords.append(kw)
+            if not forced_keywords:
+                forced_keywords = ['reglamento', 'artículo', 'procedimiento']
             
             try:
                 # Buscar con primera variante + keywords
@@ -1107,8 +1158,11 @@ def search():
         max_similarity = similar_chunks[0]['similarity'] if similar_chunks else 0
         
         # ==================== EXPANDIR CONTEXTO CON VECINOS ====================
-        # Traer chunks vecinos (anterior y posterior) del mismo archivo para enriquecer contexto
-        similar_chunks_expanded = expand_context_with_neighbors(similar_chunks)
+        # El contexto vecino puede bajar la precisión; se deja configurable y desactivado por defecto.
+        if ENABLE_NEIGHBOR_EXPANSION:
+            similar_chunks_expanded = expand_context_with_neighbors(similar_chunks)
+        else:
+            similar_chunks_expanded = similar_chunks
         
         # ==================== DETERMINAR CONFIANZA FINAL ====================
         # Lógica de confianza (colores semafóricos):
