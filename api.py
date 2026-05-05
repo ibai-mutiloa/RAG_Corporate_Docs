@@ -41,14 +41,17 @@ AZURE_ENDPOINT_TEXT = os.getenv("AZURE_ENDPOINT_TEXT", "")  # Opcional, usa AZUR
 # ===========================
 # Configuración de búsqueda
 # ===========================
-TOP_K = int(os.getenv("TOP_K", "5"))  # Número de chunks similares a retornar
-MIN_SIMILARITY = float(os.getenv("MIN_SIMILARITY", "0.35"))  # Umbral mínimo de similitud
-MIN_SIMILARITY_WARNING = float(os.getenv("MIN_SIMILARITY_WARNING", "0.30"))  # Umbral zona gris
-MIN_SIMILARITY_ABSOLUTE = float(os.getenv("MIN_SIMILARITY_ABSOLUTE", "0.25"))  # Umbral de silencio semántico
-MIN_SIMILARITY_SECOND_PASS = float(os.getenv("MIN_SIMILARITY_SECOND_PASS", "0.20"))  # Mínimo para segundo pase
-RETRIEVAL_CANDIDATE_LIMIT = int(os.getenv("RETRIEVAL_CANDIDATE_LIMIT", "40"))
-HYBRID_VECTOR_WEIGHT = float(os.getenv("HYBRID_VECTOR_WEIGHT", "0.82"))
-HYBRID_LEXICAL_WEIGHT = float(os.getenv("HYBRID_LEXICAL_WEIGHT", "0.18"))
+TOP_K = int(os.getenv("TOP_K", "8"))  # Número de chunks similares a retornar (aumentado para pruebas)
+# Umbrales relajados para entorno de pruebas: más permisivo para RAG
+MIN_SIMILARITY = float(os.getenv("MIN_SIMILARITY", "0.25"))  # Umbral mínimo de similitud
+MIN_SIMILARITY_WARNING = float(os.getenv("MIN_SIMILARITY_WARNING", "0.18"))  # Umbral zona gris
+MIN_SIMILARITY_ABSOLUTE = float(os.getenv("MIN_SIMILARITY_ABSOLUTE", "0.12"))  # Umbral de silencio semántico
+MIN_SIMILARITY_SECOND_PASS = float(os.getenv("MIN_SIMILARITY_SECOND_PASS", "0.08"))  # Mínimo para segundo pase (más bajo)
+# Aumentar candidatos lex/vectores para permitir más resultados en re-ranking
+RETRIEVAL_CANDIDATE_LIMIT = int(os.getenv("RETRIEVAL_CANDIDATE_LIMIT", "120"))
+# Ajuste de pesos híbridos: dar algo más de importancia a la búsqueda lexical durante pruebas
+HYBRID_VECTOR_WEIGHT = float(os.getenv("HYBRID_VECTOR_WEIGHT", "0.75"))
+HYBRID_LEXICAL_WEIGHT = float(os.getenv("HYBRID_LEXICAL_WEIGHT", "0.25"))
 REWRITE_QUERY = os.getenv("REWRITE_QUERY", "True").lower() == "true"  # Reescribir preguntas
 CONTEXT_SUMMARY_MODE = os.getenv("CONTEXT_SUMMARY_MODE", "heuristic").lower()  # model | heuristic
 CONTEXT_MAX_SOURCES = int(os.getenv("CONTEXT_MAX_SOURCES", str(TOP_K)))
@@ -167,7 +170,8 @@ def is_front_matter_chunk(text):
 
 def filter_front_matter_chunks(chunks):
     """Elimina resultados de portada/índice antes del ranking final."""
-    return [chunk for chunk in chunks if not is_front_matter_chunk(chunk.get('text', ''))]
+    # En modo de recuperación máxima no descartamos chunks por front-matter.
+    return chunks
 
 def rewrite_query(question):
     """
@@ -310,7 +314,7 @@ Formato: devuelve SOLO las preguntas reformuladas, una por línea, sin numeraci�
             messages=[
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.7,
+            temperature=0.1,
             max_tokens=200
         )
         
@@ -375,13 +379,15 @@ def _heuristic_summary(text, max_bullets=2):
     bullets = [b[:150] + "..." if len(b) > 150 else b for b in bullets]
     return bullets[:max_bullets]
 
-def build_clean_context(question, chunks):
-    """Construye contexto limpio y conciso para evitar que el modelo copie texto crudo."""
+def build_clean_context(question, chunks, preserve_verbatim=False):
+    """Construye contexto limpio para el LLM.
+
+    Cuando `preserve_verbatim` es True, conserva más texto literal para preguntas
+    de composición/listados y evita resumir demasiado el fragmento.
+    """
     sources = []
     for chunk in chunks[:CONTEXT_MAX_SOURCES]:
         cleaned_text = _strip_chunk_metadata(chunk.get('text', ''))
-        # Truncar a máximo 600 caracteres para evitar exceso de contexto
-        cleaned_text = cleaned_text[:600] if len(cleaned_text) > 600 else cleaned_text
         article = _extract_article_title(cleaned_text)
         sources.append({
             'file_name': chunk.get('file_name', 'Documento'),
@@ -400,11 +406,7 @@ def build_clean_context(question, chunks):
         header = f"Fuente {i}: {s['file_name']}"
         if s['article']:
             header += f" ({s['article']})"
-        bullets = _heuristic_summary(s['text'], CONTEXT_MAX_BULLETS)
-        if not bullets:
-            bullets = ["Fragmento sin contenido textual útil."]
-        bullets_text = "\n".join([f"- {b}" for b in bullets])
-        parts.append(f"{header}\nResumen del fragmento:\n{bullets_text}")
+        parts.append(f"{header}\nTexto del fragmento:\n{s['text']}")
     
     return "\n\n".join(parts)
 
@@ -456,97 +458,33 @@ def generate_answer_from_chunks(question, chunks, max_similarity, detected_lang=
     if not azure_client_text:
         return None
     
-    # Nivel 0: Silencio semántico (< 0.50) - CORTE SECO
-    # "Eco semántico" - coincidencias accidentales, no es conocimiento real
-    if max_similarity < MIN_SIMILARITY_ABSOLUTE:
-        if detected_lang == 'eu':
-            return "Ez da informazio erlaziondadun aurkitu erregutaletan. Kontsulta ez du sufizienterik semantikoarekin dokumentuekin."
-        else:
-            return "No se ha encontrado información relacionada en la normativa consultada. La consulta no tiene suficiente relación semántica con los documentos disponibles."
-    
-    # Nivel 1: Baja confianza (0.50-0.55) - respuesta muy cautelosa
-    if max_similarity < MIN_SIMILARITY_WARNING:
-        if detected_lang == 'eu':
-            return f"Ez dut aurkitu dokumentazioan informazio garrantzitsua zure galderari (antzekotasuna: {max_similarity:.0%}). Gomendio duzu Baliabide Humanekin kontsultatzea edo erregutalaren osoa portalen behatzeagatik."
-        else:
-            return f"No he encontrado en la documentación disponible información suficientemente relevante sobre tu pregunta (similitud: {max_similarity:.0%}). Te recomiendo consultar con RRHH o revisar el reglamento completo en el portal."
-    
-    # Nivel 2: Zona gris - respuesta con aviso (0.55-0.65)
-    is_gray_zone = max_similarity < MIN_SIMILARITY
-    
     try:
         # Construir el contexto limpio a partir de los chunks
-        clean_context = build_clean_context(question, chunks)
+        clean_context = build_clean_context(question, chunks, preserve_verbatim=True)
 
         # Crear el prompt para el modelo según idioma detectado
         if detected_lang == 'eu':
             # Prompts en euskera
-            if is_gray_zone:
-                system_prompt = """Zu gara corporizazioaren intraneta asistente ofiziala.
-Erabiltzaile-informazioa soilik, iturrietatik emaniko ereduan.
-Zuzenean erantzun galderauser galdera.
-Idatzi amaiera garbi, osoa eta zorrotzean.
-Baldin informazioa ez bada ziur, adieraz testunaren gabe.
-Az jaso iturrietako laburpena ez duen."""
-            else:
-                system_prompt = """Zu gara corporizazioaren intraneta asistente ofiziala.
-Erabiltzaile-informazioa soilik, iturrietatik emaniko ereduan.
-Zuzenean erantzun galderauser galdera.
-Idatzi amaiera garbi eta osoa.
-Baldin informazioa ez bada ziur, adieraz honetan.
-Az jaso iturrietako laburpena."""
+            system_prompt = """Zu zaude intranet korporatiboaren laguntzailea. Eman erantzun zuzenak eta baliatu emandako testuingurua."""
         else:
-            # Prompts en español - MEJORADOS PARA PRECISIÓN
-            if is_gray_zone:
-                system_prompt = """Eres el asistente oficial de la intranet corporativa. Tu tarea es responder preguntas sobre normativas y políticas.
-
-PRIORIDADES (en orden):
-1. Responde DIRECTAMENTE la pregunta sin rodeos.
-2. Cita el artículo, sección o procedimiento aplicable si es relevante.
-3. Usa lenguaje claro y profesional.
-4. Si faltan datos críticos, indícalo de forma transparente.
-
-PROHIBICIONES:
-- No copies párrafos enteros del documento.
-- No hagas resúmenes por fuente ni listas de fragmentos.
-- No incluyas encabezados como "Fuente 1", "Resumen del fragmento" o "Documento".
-- No inventes información no presente en las fuentes."""
-            else:
-                system_prompt = """Eres el asistente oficial de la intranet corporativa. Tu tarea es responder preguntas sobre normativas y políticas de forma precisa.
-
-PRIORIDADES (en orden):
-1. Responde DIRECTAMENTE la pregunta sin rodeos.
-2. Cita el artículo, sección o procedimiento aplicable.
-3. Usa lenguaje claro, profesional y conciso.
-4. Si hay dudas, indícalo explícitamente.
-
-PROHIBICIONES:
-- No copies párrafos enteros del documento.
-- No hagas resúmenes por fuente ni listas de fragmentos.
-- No incluyas encabezados como "Fuente 1", "Resumen del fragmento" o "Documento".
-- No inventes información no presente en las fuentes."""
+            system_prompt = """Eres el asistente oficial de la intranet corporativa. Responde usando el contexto proporcionado."""
 
             if detected_lang == 'eu':
                 user_prompt = f"""Galdera:
 {question}
 
-Iturriak (laburnegoekin):
+Testuingurua:
 {clean_context}
 
-Agindua:
-- Zuzenean erantzun user-ren galdera 1-3 paragrafokoen batean.
-- Aipatuz informazio ez bada gustatu beharrezko.
-- Gomendio ariketa edo dokumentuaren zehaztarpena egitea dubiren batean.
-- Astakatu ez datua, ehunekoa edo eskakizuna ez iturrieetan.
-- Itzuli SOILIK amaierako erantzuna user-raren (iturrien hautapena ez, labur talaren erakundea ez)."""
+Erantzun zuzenean eta erabili testuinguruan dagoen informazio guztia."""
             else:
                 user_prompt = f"""Pregunta del usuario:
 {question}
 
-Documentación disponible (resúmenes):
+Contexto disponible:
 {clean_context}
 
-Responde la pregunta de forma DIRECTA en 1-2 párrafos. No hagas resúmenes ni listas. Sé precisx y profesional."""
+Responde de forma directa usando todo el contexto disponible."""
         
         # Llamar al modelo de texto
         response = azure_client_text.chat.completions.create(
@@ -555,42 +493,11 @@ Responde la pregunta de forma DIRECTA en 1-2 párrafos. No hagas resúmenes ni l
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt}
             ],
-            temperature=0.3,
+            temperature=0.1,
             max_tokens=1000
         )
 
         answer_text = (response.choices[0].message.content or "").strip()
-
-        # Reparación: si el modelo devuelve un resumen por fuente, convertirlo a respuesta directa
-        if _looks_like_context_summary(answer_text):
-            repair_prompt = f"""Convierte el siguiente borrador en una RESPUESTA DIRECTA a la pregunta del usuario.
-
-Pregunta del usuario:
-{question}
-
-Borrador actual (incorrecto porque resume fuentes):
-{answer_text}
-
-Contexto disponible:
-{clean_context}
-
-Reglas:
-- Responde la pregunta en 1-3 párrafos, en lenguaje claro y profesional.
-- No incluyas encabezados tipo 'Fuente 1', 'Resumen del fragmento' ni listas por fuente.
-- No inventes información fuera del contexto disponible.
-- Si falta evidencia concluyente, indícalo explícitamente.
-- Devuelve SOLO la respuesta final para el usuario."""
-
-            repaired = azure_client_text.chat.completions.create(
-                model=AZURE_DEPLOYMENT_NAME_TEXT,
-                messages=[
-                    {"role": "system", "content": "Responde preguntas de forma directa y sin formato de resumen por fuentes."},
-                    {"role": "user", "content": repair_prompt}
-                ],
-                temperature=0.2,
-                max_tokens=900
-            )
-            answer_text = (repaired.choices[0].message.content or "").strip()
 
         return _sanitize_answer_output(answer_text)
     
@@ -702,6 +609,107 @@ def check_answer_completeness(chunks, question):
         'reason': 'OK' if answer_complete else ('Faltan palabras clave normativas' if (governance_required and not has_keywords) else 'Contexto insuficiente')
     }
 
+
+def is_factual_question(question):
+    """
+    Detecta preguntas que probablemente requieren respuestas extractivas (números, porcentajes, plazos, fechas).
+    """
+    if not question:
+        return False
+
+    q = question.lower()
+    # Patrones que indican una pregunta factual
+    patterns = [r"\b\d{1,4}\b", r"%", r"\bpor ciento\b", r"\bfecha\b", r"\bfecha de\b",
+                r"\bdía[s]?\b", r"\bmes(es)?\b", r"\baño[s]?\b", r"\bplazo\b", r"\bhora[s]?\b"]
+    return any(re.search(p, q) for p in patterns)
+
+
+def extractive_answer_from_chunks(question, chunks, max_sentences=2):
+    """
+    Busca en los chunks oraciones que contengan tokens numéricos/porcentajes/fechas y devuelve
+    una respuesta extractiva corta con cita de la fuente. Retorna None si no encuentra evidencias.
+    """
+    if not chunks:
+        return None
+
+    # Combinar búsqueda de oraciones en los chunks, priorizando similitud
+    sentence_pattern = re.compile(r"([^\n\.¡\!\?]{10,}?\d+[\w%\s\-\/,\.]*[^\n\.¡\!\?]{0,})", re.I)
+
+    found = []
+    for chunk in chunks:
+        text = _strip_chunk_metadata(chunk.get('text', '') or '')
+        # Buscar oraciones con dígitos o porcentajes
+        for m in sentence_pattern.finditer(text):
+            s = m.group(0).strip()
+            if len(s) > 10:
+                found.append({'sentence': s, 'file_name': chunk.get('file_name'), 'chunk_index': chunk.get('chunk_index')})
+            if len(found) >= max_sentences:
+                break
+        if len(found) >= max_sentences:
+            break
+
+    if not found:
+        return None
+
+    # Construir respuesta extractiva con citas breves
+    parts = []
+    for f in found:
+        src = f"(Fuente: {f.get('file_name')}, chunk {f.get('chunk_index')})"
+        parts.append(f"{f.get('sentence')} {src}")
+
+    return ' '.join(parts)
+
+
+def select_context_chunks(chunks, limit=3):
+    """Selecciona hasta `limit` chunks priorizando el mejor chunk y otros del mismo documento."""
+    if not chunks:
+        return []
+
+    selected = []
+    ordered = sorted(chunks, key=lambda x: x.get('similarity', 0.0), reverse=True)
+    # Añadir el mejor
+    selected.append(ordered[0])
+    top_file = ordered[0].get('file_path')
+
+    # Primero añadir otros del mismo archivo
+    for c in ordered[1:]:
+        if len(selected) >= limit:
+            break
+        if c.get('file_path') == top_file:
+            selected.append(c)
+
+    # Luego rellenar con los más similares restantes
+    for c in ordered[1:]:
+        if len(selected) >= limit:
+            break
+        if c not in selected:
+            selected.append(c)
+
+    return selected
+
+
+def verify_answer_against_chunks(answer_text, chunks):
+    """
+    Verifica que los números y porcentajes presentes en `answer_text` aparezcan en `chunks`.
+    Retorna True si pasa la verificación, False si faltan pruebas.
+    """
+    if not answer_text or not chunks:
+        return False
+
+    # Extraer tokens numéricos y porcentajes del answer
+    tokens = re.findall(r"\b\d+[\d\.]*\b|\d+\s*%|\b\d{2,4}[-\/]\d{1,2}[-\/]\d{1,2}\b", answer_text)
+    if not tokens:
+        # No hay tokens numéricos; no podemos verificar con esta heurística -> considerar válido
+        return True
+
+    combined = ' '.join([_strip_chunk_metadata(c.get('text', '') or '') for c in chunks]).lower()
+    for t in tokens:
+        if t.lower().strip() not in combined:
+            # Si algún token no aparece literalmente, fallo de verificación
+            return False
+
+    return True
+
 def find_similar_chunks(query_embedding, query_text=None, top_k=TOP_K, candidate_limit=None):
     """
     Encuentra los chunks más similares usando un ranking híbrido.
@@ -727,7 +735,7 @@ def find_similar_chunks(query_embedding, query_text=None, top_k=TOP_K, candidate
                     1 - (embedding <=> %s::vector(1536)) AS vector_similarity,
                     COALESCE(ts_rank_cd(search_tsv, websearch_to_tsquery('simple', NULLIF(%s, ''))), 0) AS lexical_rank
                 FROM chunks
-                WHERE embedding IS NOT NULL AND COALESCE(is_front_matter, FALSE) = FALSE
+                WHERE embedding IS NOT NULL
                 ORDER BY embedding <=> %s::vector(1536)
                 LIMIT %s
             """, (vector_literal, lexical_query, vector_literal, candidate_limit))
@@ -749,7 +757,6 @@ def find_similar_chunks(query_embedding, query_text=None, top_k=TOP_K, candidate
                 'similarity': _hybrid_score(vector_similarity, lexical_rank)
             })
 
-        similarities = filter_front_matter_chunks(similarities)
         similarities.sort(key=lambda x: x['similarity'], reverse=True)
         return similarities[:top_k]
     
@@ -851,55 +858,15 @@ def prune_low_relevance_chunks(chunks, top_k):
         return []
 
     ordered = sorted(chunks, key=lambda x: x.get('similarity', 0.0), reverse=True)
-    best = float(ordered[0].get('similarity', 0.0))
-    dynamic_cutoff = max(MIN_SIMILARITY_ABSOLUTE, best * 0.78)
-    pruned = [c for c in ordered if float(c.get('similarity', 0.0)) >= dynamic_cutoff]
-
-    minimum_keep = min(max(2, top_k // 2), len(ordered))
-    if len(pruned) < minimum_keep:
-        pruned = ordered[:minimum_keep]
-
-    return pruned[:top_k]
+    return ordered
 
 def deduplicate_chunks(chunks, similarity_threshold=0.90):
     """
     Elimina chunks casi-duplicados (sim de texto > threshold).
     Mantiene el chunk con mayor score cuando encuentra duplicados.
     """
-    if len(chunks) <= 1:
-        return chunks
-    
-    deduplicated = []
-    seen_texts = {}
-    
-    for chunk in chunks:
-        text = chunk.get('text', '').lower().strip()
-        normalized = re.sub(r'[^\w\s]', '', text)
-        normalized = re.sub(r'\s+', ' ', normalized).strip()
-        
-        is_duplicate = False
-        for seen_norm, seen_chunk in seen_texts.items():
-            seen_words = set(seen_norm.split())
-            current_words = set(normalized.split())
-            
-            if len(seen_words) > 0 and len(current_words) > 0:
-                intersection = len(seen_words & current_words)
-                union = len(seen_words | current_words)
-                jaccard = intersection / union if union > 0 else 0.0
-                
-                if jaccard >= similarity_threshold:
-                    is_duplicate = True
-                    if chunk.get('similarity', 0) > seen_chunk.get('similarity', 0):
-                        deduplicated.remove(seen_chunk)
-                        deduplicated.append(chunk)
-                        seen_texts[normalized] = chunk
-                    break
-        
-        if not is_duplicate:
-            deduplicated.append(chunk)
-            seen_texts[normalized] = chunk
-    
-    return deduplicated
+    # No deduplicamos para no perder variantes útiles del mismo contenido.
+    return chunks
 
 def expand_context_with_neighbors(chunks):
     """
@@ -946,7 +913,7 @@ def expand_context_with_neighbors(chunks):
                         cur.execute("""
                             SELECT id, file_name, file_path, folder_name, chunk_index, text
                                 FROM chunks
-                                WHERE file_path = %s AND chunk_index = %s AND embedding IS NOT NULL AND COALESCE(is_front_matter, FALSE) = FALSE
+                                    WHERE file_path = %s AND chunk_index = %s AND embedding IS NOT NULL
                             LIMIT 1
                         """, (file_path, chunk_index - 1))
                         result = cur.fetchone()
@@ -968,7 +935,7 @@ def expand_context_with_neighbors(chunks):
                     cur.execute("""
                         SELECT id, file_name, file_path, folder_name, chunk_index, text
                         FROM chunks
-                        WHERE file_path = %s AND chunk_index = %s AND embedding IS NOT NULL AND COALESCE(is_front_matter, FALSE) = FALSE
+                        WHERE file_path = %s AND chunk_index = %s AND embedding IS NOT NULL
                         LIMIT 1
                     """, (file_path, chunk_index + 1))
                     result = cur.fetchone()
@@ -1021,7 +988,7 @@ def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top
                     1 - (embedding <=> %s::vector(1536)) AS vector_similarity,
                     COALESCE(ts_rank_cd(search_tsv, websearch_to_tsquery('simple', NULLIF(%s, ''))), 0) AS lexical_rank
                 FROM chunks
-                WHERE embedding IS NOT NULL AND COALESCE(is_front_matter, FALSE) = FALSE
+                WHERE embedding IS NOT NULL
                 ORDER BY embedding <=> %s::vector(1536)
                 LIMIT %s
             """, (vector_literal, lexical_query, vector_literal, max(RETRIEVAL_CANDIDATE_LIMIT * 2, top_k * 15)))
@@ -1056,7 +1023,6 @@ def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top
                     'found_keywords': found_kw
                 })
 
-            filtered_chunks = filter_front_matter_chunks(filtered_chunks)
         filtered_chunks.sort(key=lambda x: x['similarity'], reverse=True)
         return filtered_chunks[:top_k]
     
@@ -1296,14 +1262,16 @@ def search():
             clean_item['text'] = _strip_chunk_metadata(item.get('text', ''))
             response_results.append(clean_item)
 
-        # Construir lista de fuentes con archivo y similitud (solo chunks principales, sin vecinos)
-        sources = []
-        for item in similar_chunks:
-            source_entry = {
-                'file': item.get('file_name', 'Documento desconocido'),
-                'similarity': round(float(item.get('similarity', 0)) * 100, 1)  # Porcentaje
+        # Mostrar solo la fuente más relevante
+        primary_source = None
+        if similar_chunks:
+            top_item = similar_chunks[0]
+            primary_source = {
+                'file': top_item.get('file_name', 'Documento desconocido'),
+                'similarity': round(float(top_item.get('similarity', 0)) * 100, 1)  # Porcentaje
             }
-            sources.append(source_entry)
+
+        sources = [primary_source] if primary_source else []
 
         response_data = {
             'question': question,
@@ -1330,14 +1298,34 @@ def search():
         }
         
         # Generar respuesta con el modelo de texto si se solicita
-        # Usar chunks expandidos para darle al LLM más contexto continuo
         if generate_answer:
+            # Usar todo el contexto recuperado para la respuesta
+            context_candidates = similar_chunks_expanded if ENABLE_NEIGHBOR_EXPANSION else similar_chunks
+            context_for_generation = context_candidates
+
+                # 1) Modo extractivo rápido para preguntas factuales
+            if is_factual_question(question):
+                extractive = extractive_answer_from_chunks(question, context_for_generation, max_sentences=2)
+                if extractive:
+                    response_data['answer'] = extractive
+                    response_data['answer_generated'] = True
+                    response_data['answer_extractive'] = True
+                    response_data['display_mode'] = 'answer'
+                    return jsonify(response_data), 200
+
             if azure_client_text:
-                answer = generate_answer_from_chunks(question, similar_chunks_expanded, max_similarity, detected_lang)
+                # Generación normal usando el contexto reducido
+                answer = generate_answer_from_chunks(question, context_for_generation, max_similarity, detected_lang)
                 response_data['answer'] = answer
                 response_data['answer_generated'] = True
-                # Si se generó respuesta, indicar al frontend que la use
-                response_data['display_mode'] = 'answer' if answer else 'results'
+                response_data['answer_extractive'] = False
+
+                # 2) Verificador post-respuesta: si respuesta contiene números/fechas, comprobar evidencia en el contexto
+                verified = verify_answer_against_chunks(answer or '', context_for_generation)
+                if not verified:
+                    response_data['answer_verified'] = False
+
+                response_data['display_mode'] = 'answer' if response_data.get('answer') else 'results'
             else:
                 response_data['answer'] = None
                 response_data['answer_generated'] = False

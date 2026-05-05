@@ -5,6 +5,7 @@ pandas
 pdfplumber
 tiktoken
 python-dotenv
+pdfplumber
 pypdf
 azure-core
 flask

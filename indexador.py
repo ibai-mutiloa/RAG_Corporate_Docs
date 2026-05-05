@@ -5,6 +5,10 @@ import re
 import psycopg2
 from psycopg2.extras import execute_values
 from pypdf import PdfReader
+try:
+    import pdfplumber
+except Exception:
+    pdfplumber = None
 from dotenv import load_dotenv
 from openai import AzureOpenAI
 from azure.core.credentials import AzureKeyCredential
@@ -36,6 +40,9 @@ CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "120"))
 FORCE_REINDEX = os.getenv("FORCE_REINDEX", "False").lower() == "true"
 MAX_TOKENS_PER_CHUNK = int(os.getenv("MAX_TOKENS_PER_CHUNK", "2000"))  # Máximo de tokens por chunk
 TOC_DOTTED_ALWAYS_SKIP = os.getenv("TOC_DOTTED_ALWAYS_SKIP", "True").lower() == "true"
+
+# Modo de indexación máxima: si es True, desactiva filtros que eliminen fragmentos
+MAX_INDEXING_MODE = os.getenv("MAX_INDEXING_MODE", "False").lower() == "true"
 
 # Inicializar tokenizer de OpenAI
 try:
@@ -132,18 +139,73 @@ def strip_front_matter_pages(page_texts):
     return page_texts
 
 def extract_text_from_pdf(pdf_path):
-    """Extrae texto de PDF"""
-    page_texts = []
-    try:
-        reader = PdfReader(pdf_path)
-        for page in reader.pages:
-            page_text = page.extract_text() or ""
-            if page_text:
-                page_texts.append(page_text)
-    except Exception as e:
-        print(f"[ERROR] No se pudo leer {pdf_path}: {e}")
+    """Extrae texto de PDF y tablas convertidas a Markdown.
 
-    page_texts = strip_front_matter_pages(page_texts)
+    Usa `pdfplumber` para extraer tablas por página y formatearlas
+    como tablas Markdown, priorizando preservación de estructura.
+    Si `pdfplumber` no está disponible, cae a `pypdf` (menos preciso
+    para tablas).
+    """
+    page_texts = []
+
+    if pdfplumber:
+        try:
+            with pdfplumber.open(pdf_path) as pdf:
+                for page in pdf.pages:
+                    parts = []
+                    text = page.extract_text() or ""
+                    if text.strip():
+                        parts.append(text)
+
+                    try:
+                        tables = page.extract_tables()
+                    except Exception:
+                        tables = []
+
+                    for table in tables or []:
+                        if not table:
+                            continue
+                        # Normalizar cabecera
+                        header = table[0]
+                        if not any(cell for cell in header if cell and str(cell).strip()):
+                            # Si la primera fila no parece cabecera, construir headers genéricos
+                            cols = len(header)
+                            header = [f"col{i+1}" for i in range(cols)]
+                            body_rows = table
+                        else:
+                            body_rows = table[1:]
+
+                        # Construir tabla Markdown
+                        md = "| " + " | ".join([str(h).strip() if h is not None else "" for h in header]) + " |\n"
+                        md += "| " + " | ".join(["---"] * len(header)) + " |\n"
+                        for row in body_rows:
+                            row_cells = [str(c).strip() if c is not None else "" for c in row]
+                            # Asegurar longitud
+                            if len(row_cells) < len(header):
+                                row_cells += [""] * (len(header) - len(row_cells))
+                            md += "| " + " | ".join(row_cells) + " |\n"
+
+                        parts.append(md)
+
+                    page_md = "\n\n".join(parts).strip()
+                    page_texts.append(page_md)
+        except Exception as e:
+            print(f"[WARN] pdfplumber falló en {pdf_path}: {e}, intentando fallback con pypdf")
+
+    # Fallback a pypdf si no hay contenido o pdfplumber no está disponible
+    if not page_texts:
+        try:
+            reader = PdfReader(pdf_path)
+            for page in reader.pages:
+                page_text = page.extract_text() or ""
+                page_texts.append(page_text)
+        except Exception as e:
+            print(f"[ERROR] No se pudo leer {pdf_path}: {e}")
+
+    # Si estamos en modo de indexación máxima, no recortamos portada/índice
+    if not MAX_INDEXING_MODE:
+        page_texts = strip_front_matter_pages(page_texts)
+
     return "\n".join(page_texts)
 
 def normalize_pdf_text(text):
@@ -663,13 +725,18 @@ def calculate_embeddings(chunks):
 def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
     """Inserta chunks con sus embeddings en la base de datos."""
     # Filtrar chunks poco informativos (indices de pagina, titulos sin contenido)
-    filtered_chunks = []
-    skipped_noise = 0
-    for c in chunks:
-        if is_noise_chunk(c):
-            skipped_noise += 1
-        else:
-            filtered_chunks.append(c)
+    # En MAX_INDEXING_MODE queremos indexar TODO, así que no filtramos.
+    if MAX_INDEXING_MODE:
+        filtered_chunks = list(chunks)
+        skipped_noise = 0
+    else:
+        filtered_chunks = []
+        skipped_noise = 0
+        for c in chunks:
+            if is_noise_chunk(c):
+                skipped_noise += 1
+            else:
+                filtered_chunks.append(c)
 
     if not filtered_chunks:
         print(f"[WARN] Todos los chunks filtrados por ruido para {file_path}")
