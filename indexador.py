@@ -43,6 +43,7 @@ TOC_DOTTED_ALWAYS_SKIP = os.getenv("TOC_DOTTED_ALWAYS_SKIP", "True").lower() == 
 
 # Modo de indexación máxima: si es True, desactiva filtros que eliminen fragmentos
 MAX_INDEXING_MODE = os.getenv("MAX_INDEXING_MODE", "False").lower() == "true"
+FAQ_MARKDOWN_NAME = os.getenv("FAQ_MARKDOWN_NAME", "FAQ.md")
 
 # Inicializar tokenizer de OpenAI
 try:
@@ -79,6 +80,16 @@ def hash_file(path):
         for chunk in iter(lambda: f.read(8192), b""):
             h.update(chunk)
     return h.hexdigest()
+
+def is_faq_markdown_file(file_name):
+    if not file_name:
+        return False
+    return os.path.basename(file_name).lower() == FAQ_MARKDOWN_NAME.lower()
+
+def extract_text_from_markdown(markdown_path):
+    """Lee un documento Markdown como texto plano."""
+    with open(markdown_path, "r", encoding="utf-8") as handle:
+        return handle.read()
 
 def _page_has_body_marker(text):
     if not text:
@@ -940,6 +951,34 @@ def process_pdfs():
     if FORCE_REINDEX:
         print("[INFO] FORCE_REINDEX activo: eliminando todos los chunks antes de reindexar")
         delete_all_chunks()
+    # También indexar el FAQ.md localizado en el repositorio (independiente de BASE_DIR)
+    repo_root = os.path.dirname(os.path.abspath(__file__))
+    repo_faq = os.path.join(repo_root, FAQ_MARKDOWN_NAME)
+    if os.path.exists(repo_faq):
+        # Determinar path relativo a BASE_DIR si aplica, si no usar basename
+        try:
+            relative_path = os.path.relpath(repo_faq, BASE_DIR)
+            if relative_path.startswith('..'):
+                relative_path = os.path.basename(repo_faq)
+        except Exception:
+            relative_path = os.path.basename(repo_faq)
+        file_hash = hash_file(repo_faq)
+        conn = connect_db()
+        with conn.cursor() as cur:
+            cur.execute("SELECT file_hash FROM chunks WHERE file_path = %s LIMIT 1", (relative_path,))
+            row = cur.fetchone()
+        conn.close()
+        if row is None or row[0] != file_hash:
+            if row is not None:
+                print(f"[INFO] FAQ.md modificado: {relative_path}, eliminando chunks antiguos")
+                delete_chunks(relative_path)
+            print(f"[INFO] Procesando FAQ interno: {relative_path}")
+            text = extract_text_from_markdown(repo_faq)
+            text = normalize_pdf_text(text)
+            if text.strip():
+                chunks = chunk_text(text)
+                insert_chunks(FAQ_MARKDOWN_NAME, relative_path, os.path.dirname(relative_path), chunks, file_hash)
+                print(f"[INFO] FAQ insertado como {relative_path}")
     # Lista de PDFs actuales usando ruta relativa para evitar colisiones de nombres
     current_files = {}
     for root, dirs, files in os.walk(BASE_DIR):
@@ -948,7 +987,7 @@ def process_pdfs():
                 dirs.remove(ignore)
         folder_name = os.path.basename(root)
         for f in files:
-            if f.lower().endswith(".pdf"):
+            if f.lower().endswith(".pdf") or is_faq_markdown_file(f):
                 full_path = os.path.join(root, f)
                 relative_path = os.path.relpath(full_path, BASE_DIR)
                 file_hash = hash_file(full_path)
@@ -969,7 +1008,10 @@ def process_pdfs():
                         )
                         delete_chunks(relative_path)
                     print(f"[INFO] Procesando PDF nuevo o modificado: {relative_path}")
-                    text = extract_text_from_pdf(full_path)
+                    if is_faq_markdown_file(f):
+                        text = extract_text_from_markdown(full_path)
+                    else:
+                        text = extract_text_from_pdf(full_path)
                     text = normalize_pdf_text(text)
                     if text.strip() == "":
                         print(f"[WARN] {full_path} está vacío")

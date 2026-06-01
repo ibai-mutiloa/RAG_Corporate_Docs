@@ -59,6 +59,8 @@ CONTEXT_MAX_BULLETS = int(os.getenv("CONTEXT_MAX_BULLETS", "2"))
 DEFAULT_GENERATE_ANSWER = os.getenv("DEFAULT_GENERATE_ANSWER", "True").lower() == "true"
 LANGUAGE_DETECTION_ENABLED = os.getenv("LANGUAGE_DETECTION_ENABLED", "True").lower() == "true"
 ENABLE_NEIGHBOR_EXPANSION = os.getenv("ENABLE_NEIGHBOR_EXPANSION", "False").lower() == "true"
+FAQ_DOCUMENT_NAME = os.getenv("FAQ_DOCUMENT_NAME", "FAQ.md")
+FAQ_PRIORITY_BOOST = float(os.getenv("FAQ_PRIORITY_BOOST", "0.25"))
 
 # Cliente de Azure OpenAI para embeddings
 azure_client = None
@@ -147,6 +149,77 @@ def _hybrid_score(vector_similarity, lexical_rank):
     """Combina similitud vectorial y lexical en una sola puntuación."""
     lexical_boost = min(float(lexical_rank) * 8.0, 1.0)
     return (HYBRID_VECTOR_WEIGHT * float(vector_similarity)) + (HYBRID_LEXICAL_WEIGHT * lexical_boost)
+
+def _is_faq_source(value):
+    if not value:
+        return False
+    return os.path.basename(str(value)).lower() == FAQ_DOCUMENT_NAME.lower()
+
+def _is_hidden_faq_chunk(chunk):
+    return _is_faq_source(chunk.get('file_name')) or _is_faq_source(chunk.get('file_path'))
+
+def _faq_priority_bonus(chunk):
+    return FAQ_PRIORITY_BOOST if _is_hidden_faq_chunk(chunk) else 0.0
+
+def _fetch_scored_chunks(query_embedding, query_text=None, top_k=TOP_K, candidate_limit=None, file_name_filter=None):
+    if candidate_limit is None:
+        candidate_limit = max(RETRIEVAL_CANDIDATE_LIMIT, top_k * 8)
+
+    lexical_query = _normalize_search_query(query_text)
+    vector_literal = _embedding_to_pgvector_literal(query_embedding)
+    conn = connect_db()
+
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            sql = """
+                SELECT
+                    id,
+                    file_name,
+                    file_path,
+                    folder_name,
+                    chunk_index,
+                    text,
+                    1 - (embedding <=> %s::vector(1536)) AS vector_similarity,
+                    COALESCE(ts_rank_cd(search_tsv, websearch_to_tsquery('simple', NULLIF(%s, ''))), 0) AS lexical_rank
+                FROM chunks
+                WHERE embedding IS NOT NULL
+            """
+            params = [vector_literal, lexical_query]
+
+            if file_name_filter:
+                sql += " AND LOWER(file_name) = LOWER(%s)"
+                params.append(file_name_filter)
+
+            sql += """
+                ORDER BY embedding <=> %s::vector(1536)
+                LIMIT %s
+            """
+            params.extend([vector_literal, candidate_limit])
+
+            cur.execute(sql, params)
+            chunks = cur.fetchall()
+
+        scored_chunks = []
+        for chunk in chunks:
+            vector_similarity = float(chunk['vector_similarity'] or 0.0)
+            lexical_rank = float(chunk['lexical_rank'] or 0.0)
+            scored_chunks.append({
+                'id': chunk['id'],
+                'file_name': chunk['file_name'],
+                'file_path': chunk['file_path'],
+                'folder_name': chunk['folder_name'],
+                'chunk_index': chunk['chunk_index'],
+                'text': chunk['text'],
+                'vector_similarity': vector_similarity,
+                'lexical_rank': lexical_rank,
+                'similarity': _hybrid_score(vector_similarity, lexical_rank) + _faq_priority_bonus(chunk)
+            })
+
+        scored_chunks.sort(key=lambda x: x['similarity'], reverse=True)
+        return scored_chunks[:top_k]
+
+    finally:
+        conn.close()
 
 def is_front_matter_chunk(text):
     """Detecta portada, índice o sumario para excluirlo de recuperación."""
@@ -389,11 +462,13 @@ def build_clean_context(question, chunks, preserve_verbatim=False):
     for chunk in chunks[:CONTEXT_MAX_SOURCES]:
         cleaned_text = _strip_chunk_metadata(chunk.get('text', ''))
         article = _extract_article_title(cleaned_text)
+        hidden_faq = _is_hidden_faq_chunk(chunk)
         sources.append({
             'file_name': chunk.get('file_name', 'Documento'),
             'article': article,
             'text': cleaned_text,
-            'similarity': chunk.get('similarity', 0.0)
+            'similarity': chunk.get('similarity', 0.0),
+            'hidden_faq': hidden_faq
         })
 
     if not sources:
@@ -403,7 +478,7 @@ def build_clean_context(question, chunks, preserve_verbatim=False):
     # y evitar que el LLM copie fragmentos largos del PDF
     parts = []
     for i, s in enumerate(sources, start=1):
-        header = f"Fuente {i}: {s['file_name']}"
+        header = f"Fuente {i}: Documento interno" if s.get('hidden_faq') else f"Fuente {i}: {s['file_name']}"
         if s['article']:
             header += f" ({s['article']})"
         parts.append(f"{header}\nTexto del fragmento:\n{s['text']}")
@@ -654,8 +729,11 @@ def extractive_answer_from_chunks(question, chunks, max_sentences=2):
     # Construir respuesta extractiva con citas breves
     parts = []
     for f in found:
-        src = f"(Fuente: {f.get('file_name')}, chunk {f.get('chunk_index')})"
-        parts.append(f"{f.get('sentence')} {src}")
+        if _is_hidden_faq_chunk(f):
+            parts.append(f.get('sentence'))
+        else:
+            src = f"(Fuente: {f.get('file_name')}, chunk {f.get('chunk_index')})"
+            parts.append(f"{f.get('sentence')} {src}")
 
     return ' '.join(parts)
 
@@ -714,54 +792,31 @@ def find_similar_chunks(query_embedding, query_text=None, top_k=TOP_K, candidate
     """
     Encuentra los chunks más similares usando un ranking híbrido.
     """
-    if candidate_limit is None:
-        candidate_limit = max(RETRIEVAL_CANDIDATE_LIMIT, top_k * 8)
+    faq_chunks = _fetch_scored_chunks(
+        query_embedding,
+        query_text=query_text,
+        top_k=top_k,
+        candidate_limit=candidate_limit,
+        file_name_filter=FAQ_DOCUMENT_NAME,
+    )
+    regular_chunks = _fetch_scored_chunks(
+        query_embedding,
+        query_text=query_text,
+        top_k=top_k,
+        candidate_limit=candidate_limit,
+        file_name_filter=None,
+    )
 
-    lexical_query = _normalize_search_query(query_text)
-    vector_literal = _embedding_to_pgvector_literal(query_embedding)
-    conn = connect_db()
-    
-    try:
-        with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            # Pedir solo los candidatos más prometedores al motor de PostgreSQL
-            cur.execute("""
-                SELECT
-                    id,
-                    file_name,
-                    file_path,
-                    folder_name,
-                    chunk_index,
-                    text,
-                    1 - (embedding <=> %s::vector(1536)) AS vector_similarity,
-                    COALESCE(ts_rank_cd(search_tsv, websearch_to_tsquery('simple', NULLIF(%s, ''))), 0) AS lexical_rank
-                FROM chunks
-                WHERE embedding IS NOT NULL
-                ORDER BY embedding <=> %s::vector(1536)
-                LIMIT %s
-            """, (vector_literal, lexical_query, vector_literal, candidate_limit))
-            chunks = cur.fetchall()
+    merged = []
+    seen_ids = set()
+    for chunk in faq_chunks + regular_chunks:
+        if chunk['id'] in seen_ids:
+            continue
+        merged.append(chunk)
+        seen_ids.add(chunk['id'])
 
-        similarities = []
-        for chunk in chunks:
-            vector_similarity = float(chunk['vector_similarity'] or 0.0)
-            lexical_rank = float(chunk['lexical_rank'] or 0.0)
-            similarities.append({
-                'id': chunk['id'],
-                'file_name': chunk['file_name'],
-                'file_path': chunk['file_path'],
-                'folder_name': chunk['folder_name'],
-                'chunk_index': chunk['chunk_index'],
-                'text': chunk['text'],
-                'vector_similarity': vector_similarity,
-                'lexical_rank': lexical_rank,
-                'similarity': _hybrid_score(vector_similarity, lexical_rank)
-            })
-
-        similarities.sort(key=lambda x: x['similarity'], reverse=True)
-        return similarities[:top_k]
-    
-    finally:
-        conn.close()
+    merged.sort(key=lambda x: x['similarity'], reverse=True)
+    return merged[:top_k]
 
 def calculate_keyword_density(text, keywords=None):
     """
@@ -1004,11 +1059,12 @@ def find_similar_chunks_with_keywords(query_embedding, forced_keywords=None, top
             if found_kw:
                 vector_similarity = float(chunk['vector_similarity'] or 0.0)
                 lexical_rank = float(chunk['lexical_rank'] or 0.0)
+                faq_bonus = _faq_priority_bonus(chunk)
                 
                 # Bonus por cantidad de keywords encontradas y por overlap con términos forzados
                 keyword_bonus = min(len(found_kw) * 0.05, 0.15)
                 overlap_bonus = calculate_query_overlap(chunk['text'], query_terms) * 0.08
-                combined_score = _hybrid_score(vector_similarity, lexical_rank) + keyword_bonus + overlap_bonus
+                combined_score = _hybrid_score(vector_similarity, lexical_rank) + keyword_bonus + overlap_bonus + faq_bonus
                 
                 filtered_chunks.append({
                     'id': chunk['id'],
@@ -1095,7 +1151,66 @@ def search():
         
         top_k = request.json.get('top_k', TOP_K)
         generate_answer = request.json.get('generate_answer', DEFAULT_GENERATE_ANSWER)
-        
+        # Chequeo rápido en FAQ: si la pregunta coincide con una entrada del FAQ,
+        # devolver la respuesta del FAQ directamente (sin exponer la fuente).
+        try:
+            repo_root = os.path.dirname(os.path.abspath(__file__))
+            faq_path = os.path.join(repo_root, FAQ_DOCUMENT_NAME)
+            if os.path.exists(faq_path):
+                faq_txt = open(faq_path, 'r', encoding='utf-8').read()
+                # Parse simple: líneas que comienzan con '##' marcan la pregunta
+                lines = faq_txt.splitlines()
+                q = None
+                a_lines = []
+                pairs = []
+                for line in lines:
+                    line_stripped = line.strip()
+                    if line_stripped.startswith('##'):
+                        if q:
+                            pairs.append((q, ' '.join(a_lines).strip()))
+                        q = line_stripped.lstrip('#').strip()
+                        a_lines = []
+                    else:
+                        if q is not None:
+                            a_lines.append(line_stripped)
+                if q:
+                    pairs.append((q, ' '.join(a_lines).strip()))
+
+                def _norm(s):
+                    return re.sub(r"[^a-z0-9áéíóúüñ]+", ' ', (s or '').lower()).strip()
+
+                nq = _norm(question)
+                for fq, fa in pairs:
+                    if not fq:
+                        continue
+                    if nq == _norm(fq) or nq in _norm(fq) or _norm(fq) in nq:
+                        # Build both `answer` and `results` so UIs that use either field
+                        # will display the FAQ response without exposing the source.
+                        response_data = {
+                            'question': question,
+                            'answer': fa,
+                            'answer_generated': True,
+                            'display_mode': 'answer',
+                            'confidence': 'alta',
+                            'sources': [],
+                            'results': [
+                                {
+                                    'id': None,
+                                    'file_name': None,
+                                    'file_path': None,
+                                    'folder_name': None,
+                                    'chunk_index': None,
+                                    'text': fa,
+                                    'similarity': 1.0
+                                }
+                            ],
+                            'count': 1,
+                        }
+                        return jsonify(response_data), 200
+        except Exception:
+            # Fallar en silencio y continuar con la recuperación normal
+            pass
+
         # Validar Azure OpenAI
         if not azure_client:
             return jsonify({
@@ -1256,16 +1371,18 @@ def search():
             ui_color = 'red'
             ui_message = 'No se ha encontrado información relevante para esta consulta'
         
+        visible_chunks = [item for item in similar_chunks if not _is_hidden_faq_chunk(item)]
+
         response_results = []
-        for item in similar_chunks:
+        for item in visible_chunks:
             clean_item = dict(item)
             clean_item['text'] = _strip_chunk_metadata(item.get('text', ''))
             response_results.append(clean_item)
 
         # Mostrar solo la fuente más relevante
         primary_source = None
-        if similar_chunks:
-            top_item = similar_chunks[0]
+        if visible_chunks:
+            top_item = visible_chunks[0]
             primary_source = {
                 'file': top_item.get('file_name', 'Documento desconocido'),
                 'similarity': round(float(top_item.get('similarity', 0)) * 100, 1)  # Porcentaje

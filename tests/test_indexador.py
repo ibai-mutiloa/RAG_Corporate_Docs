@@ -73,6 +73,11 @@ class TestLargeChunkSplit(unittest.TestCase):
 
 
 class TestNoiseDetection(unittest.TestCase):
+    def test_is_faq_markdown_file(self):
+        self.assertTrue(indexador.is_faq_markdown_file("FAQ.md"))
+        self.assertTrue(indexador.is_faq_markdown_file("/tmp/docs/FAQ.md"))
+        self.assertFalse(indexador.is_faq_markdown_file("guide.md"))
+
     def test_is_page_index_chunk(self):
         self.assertTrue(indexador.is_page_index_chunk("12"))
         self.assertTrue(indexador.is_page_index_chunk("12/34"))
