@@ -84,9 +84,9 @@ if AZURE_DEPLOYMENT_NAME_TEXT:
         )
 
 app = Flask(__name__)
-app.config['JSON_AS_ASCII'] = True
 CORS(app)
 # Forzar escape ASCII en JSON para compatibilidad con clientes Windows/IIS
+app.config['JSON_AS_ASCII'] = True
 
 
 # ===========================
@@ -856,21 +856,26 @@ def search():
         if azure_client_text:
             try:
                 if detected_lang == 'eu':
-                    # Euskera: traducir el texto exacto del FAQ
+                    # Euskera: traducir el texto exacto del FAQ sin reformular
                     system_prompt = """Traduce el siguiente texto al euskera. Reproduce todos los datos exactos (números, fechas, importes). Solo el texto traducido, sin explicaciones."""
-                    r = azure_client_text.chat.completions.create(
-                        model=AZURE_DEPLOYMENT_NAME_TEXT,
-                        messages=[
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user", "content": quick_faq_text},
-                        ],
-                        temperature=0.0,
-                        max_tokens=500,
-                    )
-                    llm_answer = (r.choices[0].message.content or "").strip()
-                    if llm_answer:
-                        final_answer = _sanitize_answer_output(llm_answer)
-                # Castellano: FAQ ya en castellano, devolver directamente
+                    user_prompt = quick_faq_text
+                else:
+                    # Castellano: el FAQ ya está en castellano, devolver directamente sin LLM
+                    final_answer = quick_faq_text
+                    return final_answer  # salir sin llamar al LLM
+
+                r = azure_client_text.chat.completions.create(
+                    model=AZURE_DEPLOYMENT_NAME_TEXT,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    temperature=0.0,
+                    max_tokens=500,
+                )
+                llm_answer = (r.choices[0].message.content or "").strip()
+                if llm_answer:
+                    final_answer = _sanitize_answer_output(llm_answer)
             except Exception as e:
                 print(f"[WARN] Error pasando FAQ por LLM: {e}")
 
