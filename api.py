@@ -217,7 +217,7 @@ def rewrite_query(question, detected_lang):
     # Sinónimos locales rápidos
     synonyms_map = {
         # Compliance / canal ético
-        'denuncia':    'canal denuncias procedimiento interno',
+        'denuncia':    'canal denuncias procedimiento interno comité cumplimiento penal',
         'queja':       'reclamación queja procedimiento interno',
         'delito':      'delito penal prevención riesgos penales cumplimiento',
         # Permisos y ausencias
@@ -231,6 +231,7 @@ def rewrite_query(question, detected_lang):
         # Jornada y horario
         'horario':     'jornada horario flexible reducida',
         'jornada':     'jornada horas anuales horario trabajo curso',
+        'horas':       'horas anuales jornada horario curso trabajo',
         'teletrabajo': 'teletrabajo remoto flexible jornada',
         # Retribución
         'sueldo':      'pagas nómina retribución anticipo',
