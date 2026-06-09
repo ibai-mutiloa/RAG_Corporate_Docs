@@ -682,7 +682,7 @@ def insert_chunks(file_name, file_path, folder_name, chunks, file_hash):
             print(f"[WARN] Chunk {i} sin embedding → se omite")
             continue
         enriched = enriched_chunks[i]
-        valid_data.append((file_name, file_path, folder_name, i, enriched, embeddings[i], enriched, False, file_hash))
+        valid_data.append((file_name, file_path, folder_name, i, enriched, embeddings[i], clean_chunk, False, file_hash))
 
     if not valid_data:
         print(f"[ERROR] Ningún chunk válido para {file_path}")
