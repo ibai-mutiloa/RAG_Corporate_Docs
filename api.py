@@ -216,33 +216,42 @@ def rewrite_query(question, detected_lang):
     """
     # Sinónimos locales rápidos
     synonyms_map = {
-        'denuncia': 'denuncia comisión ética canal reporte procedimiento',
-        'queja': 'denuncia comisión reclamación procedimiento',
-        'permiso': 'licencia autorización permiso procedimiento',
-        'vacaciones': 'vacaciones permiso descanso prestaciones',
-        'baja': 'baja licencia incapacidad descanso',
-        'excedencia': 'excedencia baja permiso procedimiento',
-        'horario': 'jornada horario flexible trabajo presencial',
-        'teletrabajo': 'trabajo remoto teletrabajo presencial flexible',
-        'gastos': 'gastos dietas manutención desplazamiento reembolso',
-        'sueldo': 'pagas nómina retribución anticipo mensual anual',
-        'sueldos': 'pagas nómina retribución anticipo mensual anual',
-        'salario': 'pagas anticipo nómina retribución mensual',
-        'salarios': 'pagas anticipo nómina retribución mensual',
-        'nómina': 'pagas anticipo retribución mensual nómina',
+        # Compliance / canal ético
+        'denuncia':    'canal denuncias procedimiento interno',
+        'queja':       'reclamación queja procedimiento interno',
+        'delito':      'delito penal prevención riesgos penales cumplimiento',
+        # Permisos y ausencias
+        'permiso':     'licencia autorización permiso',
+        'vacaciones':  'vacaciones permiso descanso prestaciones',
+        'baja':        'baja licencia incapacidad descanso',
+        'excedencia':  'excedencia baja permiso',
+        'lactancia':   'lactancia permiso reducción jornada acumulación',
+        'maternidad':  'nacimiento permiso maternidad semanas',
+        'paternidad':  'nacimiento permiso paternidad semanas',
+        # Jornada y horario
+        'horario':     'jornada horario flexible reducida',
+        'jornada':     'jornada horas anuales horario trabajo curso',
+        'teletrabajo': 'teletrabajo remoto flexible jornada',
+        # Retribución
+        'sueldo':      'pagas nómina retribución anticipo',
+        'sueldos':     'pagas nómina retribución anticipo',
+        'salario':     'pagas nómina retribución anticipo',
+        'salarios':    'pagas nómina retribución anticipo',
+        'nómina':      'pagas anticipo retribución',
+        'irpf':        'IRPF retención fiscal porcentaje',
+        'retención':   'retención fiscal descuento porcentaje',
+        'canon':       'canon educación capitalización aportación',
+        # Desplazamiento
+        'gastos':      'gastos dietas manutención desplazamiento reembolso',
         'kilometraje': 'kilómetro vehículo desplazamiento compensación',
-        'kilometros': 'kilómetro vehículo desplazamiento compensación',
-        'km': 'kilómetro vehículo desplazamiento compensación',
-        'irpf': 'retención IRPF porcentaje impuesto',
-        'retención': 'retención IRPF porcentaje impuesto',
-        'lactancia': 'lactancia permiso reducción jornada acumulación',
-        'maternidad': 'nacimiento permiso maternidad semanas',
-        'paternidad': 'nacimiento permiso paternidad semanas',
-        'jubilación': 'jubilación LagunAro pensión cotización',
-        'pensión': 'jubilación LagunAro pensión cotización',
-        'médico': 'médico Osarten servicio médico baja',
-        'accidente': 'accidente tráfico compensación vehículo',
-        'canon': 'canon educación resultado ejercicio capitalización',
+        'kilometros':  'kilómetro vehículo desplazamiento compensación',
+        'km':          'kilómetro vehículo desplazamiento compensación',
+        'campus':      'campus base compensación cambio desplazamiento trabajador',
+        # Prestaciones sociales
+        'jubilación':  'jubilación LagunAro pensión cotización',
+        'pensión':     'jubilación LagunAro pensión cotización',
+        'médico':      'médico Osarten servicio sanitario baja',
+        'accidente':   'accidente tráfico compensación vehículo',
     }
     question_lower = question.lower()
     variants = [question]
