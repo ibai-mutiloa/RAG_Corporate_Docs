@@ -3,6 +3,7 @@ psycopg2-binary
 pgvector
 pandas
 pdfplumber
+camelot-py
 tiktoken
 python-dotenv
 pdfplumber

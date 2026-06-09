@@ -1,0 +1,1572 @@
+{
+  "global_scores": {
+    "faithfulness": 0.034959349593495934,
+    "answer_relevancy": 0.4163378522783839,
+    "answer_correctness": 0.5026828086275622
+  },
+  "correlations": {
+    "corr_faithfulness_human_label": -0.02681717741522159,
+    "corr_answer_relevancy_human_label": 0.351708918643134,
+    "corr_answer_correctness_human_label": 0.772575808816095
+  },
+  "per_question": [
+    {
+      "evaluador": "Gentzane",
+      "question": "quién conforma el comité de cumplimiento?",
+      "answer": "Según la normativa consultada, en Manual Prevención Riesgos Penales.pdf se indica: 4.1.2 Composición El Comité de Cumplimiento está compuesto por cinco miembros designados por el Consejo Rector de MGEP: • Un representante de Comisión Ejecutiva. Los miembros del Comité de Cumplimiento deberán actuar con independencia y honradez para acometer las funciones encomendadas.\n\nFuentes:\n- Manual Prevención Riesgos Penales.pdf (64%)",
+      "ground_truth": "El Comité de Cumplimiento está compuesto por cinco miembros designados por el Consejo Rector de MGEP:\n• Un representante de Comisión Ejecutiva.\n• Un miembro del colectivo preferentemente del Consejo Social.\n• Tres representantes del Equipo de Coordinación General, incluyendo el/la Coordinador/a de Administración y Finanzas y el/la de Sistemas y Servicios Transversales.",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Normativa de Prevención de Riesgos Laborales",
+      "source_document": "Manual Prevención Riesgos Penales.pdf",
+      "user_input": "quién conforma el comité de cumplimiento?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Manual Prevención Riesgos Penales.pdf se indica: 4.1.2 Composición El Comité de Cumplimiento está compuesto por cinco miembros designados por el Consejo Rector de MGEP: • Un representante de Comisión Ejecutiva. Los miembros del Comité de Cumplimiento deberán actuar con independencia y honradez para acometer las funciones encomendadas.\n\nFuentes:\n- Manual Prevención Riesgos Penales.pdf (64%)",
+      "reference": "El Comité de Cumplimiento está compuesto por cinco miembros designados por el Consejo Rector de MGEP:\n• Un representante de Comisión Ejecutiva.\n• Un miembro del colectivo preferentemente del Consejo Social.\n• Tres representantes del Equipo de Coordinación General, incluyendo el/la Coordinador/a de Administración y Finanzas y el/la de Sistemas y Servicios Transversales.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.7181700381668537,
+      "answer_correctness": 0.5008511761931899
+    },
+    {
+      "evaluador": "Gentzane",
+      "question": "qué hago si conozco un delito que se ha cometido en eskola?",
+      "answer": "Según la normativa consultada, en Normativa Académica de Formación Profesional.pdf se indica: Este será quien gestione la situación generada y decida las consecuencias de los actos cometidos por el alumnado. Las faltas graves o muy graves pueden ser desde agresiones físicas o psicológicas, consumo o tráfico de sustancias, vandalismo, fraude académico, acoso, discriminación, i...\n\nFuentes:\n- Normativa Académica de Formación Profesional.pdf (57%)",
+      "ground_truth": "Objetivos y alcance\nEl presente Manual de Prevención de Riesgos Penales detalla los principios de gestión y prevención de delitos de MGEP y la estructura y funciones del Comité de Cumplimiento en relación con la Ley Orgánica 1/2015, de 30 de marzo, por la que se modifica la Ley Orgánica 10/1995, de 23 de noviembre, del Código Penal.",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Normativa de Prevención de Riesgos Laborales",
+      "source_document": "Manual Prevención Riesgos Penales.pdf",
+      "user_input": "qué hago si conozco un delito que se ha cometido en eskola?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Normativa Académica de Formación Profesional.pdf se indica: Este será quien gestione la situación generada y decida las consecuencias de los actos cometidos por el alumnado. Las faltas graves o muy graves pueden ser desde agresiones físicas o psicológicas, consumo o tráfico de sustancias, vandalismo, fraude académico, acoso, discriminación, i...\n\nFuentes:\n- Normativa Académica de Formación Profesional.pdf (57%)",
+      "reference": "Objetivos y alcance\nEl presente Manual de Prevención de Riesgos Penales detalla los principios de gestión y prevención de delitos de MGEP y la estructura y funciones del Comité de Cumplimiento en relación con la Ley Orgánica 1/2015, de 30 de marzo, por la que se modifica la Ley Orgánica 10/1995, de 23 de noviembre, del Código Penal.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.5553956929401043,
+      "answer_correctness": 0.11410010118002234
+    },
+    {
+      "evaluador": "Gentzane",
+      "question": "cómo puedo hacer una denuncia siendo un trabajador?",
+      "answer": "Según la normativa consultada, en Política de conflicto acoso laboral y acoso sexual.pdf se indica: º\nFuentes:\n- Política de conflicto acoso laboral y acoso sexual.pdf (58%)",
+      "ground_truth": "",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "",
+      "source_document": "Manual Prevención Riesgos Penales.pdf",
+      "user_input": "cómo puedo hacer una denuncia siendo un trabajador?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Política de conflicto acoso laboral y acoso sexual.pdf se indica: º\nFuentes:\n- Política de conflicto acoso laboral y acoso sexual.pdf (58%)",
+      "reference": "",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.41965588642471674,
+      "answer_correctness": 0.018312380937851477
+    },
+    {
+      "evaluador": "Gentzane",
+      "question": "que canal puedo utilizar para hacer una denuncia?",
+      "answer": "Según la normativa consultada, en Manual Prevención Riesgos Penales.pdf se indica: Tras la recepción de la denuncia, el Comité de Cumplimiento procederá a la apertura de un expediente y a realizar un análisis más detenido de lo denunciado, que podrá con... 5.2 Protocolo de tratamiento 5.2.1 Recepción de la denuncia La denuncia será recibida directamente por el Comité de Cumplimiento, quien valorará si procede o no darle trá...\n\nFuentes:\n- Manual Prevención Riesgos Penales.pdf (59%)",
+      "ground_truth": "Según la normativa consultada, en Manual Prevención Riesgos Penales.pdf se indica: Tras la recepción de la denuncia, el Comité de Cumplimiento procederá a la apertura de un expediente y a realizar un análisis más detenido de lo denunciado, que podrá con... 5.2 Protocolo de tratamiento 5.2.1 Recepción de la denuncia La denuncia será recibida directamente por el Comité de Cumplimiento, quien valorará si procede o no darle trá...\n\nFuentes:\n- Manual Prevención Riesgos Penales.pdf (59%)",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativa de Prevención de Riesgos Laborales",
+      "source_document": "Manual Prevención Riesgos Penales.pdf",
+      "user_input": "que canal puedo utilizar para hacer una denuncia?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Manual Prevención Riesgos Penales.pdf se indica: Tras la recepción de la denuncia, el Comité de Cumplimiento procederá a la apertura de un expediente y a realizar un análisis más detenido de lo denunciado, que podrá con... 5.2 Protocolo de tratamiento 5.2.1 Recepción de la denuncia La denuncia será recibida directamente por el Comité de Cumplimiento, quien valorará si procede o no darle trá...\n\nFuentes:\n- Manual Prevención Riesgos Penales.pdf (59%)",
+      "reference": "Según la normativa consultada, en Manual Prevención Riesgos Penales.pdf se indica: Tras la recepción de la denuncia, el Comité de Cumplimiento procederá a la apertura de un expediente y a realizar un análisis más detenido de lo denunciado, que podrá con... 5.2 Protocolo de tratamiento 5.2.1 Recepción de la denuncia La denuncia será recibida directamente por el Comité de Cumplimiento, quien valorará si procede o no darle trá...\n\nFuentes:\n- Manual Prevención Riesgos Penales.pdf (59%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.41867853244061287,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Itsaso",
+      "question": "a cuanto se paga el kilometraje ?",
+      "answer": "El importe abonado en concepto de kilometraje está exento de tributación hasta un límite establecido por la normativa vigente. Sin embargo, el contexto proporcionado no especifica el monto exacto que se paga por kilómetro. Para obtener este detalle, sería necesario consultar directamente la política interna o normativa aplicable en la empresa.",
+      "ground_truth": "Kilometraje: 0,32 euro/kilometro",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Normativas Laborales",
+      "source_document": "",
+      "user_input": "a cuanto se paga el kilometraje ?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "El importe abonado en concepto de kilometraje está exento de tributación hasta un límite establecido por la normativa vigente. Sin embargo, el contexto proporcionado no especifica el monto exacto que se paga por kilómetro. Para obtener este detalle, sería necesario consultar directamente la política interna o normativa aplicable en la empresa.",
+      "reference": "Kilometraje: 0,32 euro/kilometro",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.10536842427196727
+    },
+    {
+      "evaluador": "Itsaso",
+      "question": "que gastos de viaje se pagan en MGEP?",
+      "answer": "MGEP paga íntegramente los gastos de viaje y alojamiento de las personas trabajadoras, siempre que se cumplan los criterios establecidos y se tramite mediante el documento correspondiente. No se especifican otros tipos de gastos en el contexto proporcionado.",
+      "ground_truth": "MGEP paga íntegramente los gastos de viaje y alojamiento de las personas trabajadoras, siempre que se cumplan los criterios establecidos y se tramite mediante el documento correspondiente. No se especifican otros tipos de gastos en el contexto proporcionado.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "",
+      "source_document": "",
+      "user_input": "que gastos de viaje se pagan en MGEP?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "MGEP paga íntegramente los gastos de viaje y alojamiento de las personas trabajadoras, siempre que se cumplan los criterios establecidos y se tramite mediante el documento correspondiente. No se especifican otros tipos de gastos en el contexto proporcionado.",
+      "reference": "MGEP paga íntegramente los gastos de viaje y alojamiento de las personas trabajadoras, siempre que se cumplan los criterios establecidos y se tramite mediante el documento correspondiente. No se especifican otros tipos de gastos en el contexto proporcionado.",
+      "faithfulness": 0.2,
+      "answer_relevancy": 0.7422350402528343,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "El canon de educacion tiene retencion?",
+      "answer": "No se menciona en el contexto proporcionado que el Canon de Educación tenga retención. La información disponible solo indica que este canon se calcula y acredita a las personas socias al final de cada ejercicio, en proporción a la actividad realizada en la cooperativa. Si necesitas más detalles sobre retenciones específicas, sería necesario consultar documentación adicional.\n\nFuentes:\n- Reglamento de régimen interno.pdf (57%)\nPagina: 30",
+      "ground_truth": "Se computará como rendimiento de trabajo y por tanto sujeto a retención fiscal a efectos de los IRPF \nindividuales, aunque no sea disponible ya que se capitaliza.",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Normativas Laborales",
+      "source_document": "1 Anticipos y retribución.pdf",
+      "user_input": "El canon de educacion tiene retencion?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "No se menciona en el contexto proporcionado que el Canon de Educación tenga retención. La información disponible solo indica que este canon se calcula y acredita a las personas socias al final de cada ejercicio, en proporción a la actividad realizada en la cooperativa. Si necesitas más detalles sobre retenciones específicas, sería necesario consultar documentación adicional.\n\nFuentes:\n- Reglamento de régimen interno.pdf (57%)\nPagina: 30",
+      "reference": "Se computará como rendimiento de trabajo y por tanto sujeto a retención fiscal a efectos de los IRPF \nindividuales, aunque no sea disponible ya que se capitaliza.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.1267385882572764
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "cuando se calcula el IRPF?",
+      "answer": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: El porcentaje de retención a cuenta del Impuesto sobre la Renta de las Personas Físicas (IRPF) se calculará en base a la percepción íntegra anual. • La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el 1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubier...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (59%)",
+      "ground_truth": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: El porcentaje de retención a cuenta del Impuesto sobre la Renta de las Personas Físicas (IRPF) se calculará en base a la percepción íntegra anual. • La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el 1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubier...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (59%)",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "1 Anticipos y retribución.pdf",
+      "user_input": "cuando se calcula el IRPF?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: El porcentaje de retención a cuenta del Impuesto sobre la Renta de las Personas Físicas (IRPF) se calculará en base a la percepción íntegra anual. • La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el 1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubier...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (59%)",
+      "reference": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: El porcentaje de retención a cuenta del Impuesto sobre la Renta de las Personas Físicas (IRPF) se calculará en base a la percepción íntegra anual. • La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el 1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubier...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (59%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.6494106779400308,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "Que es el nivel de anticipos?",
+      "answer": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: del año siguiente: Aurrerakin Maila/Nivel de Anticipos = 1,00000 AL1(coop) * (1+%CVT) – AL1(l-a) * (%CVT - %CVR) NA = AL1(l-a) * (1+%CVR) Siendo: • NA: Nivel de Anticipos... Una vez conocido el anticipo de consumo, y la actualización de las tablas de reparto de LagunAro,EPSV, calculará los valores resultantes para el periodo del 01.04 de ese ...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (56%)",
+      "ground_truth": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: del año siguiente: Aurrerakin Maila/Nivel de Anticipos = 1,00000 AL1(coop) * (1+%CVT) – AL1(l-a) * (%CVT - %CVR) NA = AL1(l-a) * (1+%CVR) Siendo: • NA: Nivel de Anticipos... Una vez conocido el anticipo de consumo, y la actualización de las tablas de reparto de LagunAro,EPSV, calculará los valores resultantes para el periodo del 01.04 de ese ...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (56%)",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "1 Anticipos y retribución.pdf",
+      "user_input": "Que es el nivel de anticipos?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: del año siguiente: Aurrerakin Maila/Nivel de Anticipos = 1,00000 AL1(coop) * (1+%CVT) – AL1(l-a) * (%CVT - %CVR) NA = AL1(l-a) * (1+%CVR) Siendo: • NA: Nivel de Anticipos... Una vez conocido el anticipo de consumo, y la actualización de las tablas de reparto de LagunAro,EPSV, calculará los valores resultantes para el periodo del 01.04 de ese ...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (56%)",
+      "reference": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: del año siguiente: Aurrerakin Maila/Nivel de Anticipos = 1,00000 AL1(coop) * (1+%CVT) – AL1(l-a) * (%CVT - %CVR) NA = AL1(l-a) * (1+%CVR) Siendo: • NA: Nivel de Anticipos... Una vez conocido el anticipo de consumo, y la actualización de las tablas de reparto de LagunAro,EPSV, calculará los valores resultantes para el periodo del 01.04 de ese ...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (56%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.47492843509890803,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "vamos a cobrar retribucion variable?",
+      "answer": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: • CVT: Cuota variable total • CVR: Cuota variable reparto • l-a: LagunAro 2 Retribución Variable Tal y como recoge el artículo 55 del Reglamento Interno, la Cooperativa p... La retribución variable no podrá superar el 2% del anticipo laboral anual correspondiente.\n\nFuentes:\n- 1 Anticipos y retribución.pdf (63%)",
+      "ground_truth": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: • CVT: Cuota variable total • CVR: Cuota variable reparto • l-a: LagunAro 2 Retribución Variable Tal y como recoge el artículo 55 del Reglamento Interno, la Cooperativa p... La retribución variable no podrá superar el 2% del anticipo laboral anual correspondiente.\n\nFuentes:\n- 1 Anticipos y retribución.pdf (63%)",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "1 Anticipos y retribución.pdf",
+      "user_input": "vamos a cobrar retribucion variable?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: • CVT: Cuota variable total • CVR: Cuota variable reparto • l-a: LagunAro 2 Retribución Variable Tal y como recoge el artículo 55 del Reglamento Interno, la Cooperativa p... La retribución variable no podrá superar el 2% del anticipo laboral anual correspondiente.\n\nFuentes:\n- 1 Anticipos y retribución.pdf (63%)",
+      "reference": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: • CVT: Cuota variable total • CVR: Cuota variable reparto • l-a: LagunAro 2 Retribución Variable Tal y como recoge el artículo 55 del Reglamento Interno, la Cooperativa p... La retribución variable no podrá superar el 2% del anticipo laboral anual correspondiente.\n\nFuentes:\n- 1 Anticipos y retribución.pdf (63%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.6570090314305994,
+      "answer_correctness": 0.8269230769230769
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "Cuantas pagas se cobran en eskola?",
+      "answer": "Según la normativa consultada, en Idiomas.pdf se indica: a una asistencia mínima anual del 75%, salvo que no se haya cumplido por haberse requerido su presencia en otro lugar determinado como consecuencia de su actividad en Esk...\n\nFuentes:\n- Idiomas.pdf (63%)",
+      "ground_truth": "Las pagas extraordinarias son dos mensualidades enteras del Anticipo de Consumo mensual bruto que se \nestablece a partir del 01.04 de cada año.\nPara la aplicación de estas pagas, se formulan las siguientes indicaciones:\n• La primera, se hará efectiva el día 15 de Julio y su cuantía será proporcional al tiempo trabajado desde \nel 1 de Enero al 30 de Junio, cobrándola entera quien haya cubierto los 6 meses completos.\n• La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el \n1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubierto los 6 meses completos.",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Normativas Laborales",
+      "source_document": "1 Anticipos y retribución.pdf",
+      "user_input": "Cuantas pagas se cobran en eskola?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Idiomas.pdf se indica: a una asistencia mínima anual del 75%, salvo que no se haya cumplido por haberse requerido su presencia en otro lugar determinado como consecuencia de su actividad en Esk...\n\nFuentes:\n- Idiomas.pdf (63%)",
+      "reference": "Las pagas extraordinarias son dos mensualidades enteras del Anticipo de Consumo mensual bruto que se \nestablece a partir del 01.04 de cada año.\nPara la aplicación de estas pagas, se formulan las siguientes indicaciones:\n• La primera, se hará efectiva el día 15 de Julio y su cuantía será proporcional al tiempo trabajado desde \nel 1 de Enero al 30 de Junio, cobrándola entera quien haya cubierto los 6 meses completos.\n• La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el \n1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubierto los 6 meses completos.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.3922055087449738,
+      "answer_correctness": 0.08637281747287348
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "le he dado un golpe al coche, que tengo que hacer?",
+      "answer": "Si has dado un golpe al coche, debes obtener un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en el que ocurrió el accidente. Además, si el daño implica un siniestro total, necesitarás un presupuesto que demuestre que el costo de la reparación supera el valor del vehículo en el mercado.",
+      "ground_truth": "Si has dado un golpe al coche, debes obtener un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en el que ocurrió el accidente. Además, si el daño implica un siniestro total, necesitarás un presupuesto que demuestre que el costo de la reparación supera el valor del vehículo en el mercado.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "5 Compensación de daños en vehículos.pdf",
+      "user_input": "le he dado un golpe al coche, que tengo que hacer?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Si has dado un golpe al coche, debes obtener un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en el que ocurrió el accidente. Además, si el daño implica un siniestro total, necesitarás un presupuesto que demuestre que el costo de la reparación supera el valor del vehículo en el mercado.",
+      "reference": "Si has dado un golpe al coche, debes obtener un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en el que ocurrió el accidente. Además, si el daño implica un siniestro total, necesitarás un presupuesto que demuestre que el costo de la reparación supera el valor del vehículo en el mercado.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.7278100861842911,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "tengo que pagar la franquicia del vehiculo?",
+      "answer": "Sí, deberás pagar la franquicia del vehículo, ya que los vehículos particulares utilizados para actividades relacionadas con MGEP no están cubiertos por ningún seguro contratado por la institución. Por lo tanto, cualquier gasto derivado de un accidente corre a cargo del propietario del vehículo.",
+      "ground_truth": "Administración de la compensación. La administración de este fondo se llevará a cabo por el Dpto. de Administración. Fecha: 2025-05-28 \nModificación: se actualiza el importe del fondo, se \nelimina la franquicia.",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Otras Normativas Generales",
+      "source_document": "",
+      "user_input": "tengo que pagar la franquicia del vehiculo?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Sí, deberás pagar la franquicia del vehículo, ya que los vehículos particulares utilizados para actividades relacionadas con MGEP no están cubiertos por ningún seguro contratado por la institución. Por lo tanto, cualquier gasto derivado de un accidente corre a cargo del propietario del vehículo.",
+      "reference": "Administración de la compensación. La administración de este fondo se llevará a cabo por el Dpto. de Administración. Fecha: 2025-05-28 \nModificación: se actualiza el importe del fondo, se \nelimina la franquicia.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.7251722450472267,
+      "answer_correctness": 0.09387082535774507
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "que documentacion tengo que presentar para justificar los gastos de reparacion?",
+      "answer": "Para justificar los gastos de reparación, debes presentar un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en las que ocurrió el accidente. Además, si se trata de un siniestro total, es necesario incluir un presupuesto previo que demuestre que el coste de la reparación supera el valor del vehículo en el mercado.",
+      "ground_truth": "Para justificar los gastos de reparación, debes presentar un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en las que ocurrió el accidente. Además, si se trata de un siniestro total, es necesario incluir un presupuesto previo que demuestre que el coste de la reparación supera el valor del vehículo en el mercado.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "5 Compensación de daños en vehículos.pdf",
+      "user_input": "que documentacion tengo que presentar para justificar los gastos de reparacion?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Para justificar los gastos de reparación, debes presentar un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en las que ocurrió el accidente. Además, si se trata de un siniestro total, es necesario incluir un presupuesto previo que demuestre que el coste de la reparación supera el valor del vehículo en el mercado.",
+      "reference": "Para justificar los gastos de reparación, debes presentar un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en las que ocurrió el accidente. Además, si se trata de un siniestro total, es necesario incluir un presupuesto previo que demuestre que el coste de la reparación supera el valor del vehículo en el mercado.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.834077006740837,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "a quien tengo que avisar si he tenido un golpe con mi coche?",
+      "answer": "Debes informar del golpe con tu coche al departamento de Administración, proporcionando un informe explicativo sobre las circunstancias del siniestro.\n\nEs importante que actúes diligentemente para gestionar la indemnización correspondiente con tu compañía de seguros, el responsable del accidente o la aseguradora implicada. Si tienes dudas adicionales sobre el procedimiento, consulta las políticas internas relacionadas.",
+      "ground_truth": "Debes informar del golpe con tu coche al departamento de Administración, proporcionando un informe explicativo sobre las circunstancias del siniestro.\n\nEs importante que actúes diligentemente para gestionar la indemnización correspondiente con tu compañía de seguros, el responsable del accidente o la aseguradora implicada. Si tienes dudas adicionales sobre el procedimiento, consulta las políticas internas relacionadas.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "5 Compensación de daños en vehículos.pdf",
+      "user_input": "a quien tengo que avisar si he tenido un golpe con mi coche?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Debes informar del golpe con tu coche al departamento de Administración, proporcionando un informe explicativo sobre las circunstancias del siniestro.\n\nEs importante que actúes diligentemente para gestionar la indemnización correspondiente con tu compañía de seguros, el responsable del accidente o la aseguradora implicada. Si tienes dudas adicionales sobre el procedimiento, consulta las políticas internas relacionadas.",
+      "reference": "Debes informar del golpe con tu coche al departamento de Administración, proporcionando un informe explicativo sobre las circunstancias del siniestro.\n\nEs importante que actúes diligentemente para gestionar la indemnización correspondiente con tu compañía de seguros, el responsable del accidente o la aseguradora implicada. Si tienes dudas adicionales sobre el procedimiento, consulta las políticas internas relacionadas.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.7944446672337188,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "el seguro de MGEP me cubre todos los gastos?",
+      "answer": "El seguro de MGEP no cubre todos los gastos. Los materiales personales, como vehículos particulares, no están incluidos en la cobertura. Además, el seguro de accidentes complementario solo cubre daños personales en caso de accidente, como muerte, invalidez e incapacidad. Para otros tipos de gastos, no hay evidencia suficiente en el contexto proporcionado.",
+      "ground_truth": "Beste araudi batera eramaten du, baliteke galdera ez egotea ondo eginda",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Otras Normativas Generales",
+      "source_document": "",
+      "user_input": "el seguro de MGEP me cubre todos los gastos?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "El seguro de MGEP no cubre todos los gastos. Los materiales personales, como vehículos particulares, no están incluidos en la cobertura. Además, el seguro de accidentes complementario solo cubre daños personales en caso de accidente, como muerte, invalidez e incapacidad. Para otros tipos de gastos, no hay evidencia suficiente en el contexto proporcionado.",
+      "reference": "Beste araudi batera eramaten du, baliteke galdera ez egotea ondo eginda",
+      "faithfulness": 0.16666666666666666,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.027352712793054103
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "Política comunicación contrataciones.pdf",
+      "answer": "EZ DAGOKIO GALDERARIK, BARNE ARAUDIA DA",
+      "ground_truth": "",
+      "human_label": 0.0,
+      "human_correctness_raw": "",
+      "scope": "",
+      "source_document": "",
+      "user_input": "Política comunicación contrataciones.pdf",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "EZ DAGOKIO GALDERARIK, BARNE ARAUDIA DA",
+      "reference": "",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.037294165590779825
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "que tengo que hacer si la huelga es vinculante?",
+      "answer": "Si la huelga es vinculante, debes cumplir con las mismas consecuencias y normativas aplicables a todas las personas trabajadoras, independientemente de si tienes un día flexible. Además, si necesitas realizar una actividad externa ineludible, es necesario que informes previamente a tu Coordinador/a antes de la votación de la huelga.",
+      "ground_truth": "Si la huelga es vinculante, debes cumplir con las mismas consecuencias y normativas aplicables a todas las personas trabajadoras, independientemente de si tienes un día flexible. Además, si necesitas realizar una actividad externa ineludible, es necesario que informes previamente a tu Coordinador/a antes de la votación de la huelga.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Huelga personas trabajadoras",
+      "user_input": "que tengo que hacer si la huelga es vinculante?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Si la huelga es vinculante, debes cumplir con las mismas consecuencias y normativas aplicables a todas las personas trabajadoras, independientemente de si tienes un día flexible. Además, si necesitas realizar una actividad externa ineludible, es necesario que informes previamente a tu Coordinador/a antes de la votación de la huelga.",
+      "reference": "Si la huelga es vinculante, debes cumplir con las mismas consecuencias y normativas aplicables a todas las personas trabajadoras, independientemente de si tienes un día flexible. Además, si necesitas realizar una actividad externa ineludible, es necesario que informes previamente a tu Coordinador/a antes de la votación de la huelga.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.4998769257210018,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "cuando se vota cuando hay convocatoria de huelga?",
+      "answer": "La votación en caso de convocatoria de huelga se realiza de forma secreta e individual una vez concluido el proceso correspondiente. Si no hay tiempo suficiente, el sistema de votación puede ser adaptado por el Consejo Social, garantizando siempre la transparencia y el cumplimiento de los procedimientos.",
+      "ground_truth": "La votación en caso de convocatoria de huelga se realiza de forma secreta e individual una vez concluido el proceso correspondiente. Si no hay tiempo suficiente, el sistema de votación puede ser adaptado por el Consejo Social, garantizando siempre la transparencia y el cumplimiento de los procedimientos.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Huelga personas trabajadoras",
+      "user_input": "cuando se vota cuando hay convocatoria de huelga?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "La votación en caso de convocatoria de huelga se realiza de forma secreta e individual una vez concluido el proceso correspondiente. Si no hay tiempo suficiente, el sistema de votación puede ser adaptado por el Consejo Social, garantizando siempre la transparencia y el cumplimiento de los procedimientos.",
+      "reference": "La votación en caso de convocatoria de huelga se realiza de forma secreta e individual una vez concluido el proceso correspondiente. Si no hay tiempo suficiente, el sistema de votación puede ser adaptado por el Consejo Social, garantizando siempre la transparencia y el cumplimiento de los procedimientos.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.8481572512431874,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "puedo ir a trabajar un dia de huelga?",
+      "answer": "Sí, puedes ir a trabajar un día de huelga. Sin embargo, si tienes un día flexible, las mismas condiciones y consecuencias aplicarán como para el resto de las personas trabajadoras. Si necesitas realizar una actividad externa ineludible, debes comunicarlo previamente a tu Coordinador o Coordinadora antes de la votación de la huelga.",
+      "ground_truth": "Sí, puedes ir a trabajar un día de huelga. Sin embargo, si tienes un día flexible, las mismas condiciones y consecuencias aplicarán como para el resto de las personas trabajadoras. Si necesitas realizar una actividad externa ineludible, debes comunicarlo previamente a tu Coordinador o Coordinadora antes de la votación de la huelga.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Huelga personas trabajadoras",
+      "user_input": "puedo ir a trabajar un dia de huelga?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Sí, puedes ir a trabajar un día de huelga. Sin embargo, si tienes un día flexible, las mismas condiciones y consecuencias aplicarán como para el resto de las personas trabajadoras. Si necesitas realizar una actividad externa ineludible, debes comunicarlo previamente a tu Coordinador o Coordinadora antes de la votación de la huelga.",
+      "reference": "Sí, puedes ir a trabajar un día de huelga. Sin embargo, si tienes un día flexible, las mismas condiciones y consecuencias aplicarán como para el resto de las personas trabajadoras. Si necesitas realizar una actividad externa ineludible, debes comunicarlo previamente a tu Coordinador o Coordinadora antes de la votación de la huelga.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.962008101654285,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "que significa que la huelga sea vinculante?",
+      "answer": "Que la huelga sea vinculante significa que tiene efectos legales y obligatorios sobre las partes involucradas, como la empresa y los trabajadores. Sin embargo, el contexto proporcionado solo menciona el caso de huelgas no vinculantes, por lo que no se detalla específicamente qué implica una huelga vinculante en este caso.",
+      "ground_truth": "Que la huelga sea vinculante significa que tiene efectos legales y obligatorios sobre las partes involucradas, como la empresa y los trabajadores. Sin embargo, el contexto proporcionado solo menciona el caso de huelgas no vinculantes, por lo que no se detalla específicamente qué implica una huelga vinculante en este caso.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Huelga personas trabajadoras",
+      "user_input": "que significa que la huelga sea vinculante?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Que la huelga sea vinculante significa que tiene efectos legales y obligatorios sobre las partes involucradas, como la empresa y los trabajadores. Sin embargo, el contexto proporcionado solo menciona el caso de huelgas no vinculantes, por lo que no se detalla específicamente qué implica una huelga vinculante en este caso.",
+      "reference": "Que la huelga sea vinculante significa que tiene efectos legales y obligatorios sobre las partes involucradas, como la empresa y los trabajadores. Sin embargo, el contexto proporcionado solo menciona el caso de huelgas no vinculantes, por lo que no se detalla específicamente qué implica una huelga vinculante en este caso.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.8124999999999999
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "afecta la huelga de los alumnos a la huelga de trabajadores?",
+      "answer": "No hay evidencia suficiente en el contexto proporcionado para determinar si la huelga de los alumnos afecta directamente a la huelga de los trabajadores. El documento menciona condiciones para realizar paros en la enseñanza y el respaldo necesario de sindicatos estudiantiles, pero no establece una relación explícita entre ambas huelgas.",
+      "ground_truth": "Voto favorable a la huelga por mayoría de 2/3, pero inferior al 80%, de votos válidos emitidos. En este caso las acciones a emprender serán en función de lo que decida el alumnado: • Si el alumnado decide secundar la huelga, se considerará un caso de huelga VINCULANTE. • Si el alumnado decide no secundar la huelga, ésta no tendrá lugar, salvo en el caso de una huelga de un colectivo concreto, en el que se podrá realizar la huelga NO VINCULANTE aunque el alumnado no la secunde, entendiéndose que el personal trabajador no convocado a la huelga y aquellos/as que no la secunden suplirán sus funciones más importantes, sin distorsionar en la medida de lo posible el normal desarrollo de las clases y las actividades de MGEP. c) Voto favorable a la huelga por mayoría del 50% (pero inferior a 2/3) de los votos válidos emitidos. Al igual que en el caso anterior, las acciones a emprender serán en función de lo que decida el alumnado: 3 Versión 3 • Si el alumnado decide secundar la huelga, se considerará un caso de huelga NO VINCULANTE. • Si el alumnado decide no secundar la huelga, ésta no tendrá lugar, salvo en el caso de una huelga de un colectivo concreto, en el que se podrá realizar la huelga NO VINCULANTE, aunque el alumnado no la secunde, entendiéndose que el personal trabajador no convocado a la huelga y aquellos/as que no la secunden suplirán sus funciones más importantes.",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Otras Normativas Generales",
+      "source_document": "huelga de alumnos",
+      "user_input": "afecta la huelga de los alumnos a la huelga de trabajadores?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "No hay evidencia suficiente en el contexto proporcionado para determinar si la huelga de los alumnos afecta directamente a la huelga de los trabajadores. El documento menciona condiciones para realizar paros en la enseñanza y el respaldo necesario de sindicatos estudiantiles, pero no establece una relación explícita entre ambas huelgas.",
+      "reference": "Voto favorable a la huelga por mayoría de 2/3, pero inferior al 80%, de votos válidos emitidos. En este caso las acciones a emprender serán en función de lo que decida el alumnado: • Si el alumnado decide secundar la huelga, se considerará un caso de huelga VINCULANTE. • Si el alumnado decide no secundar la huelga, ésta no tendrá lugar, salvo en el caso de una huelga de un colectivo concreto, en el que se podrá realizar la huelga NO VINCULANTE aunque el alumnado no la secunde, entendiéndose que el personal trabajador no convocado a la huelga y aquellos/as que no la secunden suplirán sus funciones más importantes, sin distorsionar en la medida de lo posible el normal desarrollo de las clases y las actividades de MGEP. c) Voto favorable a la huelga por mayoría del 50% (pero inferior a 2/3) de los votos válidos emitidos. Al igual que en el caso anterior, las acciones a emprender serán en función de lo que decida el alumnado: 3 Versión 3 • Si el alumnado decide secundar la huelga, se considerará un caso de huelga NO VINCULANTE. • Si el alumnado decide no secundar la huelga, ésta no tendrá lugar, salvo en el caso de una huelga de un colectivo concreto, en el que se podrá realizar la huelga NO VINCULANTE, aunque el alumnado no la secunde, entendiéndose que el personal trabajador no convocado a la huelga y aquellos/as que no la secunden suplirán sus funciones más importantes.",
+      "faithfulness": 0.5,
+      "answer_relevancy": 0.0,
+      "answer_correctness": NaN
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "cuando afecta la huelga de alumnos a la huelga de trabajadores?",
+      "answer": "La huelga de alumnos afecta a la huelga de trabajadores si el alumnado decide secundarla, ya que en ese caso se considera una huelga vinculante. Esto implica que las acciones de los trabajadores estarán condicionadas por la decisión del alumnado. Sin embargo, no se especifican más detalles sobre cómo se coordinarían ambas huelgas o sus implicaciones exactas.\n\nFuentes:\n- Huelga trabajadores.pdf (64%)\nPagina: 3",
+      "ground_truth": "Beharbada araudia bera zehatzagoa izan behar da",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Huelga personas trabajadoras",
+      "user_input": "cuando afecta la huelga de alumnos a la huelga de trabajadores?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "La huelga de alumnos afecta a la huelga de trabajadores si el alumnado decide secundarla, ya que en ese caso se considera una huelga vinculante. Esto implica que las acciones de los trabajadores estarán condicionadas por la decisión del alumnado. Sin embargo, no se especifican más detalles sobre cómo se coordinarían ambas huelgas o sus implicaciones exactas.\n\nFuentes:\n- Huelga trabajadores.pdf (64%)\nPagina: 3",
+      "reference": "Beharbada araudia bera zehatzagoa izan behar da",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.03259376633193786
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "cuales son los pasos a seguir en el caso de que fallezca un empleado de Eskola?",
+      "answer": "En caso de que fallezca un empleado de Eskola, se debe contactar con la mutua de accidentes para informar del fallecimiento y realizar los trámites correspondientes. Además, se calcula el finiquito del trabajador y se procede a darlo de baja en el sistema interno de la empresa.\n\nSi se requiere información adicional sobre otros pasos específicos, el protocolo no lo detalla explícitamente en el contexto proporcionado.\n\nFuentes:\n- Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf (64%)\nPagina: 2",
+      "ground_truth": "ikasleen araudira joaten da",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf",
+      "user_input": "cuales son los pasos a seguir en el caso de que fallezca un empleado de Eskola?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "En caso de que fallezca un empleado de Eskola, se debe contactar con la mutua de accidentes para informar del fallecimiento y realizar los trámites correspondientes. Además, se calcula el finiquito del trabajador y se procede a darlo de baja en el sistema interno de la empresa.\n\nSi se requiere información adicional sobre otros pasos específicos, el protocolo no lo detalla explícitamente en el contexto proporcionado.\n\nFuentes:\n- Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf (64%)\nPagina: 2",
+      "reference": "ikasleen araudira joaten da",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.9215811113378463,
+      "answer_correctness": 0.057910589825599795
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "cuales son los pasos a seguir en el caso de que fallezca un alumno de Eskola?",
+      "answer": "En caso de que fallezca un alumno de Eskola, uno de los pasos a seguir es contactar con el tanatorio para gestionar la publicación de esquelas en medios de comunicación relevantes, como Berria, Gara, Diario Vasco, Noticias de Gipuzkoa y Goiena. Sin embargo, el contexto proporcionado no detalla otros procedimientos específicos que puedan formar parte del protocolo.",
+      "ground_truth": "En caso de que fallezca un alumno de Eskola, uno de los pasos a seguir es contactar con el tanatorio para gestionar la publicación de esquelas en medios de comunicación relevantes, como Berria, Gara, Diario Vasco, Noticias de Gipuzkoa y Goiena. Sin embargo, el contexto proporcionado no detalla otros procedimientos específicos que puedan formar parte del protocolo.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Normativa para definir el protocolo en caso de fallecimiento de alumnado por enfermedad o accidente",
+      "user_input": "cuales son los pasos a seguir en el caso de que fallezca un alumno de Eskola?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "En caso de que fallezca un alumno de Eskola, uno de los pasos a seguir es contactar con el tanatorio para gestionar la publicación de esquelas en medios de comunicación relevantes, como Berria, Gara, Diario Vasco, Noticias de Gipuzkoa y Goiena. Sin embargo, el contexto proporcionado no detalla otros procedimientos específicos que puedan formar parte del protocolo.",
+      "reference": "En caso de que fallezca un alumno de Eskola, uno de los pasos a seguir es contactar con el tanatorio para gestionar la publicación de esquelas en medios de comunicación relevantes, como Berria, Gara, Diario Vasco, Noticias de Gipuzkoa y Goiena. Sin embargo, el contexto proporcionado no detalla otros procedimientos específicos que puedan formar parte del protocolo.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia",
+      "question": "cuales son los pasos a seguir en el caso de que fallezca el padre de un empleado de Eskola?",
+      "answer": "EEn el caso de que fallezca el padre de un empleado de Eskola, el protocolo específico no está detallado en el contexto proporcionado. Sin embargo, se menciona que existen procedimientos relacionados con el fallecimiento de trabajadores o familiares, como la comunicación con entidades externas y gestiones administrativas.\n\nSi necesitas información más precisa sobre los pasos a seguir en esta situación, sería recomendable consultar directamente el protocolo completo o contactar con el área de recursos humanos de la empresa.como la comunicación con entidades externas y gestiones administrativas.",
+      "ground_truth": "EEn el caso de que fallezca el padre de un empleado de Eskola, el protocolo específico no está detallado en el contexto proporcionado. Sin embargo, se menciona que existen procedimientos relacionados con el fallecimiento de trabajadores o familiares, como la comunicación con entidades externas y gestiones administrativas.\n\nSi necesitas información más precisa sobre los pasos a seguir en esta situación, sería recomendable consultar directamente el protocolo completo o contactar con el área de recursos humanos de la empresa.como la comunicación con entidades externas y gestiones administrativas.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Normativa para definir el protocolo de actuación en caso de muerte de trabajador/a de familiar de trabajador/a de MGEP",
+      "user_input": "cuales son los pasos a seguir en el caso de que fallezca el padre de un empleado de Eskola?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "EEn el caso de que fallezca el padre de un empleado de Eskola, el protocolo específico no está detallado en el contexto proporcionado. Sin embargo, se menciona que existen procedimientos relacionados con el fallecimiento de trabajadores o familiares, como la comunicación con entidades externas y gestiones administrativas.\n\nSi necesitas información más precisa sobre los pasos a seguir en esta situación, sería recomendable consultar directamente el protocolo completo o contactar con el área de recursos humanos de la empresa.como la comunicación con entidades externas y gestiones administrativas.",
+      "reference": "EEn el caso de que fallezca el padre de un empleado de Eskola, el protocolo específico no está detallado en el contexto proporcionado. Sin embargo, se menciona que existen procedimientos relacionados con el fallecimiento de trabajadores o familiares, como la comunicación con entidades externas y gestiones administrativas.\n\nSi necesitas información más precisa sobre los pasos a seguir en esta situación, sería recomendable consultar directamente el protocolo completo o contactar con el área de recursos humanos de la empresa.como la comunicación con entidades externas y gestiones administrativas.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.9999990941330369
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "El canon de educacion tiene retencion?",
+      "answer": "No se menciona en el contexto proporcionado que el Canon de Educación tenga retención. La información disponible solo indica que este canon se calcula y acredita a las personas socias al final de cada ejercicio, en proporción a la actividad realizada en la cooperativa. Si necesitas más detalles sobre retenciones específicas, sería necesario consultar documentación adicional.\n\nFuentes:\n- Reglamento de régimen interno.pdf (57%)\nPagina: 30",
+      "ground_truth": "Se computará como rendimiento de trabajo y por tanto sujeto a retención fiscal a efectos de los IRPF \nindividuales, aunque no sea disponible ya que se capitaliza.",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Normativas Laborales",
+      "source_document": "1 Anticipos y retribución.pdf",
+      "user_input": "El canon de educacion tiene retencion?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "No se menciona en el contexto proporcionado que el Canon de Educación tenga retención. La información disponible solo indica que este canon se calcula y acredita a las personas socias al final de cada ejercicio, en proporción a la actividad realizada en la cooperativa. Si necesitas más detalles sobre retenciones específicas, sería necesario consultar documentación adicional.\n\nFuentes:\n- Reglamento de régimen interno.pdf (57%)\nPagina: 30",
+      "reference": "Se computará como rendimiento de trabajo y por tanto sujeto a retención fiscal a efectos de los IRPF \nindividuales, aunque no sea disponible ya que se capitaliza.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.1267509632590023
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "cuando se calcula el IRPF?",
+      "answer": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: El porcentaje de retención a cuenta del Impuesto sobre la Renta de las Personas Físicas (IRPF) se calculará en base a la percepción íntegra anual. • La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el 1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubier...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (59%)",
+      "ground_truth": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: El porcentaje de retención a cuenta del Impuesto sobre la Renta de las Personas Físicas (IRPF) se calculará en base a la percepción íntegra anual. • La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el 1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubier...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (59%)",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "1 Anticipos y retribución.pdf",
+      "user_input": "cuando se calcula el IRPF?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: El porcentaje de retención a cuenta del Impuesto sobre la Renta de las Personas Físicas (IRPF) se calculará en base a la percepción íntegra anual. • La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el 1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubier...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (59%)",
+      "reference": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: El porcentaje de retención a cuenta del Impuesto sobre la Renta de las Personas Físicas (IRPF) se calculará en base a la percepción íntegra anual. • La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el 1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubier...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (59%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.6689180980660325,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "Que es el nivel de anticipos?",
+      "answer": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: del año siguiente: Aurrerakin Maila/Nivel de Anticipos = 1,00000 AL1(coop) * (1+%CVT) – AL1(l-a) * (%CVT - %CVR) NA = AL1(l-a) * (1+%CVR) Siendo: • NA: Nivel de Anticipos... Una vez conocido el anticipo de consumo, y la actualización de las tablas de reparto de LagunAro,EPSV, calculará los valores resultantes para el periodo del 01.04 de ese ...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (56%)",
+      "ground_truth": "Aurreko erantzuna aldatu du, lehen ondo erantzuten zuen. Orain hauxe El nivel de anticipos se refiere al sistema establecido para gestionar los adelantos económicos que pueden solicitar los empleados, regulado por la normativa de anticipos y retribución. Este sistema aplica a todos los departamentos y personal, tanto PDI como PAS, bajo la supervisión del Departamento de Administración y Finanzas.\n\nSi necesitas más detalles específicos sobre cómo se calcula o aplica este nivel, la evidencia disponible no proporciona información suficiente.\n\nFuentes:\n- 1 Anticipos y retribución.pdf (57%)",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Normativas Laborales",
+      "source_document": "1 Anticipos y retribución.pdf",
+      "user_input": "Que es el nivel de anticipos?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: del año siguiente: Aurrerakin Maila/Nivel de Anticipos = 1,00000 AL1(coop) * (1+%CVT) – AL1(l-a) * (%CVT - %CVR) NA = AL1(l-a) * (1+%CVR) Siendo: • NA: Nivel de Anticipos... Una vez conocido el anticipo de consumo, y la actualización de las tablas de reparto de LagunAro,EPSV, calculará los valores resultantes para el periodo del 01.04 de ese ...\n\nFuentes:\n- 1 Anticipos y retribución.pdf (56%)",
+      "reference": "Aurreko erantzuna aldatu du, lehen ondo erantzuten zuen. Orain hauxe El nivel de anticipos se refiere al sistema establecido para gestionar los adelantos económicos que pueden solicitar los empleados, regulado por la normativa de anticipos y retribución. Este sistema aplica a todos los departamentos y personal, tanto PDI como PAS, bajo la supervisión del Departamento de Administración y Finanzas.\n\nSi necesitas más detalles específicos sobre cómo se calcula o aplica este nivel, la evidencia disponible no proporciona información suficiente.\n\nFuentes:\n- 1 Anticipos y retribución.pdf (57%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.48565961853949025,
+      "answer_correctness": 0.2970832460792499
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "vamos a cobrar retribucion variable?",
+      "answer": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: • CVT: Cuota variable total • CVR: Cuota variable reparto • l-a: LagunAro 2 Retribución Variable Tal y como recoge el artículo 55 del Reglamento Interno, la Cooperativa p... La retribución variable no podrá superar el 2% del anticipo laboral anual correspondiente.\n\nFuentes:\n- 1 Anticipos y retribución.pdf (63%)",
+      "ground_truth": "aurreko erantzuna hobeto zegoen, orain afirmatu egiten du jaso behar dugula eta hori ez da zuzena, hauxe da ematen digun erantzuna: Sí, se contempla la retribución variable según el artículo 55 del Reglamento Interno de la Cooperativa. Sin embargo, esta no podrá superar el 2% del anticipo laboral anual correspondiente.\n\nFuentes:\n- 1 Anticipos y retribución.pdf (64%)",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Normativas Laborales",
+      "source_document": "1 Anticipos y retribución.pdf",
+      "user_input": "vamos a cobrar retribucion variable?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en 1 Anticipos y retribución.pdf se indica: • CVT: Cuota variable total • CVR: Cuota variable reparto • l-a: LagunAro 2 Retribución Variable Tal y como recoge el artículo 55 del Reglamento Interno, la Cooperativa p... La retribución variable no podrá superar el 2% del anticipo laboral anual correspondiente.\n\nFuentes:\n- 1 Anticipos y retribución.pdf (63%)",
+      "reference": "aurreko erantzuna hobeto zegoen, orain afirmatu egiten du jaso behar dugula eta hori ez da zuzena, hauxe da ematen digun erantzuna: Sí, se contempla la retribución variable según el artículo 55 del Reglamento Interno de la Cooperativa. Sin embargo, esta no podrá superar el 2% del anticipo laboral anual correspondiente.\n\nFuentes:\n- 1 Anticipos y retribución.pdf (64%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.5130225154848664,
+      "answer_correctness": 0.47799959417482496
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "Cuantas pagas se cobran en eskola?",
+      "answer": "Según la normativa consultada, en Idiomas.pdf se indica: a una asistencia mínima anual del 75%, salvo que no se haya cumplido por haberse requerido su presencia en otro lugar determinado como consecuencia de su actividad en Esk...\n\nFuentes:\n- Idiomas.pdf (63%)",
+      "ground_truth": "Las pagas extraordinarias son dos mensualidades enteras del Anticipo de Consumo mensual bruto que se \nestablece a partir del 01.04 de cada año.\nPara la aplicación de estas pagas, se formulan las siguientes indicaciones:\n• La primera, se hará efectiva el día 15 de Julio y su cuantía será proporcional al tiempo trabajado desde \nel 1 de Enero al 30 de Junio, cobrándola entera quien haya cubierto los 6 meses completos.\n• La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el \n1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubierto los 6 meses completos.",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Normativas Laborales",
+      "source_document": "1 Anticipos y retribución.pdf",
+      "user_input": "Cuantas pagas se cobran en eskola?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Idiomas.pdf se indica: a una asistencia mínima anual del 75%, salvo que no se haya cumplido por haberse requerido su presencia en otro lugar determinado como consecuencia de su actividad en Esk...\n\nFuentes:\n- Idiomas.pdf (63%)",
+      "reference": "Las pagas extraordinarias son dos mensualidades enteras del Anticipo de Consumo mensual bruto que se \nestablece a partir del 01.04 de cada año.\nPara la aplicación de estas pagas, se formulan las siguientes indicaciones:\n• La primera, se hará efectiva el día 15 de Julio y su cuantía será proporcional al tiempo trabajado desde \nel 1 de Enero al 30 de Junio, cobrándola entera quien haya cubierto los 6 meses completos.\n• La segunda paga, se hará efectiva el 15 de Diciembre y será proporcional al tiempo trabajado desde el \n1 de Julio al 31 de Diciembre, cobrándola entera quien haya cubierto los 6 meses completos.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.40135447359410986,
+      "answer_correctness": 0.08634884152246039
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "le he dado un golpe al coche, que tengo que hacer?",
+      "answer": "Si has dado un golpe al coche, debes obtener un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en el que ocurrió el accidente. Además, si el daño implica un siniestro total, necesitarás un presupuesto que demuestre que el costo de la reparación supera el valor del vehículo en el mercado.",
+      "ground_truth": "Si has dado un golpe al coche, debes obtener un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en el que ocurrió el accidente. Además, si el daño implica un siniestro total, necesitarás un presupuesto que demuestre que el costo de la reparación supera el valor del vehículo en el mercado.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "5 Compensación de daños en vehículos.pdf",
+      "user_input": "le he dado un golpe al coche, que tengo que hacer?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Si has dado un golpe al coche, debes obtener un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en el que ocurrió el accidente. Además, si el daño implica un siniestro total, necesitarás un presupuesto que demuestre que el costo de la reparación supera el valor del vehículo en el mercado.",
+      "reference": "Si has dado un golpe al coche, debes obtener un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en el que ocurrió el accidente. Además, si el daño implica un siniestro total, necesitarás un presupuesto que demuestre que el costo de la reparación supera el valor del vehículo en el mercado.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.7321526234470898,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "tengo que pagar la franquicia del vehiculo?",
+      "answer": "Debes pagar la franquicia del vehículo si se cumplen las condiciones establecidas en la póliza de seguro y no hay incumplimientos, como conducir bajo los efectos del alcohol o drogas, o tener el seguro obligatorio impago. Si estas condiciones no se cumplen, podrías perder la cobertura y asumir el costo total de los daños.\n\nFuentes:\n- 5 Compensación de daños en vehículos.pdf (56%)",
+      "ground_truth": "Administración de la compensación. La administración de este fondo se llevará a cabo por el Dpto. de Administración. Fecha: 2025-05-28 \nModificación: se actualiza el importe del fondo, se \nelimina la franquicia.",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Otras Normativas Generales",
+      "source_document": "",
+      "user_input": "tengo que pagar la franquicia del vehiculo?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Debes pagar la franquicia del vehículo si se cumplen las condiciones establecidas en la póliza de seguro y no hay incumplimientos, como conducir bajo los efectos del alcohol o drogas, o tener el seguro obligatorio impago. Si estas condiciones no se cumplen, podrías perder la cobertura y asumir el costo total de los daños.\n\nFuentes:\n- 5 Compensación de daños en vehículos.pdf (56%)",
+      "reference": "Administración de la compensación. La administración de este fondo se llevará a cabo por el Dpto. de Administración. Fecha: 2025-05-28 \nModificación: se actualiza el importe del fondo, se \nelimina la franquicia.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.7669574645250474,
+      "answer_correctness": 0.09796548101731004
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "que documentacion tengo que presentar para justificar los gastos de reparacion?",
+      "answer": "Para justificar los gastos de reparación, debes presentar un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en las que ocurrió el accidente. Además, si se trata de un siniestro total, es necesario incluir un presupuesto previo que demuestre que el coste de la reparación supera el valor del vehículo en el mercado.",
+      "ground_truth": "Para justificar los gastos de reparación, debes presentar un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en las que ocurrió el accidente. Además, si se trata de un siniestro total, es necesario incluir un presupuesto previo que demuestre que el coste de la reparación supera el valor del vehículo en el mercado.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "5 Compensación de daños en vehículos.pdf",
+      "user_input": "que documentacion tengo que presentar para justificar los gastos de reparacion?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Para justificar los gastos de reparación, debes presentar un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en las que ocurrió el accidente. Además, si se trata de un siniestro total, es necesario incluir un presupuesto previo que demuestre que el coste de la reparación supera el valor del vehículo en el mercado.",
+      "reference": "Para justificar los gastos de reparación, debes presentar un escrito del Coordinador del Departamento que acredite las circunstancias del servicio profesional en las que ocurrió el accidente. Además, si se trata de un siniestro total, es necesario incluir un presupuesto previo que demuestre que el coste de la reparación supera el valor del vehículo en el mercado.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.8340838885894224,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "a quien tengo que avisar si he tenido un golpe con mi coche?",
+      "answer": "Debes informar del golpe con tu coche al departamento de Administración, proporcionando un informe explicativo sobre las circunstancias del siniestro.\n\nEs importante que actúes diligentemente para gestionar la indemnización correspondiente con tu compañía de seguros, el responsable del accidente o la aseguradora implicada. Si tienes dudas adicionales sobre el procedimiento, consulta las políticas internas relacionadas.",
+      "ground_truth": "Debes informar del golpe con tu coche al departamento de Administración, proporcionando un informe explicativo sobre las circunstancias del siniestro.\n\nEs importante que actúes diligentemente para gestionar la indemnización correspondiente con tu compañía de seguros, el responsable del accidente o la aseguradora implicada. Si tienes dudas adicionales sobre el procedimiento, consulta las políticas internas relacionadas.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "5 Compensación de daños en vehículos.pdf",
+      "user_input": "a quien tengo que avisar si he tenido un golpe con mi coche?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Debes informar del golpe con tu coche al departamento de Administración, proporcionando un informe explicativo sobre las circunstancias del siniestro.\n\nEs importante que actúes diligentemente para gestionar la indemnización correspondiente con tu compañía de seguros, el responsable del accidente o la aseguradora implicada. Si tienes dudas adicionales sobre el procedimiento, consulta las políticas internas relacionadas.",
+      "reference": "Debes informar del golpe con tu coche al departamento de Administración, proporcionando un informe explicativo sobre las circunstancias del siniestro.\n\nEs importante que actúes diligentemente para gestionar la indemnización correspondiente con tu compañía de seguros, el responsable del accidente o la aseguradora implicada. Si tienes dudas adicionales sobre el procedimiento, consulta las políticas internas relacionadas.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.7944142856729085,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "el seguro de MGEP me cubre todos los gastos?",
+      "answer": "El seguro de MGEP no necesariamente cubre todos los gastos. Según la información disponible, MGEP tiene una póliza de accidentes colectivos contratada con Zurich España, pero los detalles específicos sobre el alcance de la cobertura, como qué gastos están incluidos o excluidos, no están claramente especificados en el contexto proporcionado. Te recomendaría consultar directamente la póliza o contactar con la Gerencia de Riesgos de MONDRAGON para obtener información más detallada.\n\nFuentes:\n- Normativa laboral.pdf (57%)",
+      "ground_truth": "Beste araudi batera eramaten du, baliteke galdera ez egotea ondo eginda",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Otras Normativas Generales",
+      "source_document": "",
+      "user_input": "el seguro de MGEP me cubre todos los gastos?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "El seguro de MGEP no necesariamente cubre todos los gastos. Según la información disponible, MGEP tiene una póliza de accidentes colectivos contratada con Zurich España, pero los detalles específicos sobre el alcance de la cobertura, como qué gastos están incluidos o excluidos, no están claramente especificados en el contexto proporcionado. Te recomendaría consultar directamente la póliza o contactar con la Gerencia de Riesgos de MONDRAGON para obtener información más detallada.\n\nFuentes:\n- Normativa laboral.pdf (57%)",
+      "reference": "Beste araudi batera eramaten du, baliteke galdera ez egotea ondo eginda",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.031025264977624978
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "el seguro de MGEP me cubre todos los gastos que he tenido con mi coche?",
+      "answer": "El seguro de MGEP no cubre automáticamente todos los gastos relacionados con daños en tu coche. Según el contexto disponible, parece que existe una normativa específica para casos en los que un trabajador utiliza su vehículo propio al servicio de MGEP y se producen daños, pero no se detalla si todos los gastos son cubiertos ni las condiciones exactas. Te recomendaría revisar la normativa completa o consultar directamente con el área correspondiente para obtener información precisa sobre tu caso.\n\nFuentes:\n- 5 Compensación de daños en vehículos.pdf (61%)",
+      "ground_truth": "El seguro de MGEP no cubre automáticamente todos los gastos relacionados con daños en tu coche. Según el contexto disponible, parece que existe una normativa específica para casos en los que un trabajador utiliza su vehículo propio al servicio de MGEP y se producen daños, pero no se detalla si todos los gastos son cubiertos ni las condiciones exactas. Te recomendaría revisar la normativa completa o consultar directamente con el área correspondiente para obtener información precisa sobre tu caso.\n\nFuentes:\n- 5 Compensación de daños en vehículos.pdf (61%)",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "",
+      "source_document": "",
+      "user_input": "el seguro de MGEP me cubre todos los gastos que he tenido con mi coche?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "El seguro de MGEP no cubre automáticamente todos los gastos relacionados con daños en tu coche. Según el contexto disponible, parece que existe una normativa específica para casos en los que un trabajador utiliza su vehículo propio al servicio de MGEP y se producen daños, pero no se detalla si todos los gastos son cubiertos ni las condiciones exactas. Te recomendaría revisar la normativa completa o consultar directamente con el área correspondiente para obtener información precisa sobre tu caso.\n\nFuentes:\n- 5 Compensación de daños en vehículos.pdf (61%)",
+      "reference": "El seguro de MGEP no cubre automáticamente todos los gastos relacionados con daños en tu coche. Según el contexto disponible, parece que existe una normativa específica para casos en los que un trabajador utiliza su vehículo propio al servicio de MGEP y se producen daños, pero no se detalla si todos los gastos son cubiertos ni las condiciones exactas. Te recomendaría revisar la normativa completa o consultar directamente con el área correspondiente para obtener información precisa sobre tu caso.\n\nFuentes:\n- 5 Compensación de daños en vehículos.pdf (61%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "Política comunicación contrataciones.pdf",
+      "answer": "EZ DAGOKIO GALDERARIK, BARNE ARAUDIA DA",
+      "ground_truth": "",
+      "human_label": 0.0,
+      "human_correctness_raw": "",
+      "scope": "",
+      "source_document": "",
+      "user_input": "Política comunicación contrataciones.pdf",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "EZ DAGOKIO GALDERARIK, BARNE ARAUDIA DA",
+      "reference": "",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.037294165590779825
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "que tengo que hacer si la huelga es vinculante?",
+      "answer": "Si la huelga es vinculante, debes cumplir con las mismas consecuencias y normativas aplicables a todas las personas trabajadoras, independientemente de si tienes un día flexible. Además, si necesitas realizar una actividad externa ineludible, es necesario que informes previamente a tu Coordinador/a antes de la votación de la huelga.",
+      "ground_truth": "Si la huelga es vinculante, debes cumplir con las mismas consecuencias y normativas aplicables a todas las personas trabajadoras, independientemente de si tienes un día flexible. Además, si necesitas realizar una actividad externa ineludible, es necesario que informes previamente a tu Coordinador/a antes de la votación de la huelga.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Huelga personas trabajadoras",
+      "user_input": "que tengo que hacer si la huelga es vinculante?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Si la huelga es vinculante, debes cumplir con las mismas consecuencias y normativas aplicables a todas las personas trabajadoras, independientemente de si tienes un día flexible. Además, si necesitas realizar una actividad externa ineludible, es necesario que informes previamente a tu Coordinador/a antes de la votación de la huelga.",
+      "reference": "Si la huelga es vinculante, debes cumplir con las mismas consecuencias y normativas aplicables a todas las personas trabajadoras, independientemente de si tienes un día flexible. Además, si necesitas realizar una actividad externa ineludible, es necesario que informes previamente a tu Coordinador/a antes de la votación de la huelga.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.4998769257210018,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "cuando se vota cuando hay convocatoria de huelga?",
+      "answer": "La votación en caso de convocatoria de huelga se realiza de forma secreta e individual una vez concluido el proceso correspondiente. Si no hay tiempo suficiente, el sistema de votación puede ser adaptado por el Consejo Social, garantizando siempre la transparencia y el cumplimiento de los procedimientos.",
+      "ground_truth": "La votación en caso de convocatoria de huelga se realiza de forma secreta e individual una vez concluido el proceso correspondiente. Si no hay tiempo suficiente, el sistema de votación puede ser adaptado por el Consejo Social, garantizando siempre la transparencia y el cumplimiento de los procedimientos.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Huelga personas trabajadoras",
+      "user_input": "cuando se vota cuando hay convocatoria de huelga?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "La votación en caso de convocatoria de huelga se realiza de forma secreta e individual una vez concluido el proceso correspondiente. Si no hay tiempo suficiente, el sistema de votación puede ser adaptado por el Consejo Social, garantizando siempre la transparencia y el cumplimiento de los procedimientos.",
+      "reference": "La votación en caso de convocatoria de huelga se realiza de forma secreta e individual una vez concluido el proceso correspondiente. Si no hay tiempo suficiente, el sistema de votación puede ser adaptado por el Consejo Social, garantizando siempre la transparencia y el cumplimiento de los procedimientos.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.8481572512431874,
+      "answer_correctness": NaN
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "puedo ir a trabajar un dia de huelga?",
+      "answer": "Sí, puedes ir a trabajar un día de huelga. Sin embargo, si tienes una actividad externa ineludible, debes comunicarlo previamente a tu Coordinador o Coordinadora antes de la votación de la huelga. Además, las personas con días flexibles tendrán las mismas consecuencias que el resto de trabajadores en relación con la huelga.\n\nFuentes:\n- Huelga trabajadores.pdf (64%)",
+      "ground_truth": "Sí, puedes ir a trabajar un día de huelga. Sin embargo, si tienes una actividad externa ineludible, debes comunicarlo previamente a tu Coordinador o Coordinadora antes de la votación de la huelga. Además, las personas con días flexibles tendrán las mismas consecuencias que el resto de trabajadores en relación con la huelga.\n\nFuentes:\n- Huelga trabajadores.pdf (64%)",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Huelga personas trabajadoras",
+      "user_input": "puedo ir a trabajar un dia de huelga?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Sí, puedes ir a trabajar un día de huelga. Sin embargo, si tienes una actividad externa ineludible, debes comunicarlo previamente a tu Coordinador o Coordinadora antes de la votación de la huelga. Además, las personas con días flexibles tendrán las mismas consecuencias que el resto de trabajadores en relación con la huelga.\n\nFuentes:\n- Huelga trabajadores.pdf (64%)",
+      "reference": "Sí, puedes ir a trabajar un día de huelga. Sin embargo, si tienes una actividad externa ineludible, debes comunicarlo previamente a tu Coordinador o Coordinadora antes de la votación de la huelga. Además, las personas con días flexibles tendrán las mismas consecuencias que el resto de trabajadores en relación con la huelga.\n\nFuentes:\n- Huelga trabajadores.pdf (64%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.9619929511317695,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "que significa que la huelga sea vinculante?",
+      "answer": "Que la huelga sea vinculante significa que tiene efectos legales y obligatorios sobre las partes involucradas, como la empresa y los trabajadores. Sin embargo, el contexto proporcionado solo menciona el caso de huelgas no vinculantes, por lo que no se detalla específicamente qué implica una huelga vinculante en este caso.",
+      "ground_truth": "Que la huelga sea vinculante significa que tiene efectos legales y obligatorios sobre las partes involucradas, como la empresa y los trabajadores. Sin embargo, el contexto proporcionado solo menciona el caso de huelgas no vinculantes, por lo que no se detalla específicamente qué implica una huelga vinculante en este caso.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Huelga personas trabajadoras",
+      "user_input": "que significa que la huelga sea vinculante?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Que la huelga sea vinculante significa que tiene efectos legales y obligatorios sobre las partes involucradas, como la empresa y los trabajadores. Sin embargo, el contexto proporcionado solo menciona el caso de huelgas no vinculantes, por lo que no se detalla específicamente qué implica una huelga vinculante en este caso.",
+      "reference": "Que la huelga sea vinculante significa que tiene efectos legales y obligatorios sobre las partes involucradas, como la empresa y los trabajadores. Sin embargo, el contexto proporcionado solo menciona el caso de huelgas no vinculantes, por lo que no se detalla específicamente qué implica una huelga vinculante en este caso.",
+      "faithfulness": 0.25,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.9999997976400407
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "afecta la huelga de los alumnos a la huelga de trabajadores?",
+      "answer": "La huelga de los alumnos no afecta directamente a la huelga de los trabajadores, ya que se consideran independientes. Si los alumnos deciden secundar su propia huelga, esta se clasifica como no vinculante y no interfiere con las acciones de los trabajadores.\n\nFuentes:\n- Huelga trabajadores.pdf (63%)",
+      "ground_truth": "Voto favorable a la huelga por mayoría de 2/3, pero inferior al 80%, de votos válidos emitidos. En este caso las acciones a emprender serán en función de lo que decida el alumnado: • Si el alumnado decide secundar la huelga, se considerará un caso de huelga VINCULANTE. • Si el alumnado decide no secundar la huelga, ésta no tendrá lugar, salvo en el caso de una huelga de un colectivo concreto, en el que se podrá realizar la huelga NO VINCULANTE aunque el alumnado no la secunde, entendiéndose que el personal trabajador no convocado a la huelga y aquellos/as que no la secunden suplirán sus funciones más importantes, sin distorsionar en la medida de lo posible el normal desarrollo de las clases y las actividades de MGEP. c) Voto favorable a la huelga por mayoría del 50% (pero inferior a 2/3) de los votos válidos emitidos. Al igual que en el caso anterior, las acciones a emprender serán en función de lo que decida el alumnado: 3 Versión 3 • Si el alumnado decide secundar la huelga, se considerará un caso de huelga NO VINCULANTE. • Si el alumnado decide no secundar la huelga, ésta no tendrá lugar, salvo en el caso de una huelga de un colectivo concreto, en el que se podrá realizar la huelga NO VINCULANTE, aunque el alumnado no la secunde, entendiéndose que el personal trabajador no convocado a la huelga y aquellos/as que no la secunden suplirán sus funciones más importantes.",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Otras Normativas Generales",
+      "source_document": "huelga de alumnos",
+      "user_input": "afecta la huelga de los alumnos a la huelga de trabajadores?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "La huelga de los alumnos no afecta directamente a la huelga de los trabajadores, ya que se consideran independientes. Si los alumnos deciden secundar su propia huelga, esta se clasifica como no vinculante y no interfiere con las acciones de los trabajadores.\n\nFuentes:\n- Huelga trabajadores.pdf (63%)",
+      "reference": "Voto favorable a la huelga por mayoría de 2/3, pero inferior al 80%, de votos válidos emitidos. En este caso las acciones a emprender serán en función de lo que decida el alumnado: • Si el alumnado decide secundar la huelga, se considerará un caso de huelga VINCULANTE. • Si el alumnado decide no secundar la huelga, ésta no tendrá lugar, salvo en el caso de una huelga de un colectivo concreto, en el que se podrá realizar la huelga NO VINCULANTE aunque el alumnado no la secunde, entendiéndose que el personal trabajador no convocado a la huelga y aquellos/as que no la secunden suplirán sus funciones más importantes, sin distorsionar en la medida de lo posible el normal desarrollo de las clases y las actividades de MGEP. c) Voto favorable a la huelga por mayoría del 50% (pero inferior a 2/3) de los votos válidos emitidos. Al igual que en el caso anterior, las acciones a emprender serán en función de lo que decida el alumnado: 3 Versión 3 • Si el alumnado decide secundar la huelga, se considerará un caso de huelga NO VINCULANTE. • Si el alumnado decide no secundar la huelga, ésta no tendrá lugar, salvo en el caso de una huelga de un colectivo concreto, en el que se podrá realizar la huelga NO VINCULANTE, aunque el alumnado no la secunde, entendiéndose que el personal trabajador no convocado a la huelga y aquellos/as que no la secunden suplirán sus funciones más importantes.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.8788556400962798,
+      "answer_correctness": 0.4181349413550557
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "cuando afecta la huelga de alumnos a la huelga de trabajadores?",
+      "answer": "La huelga de alumnos afecta a la huelga de trabajadores si el alumnado decide secundarla, ya que en ese caso se considera una huelga vinculante. Esto implica que las acciones de los trabajadores estarán condicionadas por la decisión del alumnado. Sin embargo, no se especifican más detalles sobre cómo se coordinarían ambas huelgas o sus implicaciones exactas.\n\nFuentes:\n- Huelga trabajadores.pdf (64%)\nPagina: 3",
+      "ground_truth": "orain ondo erantzun du",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Huelga personas trabajadoras",
+      "user_input": "cuando afecta la huelga de alumnos a la huelga de trabajadores?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "La huelga de alumnos afecta a la huelga de trabajadores si el alumnado decide secundarla, ya que en ese caso se considera una huelga vinculante. Esto implica que las acciones de los trabajadores estarán condicionadas por la decisión del alumnado. Sin embargo, no se especifican más detalles sobre cómo se coordinarían ambas huelgas o sus implicaciones exactas.\n\nFuentes:\n- Huelga trabajadores.pdf (64%)\nPagina: 3",
+      "reference": "orain ondo erantzun du",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.0215292147712813
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "cuales son los pasos a seguir en el caso de que fallezca un empleado de Eskola?",
+      "answer": "MGEP cuenta con un protocolo específico para el caso de fallecimiento de un trabajador o trabajadora. Sin embargo, los pasos detallados no están disponibles en el contexto proporcionado. Se recomienda consultar directamente el protocolo interno de la organización para obtener instrucciones precisas.\n\nFuentes:\n- Protocolo en caso de fallecimiento de alumnado por enfermedad o accidente.pdf (71%)",
+      "ground_truth": "ikasleen araudira joaten da",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf",
+      "user_input": "cuales son los pasos a seguir en el caso de que fallezca un empleado de Eskola?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "MGEP cuenta con un protocolo específico para el caso de fallecimiento de un trabajador o trabajadora. Sin embargo, los pasos detallados no están disponibles en el contexto proporcionado. Se recomienda consultar directamente el protocolo interno de la organización para obtener instrucciones precisas.\n\nFuentes:\n- Protocolo en caso de fallecimiento de alumnado por enfermedad o accidente.pdf (71%)",
+      "reference": "ikasleen araudira joaten da",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.035525018624121205
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "cuales son los pasos a seguir en el caso de que fallezca un alumno de Eskola?",
+      "answer": "En caso de que fallezca un alumno de Eskola, uno de los pasos a seguir es contactar con el tanatorio para gestionar la publicación de esquelas en medios de comunicación relevantes, como Berria, Gara, Diario Vasco, Noticias de Gipuzkoa y Goiena. Sin embargo, el contexto proporcionado no detalla otros procedimientos específicos que puedan formar parte del protocolo.",
+      "ground_truth": "En caso de que fallezca un alumno de Eskola, uno de los pasos a seguir es contactar con el tanatorio para gestionar la publicación de esquelas en medios de comunicación relevantes, como Berria, Gara, Diario Vasco, Noticias de Gipuzkoa y Goiena. Sin embargo, el contexto proporcionado no detalla otros procedimientos específicos que puedan formar parte del protocolo.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Normativa para definir el protocolo en caso de fallecimiento de alumnado por enfermedad o accidente",
+      "user_input": "cuales son los pasos a seguir en el caso de que fallezca un alumno de Eskola?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "En caso de que fallezca un alumno de Eskola, uno de los pasos a seguir es contactar con el tanatorio para gestionar la publicación de esquelas en medios de comunicación relevantes, como Berria, Gara, Diario Vasco, Noticias de Gipuzkoa y Goiena. Sin embargo, el contexto proporcionado no detalla otros procedimientos específicos que puedan formar parte del protocolo.",
+      "reference": "En caso de que fallezca un alumno de Eskola, uno de los pasos a seguir es contactar con el tanatorio para gestionar la publicación de esquelas en medios de comunicación relevantes, como Berria, Gara, Diario Vasco, Noticias de Gipuzkoa y Goiena. Sin embargo, el contexto proporcionado no detalla otros procedimientos específicos que puedan formar parte del protocolo.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Amaia_probak2",
+      "question": "cuales son los pasos a seguir en el caso de que fallezca el padre de un empleado de Eskola?",
+      "answer": "EEn el caso de que fallezca el padre de un empleado de Eskola, el protocolo específico no está detallado en el contexto proporcionado. Sin embargo, se menciona que existen procedimientos relacionados con el fallecimiento de trabajadores o familiares, como la comunicación con entidades externas y gestiones administrativas.\n\nSi necesitas información más precisa sobre los pasos a seguir en esta situación, sería recomendable consultar directamente el protocolo completo o contactar con el área de recursos humanos de la empresa.como la comunicación con entidades externas y gestiones administrativas.",
+      "ground_truth": "EEn el caso de que fallezca el padre de un empleado de Eskola, el protocolo específico no está detallado en el contexto proporcionado. Sin embargo, se menciona que existen procedimientos relacionados con el fallecimiento de trabajadores o familiares, como la comunicación con entidades externas y gestiones administrativas.\n\nSi necesitas información más precisa sobre los pasos a seguir en esta situación, sería recomendable consultar directamente el protocolo completo o contactar con el área de recursos humanos de la empresa.como la comunicación con entidades externas y gestiones administrativas.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Normativa para definir el protocolo de actuación en caso de muerte de trabajador/a de familiar de trabajador/a de MGEP",
+      "user_input": "cuales son los pasos a seguir en el caso de que fallezca el padre de un empleado de Eskola?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "EEn el caso de que fallezca el padre de un empleado de Eskola, el protocolo específico no está detallado en el contexto proporcionado. Sin embargo, se menciona que existen procedimientos relacionados con el fallecimiento de trabajadores o familiares, como la comunicación con entidades externas y gestiones administrativas.\n\nSi necesitas información más precisa sobre los pasos a seguir en esta situación, sería recomendable consultar directamente el protocolo completo o contactar con el área de recursos humanos de la empresa.como la comunicación con entidades externas y gestiones administrativas.",
+      "reference": "EEn el caso de que fallezca el padre de un empleado de Eskola, el protocolo específico no está detallado en el contexto proporcionado. Sin embargo, se menciona que existen procedimientos relacionados con el fallecimiento de trabajadores o familiares, como la comunicación con entidades externas y gestiones administrativas.\n\nSi necesitas información más precisa sobre los pasos a seguir en esta situación, sería recomendable consultar directamente el protocolo completo o contactar con el área de recursos humanos de la empresa.como la comunicación con entidades externas y gestiones administrativas.",
+      "faithfulness": 0.5,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Ana",
+      "question": "Cuántas horas tengo que trabajar durante el curso 2024-2025?",
+      "answer": "Según la normativa consultada, en Normativa laboral.pdf se indica: En aplicación de los criterios establecidos en dicha normativa, el número de horas laborales del curso 24/25 viene fijado en base a la media ponderada de las horas que es... CALENDARIO LABORAL CURSO 2024-25 Para la elaboración del Calendario Laboral y para la definición del horario de trabajo se aplica la Normativa correspondiente (“Normativa...\n\nFuentes:\n- Normativa laboral.pdf (74%)",
+      "ground_truth": "Erantzuna zuzena da baina zuzenean ez dizkit lan orduak ematen. Fitxategian sartu eta aurkitzen ditut. Arautegian kontutan hartu beharko litzateke, nahiz eta 2025-2026 kurtsoko martxoan egon hainbat datu 2024-2025 kurtsokoak agertzen direla (apirilean egiten delako eguneraketa)",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Normativas Laborales",
+      "source_document": "Normativa laboral",
+      "user_input": "Cuántas horas tengo que trabajar durante el curso 2024-2025?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Normativa laboral.pdf se indica: En aplicación de los criterios establecidos en dicha normativa, el número de horas laborales del curso 24/25 viene fijado en base a la media ponderada de las horas que es... CALENDARIO LABORAL CURSO 2024-25 Para la elaboración del Calendario Laboral y para la definición del horario de trabajo se aplica la Normativa correspondiente (“Normativa...\n\nFuentes:\n- Normativa laboral.pdf (74%)",
+      "reference": "Erantzuna zuzena da baina zuzenean ez dizkit lan orduak ematen. Fitxategian sartu eta aurkitzen ditut. Arautegian kontutan hartu beharko litzateke, nahiz eta 2025-2026 kurtsoko martxoan egon hainbat datu 2024-2025 kurtsokoak agertzen direla (apirilean egiten delako eguneraketa)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.6901810561848265,
+      "answer_correctness": 0.05500404388016286
+    },
+    {
+      "evaluador": "Ana",
+      "question": "En caso de que me hagan socio indefinido cuánta aportación tengo que pagar?",
+      "answer": "En caso de que te hagan socio indefinido, deberás realizar una aportación inicial total equivalente al 100% de la aportación establecida para las personas socias indefinidas. Esta aportación incluye una parte obligatoria al capital, que corresponde al 80% de dicha aportación total.\n\nSi necesitas detalles específicos sobre los montos exactos, te sugerimos consultar los estatutos completos o contactar con el área correspondiente.\n\nFuentes:\n- Estatutos.pdf (70%)\nPagina: 42",
+      "ground_truth": "Erantzun orokorra agertzen da baina, hala ere, ez du esaten zenbat ordaindu behar den.",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "Normativa laboral",
+      "user_input": "En caso de que me hagan socio indefinido cuánta aportación tengo que pagar?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "En caso de que te hagan socio indefinido, deberás realizar una aportación inicial total equivalente al 100% de la aportación establecida para las personas socias indefinidas. Esta aportación incluye una parte obligatoria al capital, que corresponde al 80% de dicha aportación total.\n\nSi necesitas detalles específicos sobre los montos exactos, te sugerimos consultar los estatutos completos o contactar con el área correspondiente.\n\nFuentes:\n- Estatutos.pdf (70%)\nPagina: 42",
+      "reference": "Erantzun orokorra agertzen da baina, hala ere, ez du esaten zenbat ordaindu behar den.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.7675979764819639
+    },
+    {
+      "evaluador": "Ana",
+      "question": "Si me contratan como PAS con experiencia, ¿qué índice me correspondería al año siguiente?",
+      "answer": "No se puede determinar con precisión qué índice te correspondería al año siguiente, ya que depende de factores como tu valoración como PAS, el tiempo acumulado en esa posición y otros criterios específicos de evaluación. Según el manual, para ciertos avances se requiere una valoración mínima de 2 durante al menos 2 años, pero no se detalla cómo se aplica esto específicamente al índice en tu caso.\n\nFuentes:\n- Manual de evaluación y retribución.pdf (67%)\nPagina: 34",
+      "ground_truth": "Erantzun orokorra da baina ez da guztiz zuzena. \"Normativa de contratatación y consolidación\" dokumentuan bilatu ordez \"Manual de evalución...\" dokumentura eramaten gaitu.",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Normativa de contratación y consolidación.pdf",
+      "user_input": "Si me contratan como PAS con experiencia, ¿qué índice me correspondería al año siguiente?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "No se puede determinar con precisión qué índice te correspondería al año siguiente, ya que depende de factores como tu valoración como PAS, el tiempo acumulado en esa posición y otros criterios específicos de evaluación. Según el manual, para ciertos avances se requiere una valoración mínima de 2 durante al menos 2 años, pero no se detalla cómo se aplica esto específicamente al índice en tu caso.\n\nFuentes:\n- Manual de evaluación y retribución.pdf (67%)\nPagina: 34",
+      "reference": "Erantzun orokorra da baina ez da guztiz zuzena. \"Normativa de contratatación y consolidación\" dokumentuan bilatu ordez \"Manual de evalución...\" dokumentura eramaten gaitu.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.08922532599538917
+    },
+    {
+      "evaluador": "Ana",
+      "question": "¿Al cabo de cuanto tiempo me pueden consolidar en MGEP?",
+      "answer": "Como norma general, en MGEP se puede proponer la consolidación al cabo de 3 años. Sin embargo, existen excepciones que permiten adelantar esta decisión a los 24 meses o incluso antes, dependiendo de las necesidades de la cooperativa y otros factores específicos.\n\nFuentes:\n- Normativa de contratación y consolidación.pdf (77%)\nPagina: 2",
+      "ground_truth": "Erantzuna nahiko ondo dagoela esango nuke",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Normativa de contratación y consolidación.pdf",
+      "user_input": "¿Al cabo de cuanto tiempo me pueden consolidar en MGEP?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Como norma general, en MGEP se puede proponer la consolidación al cabo de 3 años. Sin embargo, existen excepciones que permiten adelantar esta decisión a los 24 meses o incluso antes, dependiendo de las necesidades de la cooperativa y otros factores específicos.\n\nFuentes:\n- Normativa de contratación y consolidación.pdf (77%)\nPagina: 2",
+      "reference": "Erantzuna nahiko ondo dagoela esango nuke",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.8092378933138961,
+      "answer_correctness": 0.029487982332284904
+    },
+    {
+      "evaluador": "Ana",
+      "question": "¿Un trabajador puede solicitar un cambio de campus?",
+      "answer": "Sí, un trabajador puede solicitar un cambio de campus. Sin embargo, los casos especiales relacionados con esta solicitud serán evaluados de manera excepcional por la Coordinación General, lo que implica que cada situación será analizada individualmente.\n\nFuentes:\n- 4 Compensación por cambio de campus base.pdf (62%)\nPagina: 3",
+      "ground_truth": "Erantzuna zuzena da",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "Compensación por cambio de campus base.pdf",
+      "user_input": "¿Un trabajador puede solicitar un cambio de campus?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Sí, un trabajador puede solicitar un cambio de campus. Sin embargo, los casos especiales relacionados con esta solicitud serán evaluados de manera excepcional por la Coordinación General, lo que implica que cada situación será analizada individualmente.\n\nFuentes:\n- 4 Compensación por cambio de campus base.pdf (62%)\nPagina: 3",
+      "reference": "Erantzuna zuzena da",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.9911612978429893,
+      "answer_correctness": 0.41153481273193554
+    },
+    {
+      "evaluador": "Ana",
+      "question": "¿Cómo se compensa al trabajador en caso de que MGEP me proponga un cambio de campus?",
+      "answer": "En caso de que MGEP proponga un cambio de campus y el socio lo apruebe, se compensa al trabajador cubriendo la diferencia de kilometraje en el trayecto durante 8 semestres (6 cursos) desde el inicio del cambio. Al finalizar este periodo, el Coordinador de Departamento y el trabajador decidirán si el cambio de campus base se consolida o no.\n\nFuentes:\n- 4 Compensación por cambio de campus base.pdf (80%)\nPagina: 2",
+      "ground_truth": "Erantzuna zuzena da",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "Compensación por cambio de campus base.pdf",
+      "user_input": "¿Cómo se compensa al trabajador en caso de que MGEP me proponga un cambio de campus?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "En caso de que MGEP proponga un cambio de campus y el socio lo apruebe, se compensa al trabajador cubriendo la diferencia de kilometraje en el trayecto durante 8 semestres (6 cursos) desde el inicio del cambio. Al finalizar este periodo, el Coordinador de Departamento y el trabajador decidirán si el cambio de campus base se consolida o no.\n\nFuentes:\n- 4 Compensación por cambio de campus base.pdf (80%)\nPagina: 2",
+      "reference": "Erantzuna zuzena da",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.6398206942700347,
+      "answer_correctness": 0.783800537154043
+    },
+    {
+      "evaluador": "Ana",
+      "question": "¿Qué permisos retribuidos tienen las personas socias de trabajo por cumplir deberes públicos?",
+      "answer": "Las personas socias de trabajo tienen derecho a permisos retribuidos para cumplir deberes públicos, siempre que avisen y justifiquen previamente a su coordinador/a de departamento. Esto incluye actuaciones como testigos en procesos judiciales o como peritos designados judicialmente.\n\nFuentes:\n- Permiso por cargo público.pdf (70%)\nPagina: 2",
+      "ground_truth": "Erantzun orokorra baina zuzena da",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Permiso por cargo público.pdf",
+      "user_input": "¿Qué permisos retribuidos tienen las personas socias de trabajo por cumplir deberes públicos?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Las personas socias de trabajo tienen derecho a permisos retribuidos para cumplir deberes públicos, siempre que avisen y justifiquen previamente a su coordinador/a de departamento. Esto incluye actuaciones como testigos en procesos judiciales o como peritos designados judicialmente.\n\nFuentes:\n- Permiso por cargo público.pdf (70%)\nPagina: 2",
+      "reference": "Erantzun orokorra baina zuzena da",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.9086576047178643,
+      "answer_correctness": 0.03295082189269368
+    },
+    {
+      "evaluador": "Ana",
+      "question": "¿Cuáles son los pasos del protocolo de MGEP ante el fallecimiento de una alumna?",
+      "answer": "Los pasos del protocolo de MGEP ante el fallecimiento de una alumna incluyen contactar con el tanatorio para gestionar la publicación de esquelas en medios de comunicación como Berria, Gara, Diario Vasco, Noticias de Gipuzkoa y Goiena. Sin embargo, el contexto proporcionado no detalla otros pasos específicos del protocolo, como posibles acciones internas o de apoyo a la comunidad educativa.\n\nFuentes:\n- Protocolo en caso de fallecimiento de alumnado por enfermedad o accidente.pdf (74%)\nPagina: 2",
+      "ground_truth": "Erantzuna zuzena da",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Protocolo en caso de fallecimiento de alumnado por enfermedad o accidente.pdf",
+      "user_input": "¿Cuáles son los pasos del protocolo de MGEP ante el fallecimiento de una alumna?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Los pasos del protocolo de MGEP ante el fallecimiento de una alumna incluyen contactar con el tanatorio para gestionar la publicación de esquelas en medios de comunicación como Berria, Gara, Diario Vasco, Noticias de Gipuzkoa y Goiena. Sin embargo, el contexto proporcionado no detalla otros pasos específicos del protocolo, como posibles acciones internas o de apoyo a la comunidad educativa.\n\nFuentes:\n- Protocolo en caso de fallecimiento de alumnado por enfermedad o accidente.pdf (74%)\nPagina: 2",
+      "reference": "Erantzuna zuzena da",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.06415482809192499
+    },
+    {
+      "evaluador": "Josune",
+      "question": "He empezado hoy a  trabajar en la empresa, tengo que realizar el registro de jornada?",
+      "answer": "Sí, debes realizar el registro de jornada desde tu primer día de trabajo. Es obligatorio registrar diariamente el inicio y fin de tu jornada laboral, así como cualquier pausa o desplazamiento que realices por motivos laborales. Fuentes: 2 Horario de trabajo.pdf (67%) Pagina: 5",
+      "ground_truth": "Sí, debes realizar el registro de jornada desde tu primer día de trabajo. Es obligatorio registrar diariamente el inicio y fin de tu jornada laboral, así como cualquier pausa o desplazamiento que realices por motivos laborales. Fuentes: 2 Horario de trabajo.pdf (67%) Pagina: 5",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "Horario de trabajo",
+      "user_input": "He empezado hoy a  trabajar en la empresa, tengo que realizar el registro de jornada?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Sí, debes realizar el registro de jornada desde tu primer día de trabajo. Es obligatorio registrar diariamente el inicio y fin de tu jornada laboral, así como cualquier pausa o desplazamiento que realices por motivos laborales. Fuentes: 2 Horario de trabajo.pdf (67%) Pagina: 5",
+      "reference": "Sí, debes realizar el registro de jornada desde tu primer día de trabajo. Es obligatorio registrar diariamente el inicio y fin de tu jornada laboral, así como cualquier pausa o desplazamiento que realices por motivos laborales. Fuentes: 2 Horario de trabajo.pdf (67%) Pagina: 5",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.805370269070847,
+      "answer_correctness": 0.875
+    },
+    {
+      "evaluador": "Josune",
+      "question": "Cual es la jornada diaria de trabajo?",
+      "answer": "Según la normativa consultada, en 2 Horario de trabajo.pdf se indica: La jornada semanal es de 5 días de trabajo de lunes a viernes y el calendario se aprueba por el Consejo Rector. 2 Jornada laboral La jornada diaria estándar es de 8 horas y 15 minutos, presenciales, y de media. Fuentes: 2 Horario de trabajo.pdf (63%). Pagina: 2",
+      "ground_truth": "Según la normativa consultada, en 2 Horario de trabajo.pdf se indica: La jornada semanal es de 5 días de trabajo de lunes a viernes y el calendario se aprueba por el Consejo Rector. 2 Jornada laboral La jornada diaria estándar es de 8 horas y 15 minutos, presenciales, y de media. Fuentes: 2 Horario de trabajo.pdf (63%). Pagina: 2",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "Horario de trabajo",
+      "user_input": "Cual es la jornada diaria de trabajo?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en 2 Horario de trabajo.pdf se indica: La jornada semanal es de 5 días de trabajo de lunes a viernes y el calendario se aprueba por el Consejo Rector. 2 Jornada laboral La jornada diaria estándar es de 8 horas y 15 minutos, presenciales, y de media. Fuentes: 2 Horario de trabajo.pdf (63%). Pagina: 2",
+      "reference": "Según la normativa consultada, en 2 Horario de trabajo.pdf se indica: La jornada semanal es de 5 días de trabajo de lunes a viernes y el calendario se aprueba por el Consejo Rector. 2 Jornada laboral La jornada diaria estándar es de 8 horas y 15 minutos, presenciales, y de media. Fuentes: 2 Horario de trabajo.pdf (63%). Pagina: 2",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.5808054762720153,
+      "answer_correctness": 0.8500000000000002
+    },
+    {
+      "evaluador": "Josune",
+      "question": "Tengo algún permiso por traslado del domicilio habitual?",
+      "answer": "No tengo suficiente informacion para responder con confianza a tu pregunta. Por favor, intenta reformular tu pregunta o consulta directamente con el departamento correspondiente.",
+      "ground_truth": "El personal trabajador podrá ausentarse un máximo de un día por traslado de domicilio habitual asegurándose de la ejecución posterior de las actividades que estuvieran previstas para esa fecha sin que eso suponga reducción en su remuneración.",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Normativas Laborales",
+      "source_document": "Horario de trabajo",
+      "user_input": "Tengo algún permiso por traslado del domicilio habitual?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "No tengo suficiente informacion para responder con confianza a tu pregunta. Por favor, intenta reformular tu pregunta o consulta directamente con el departamento correspondiente.",
+      "reference": "El personal trabajador podrá ausentarse un máximo de un día por traslado de domicilio habitual asegurándose de la ejecución posterior de las actividades que estuvieran previstas para esa fecha sin que eso suponga reducción en su remuneración.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.06306441664099577
+    },
+    {
+      "evaluador": "Josune",
+      "question": "Cual es el horario en julio?",
+      "answer": "El horario en julio está sujeto a la condición de que los compromisos con clientes y entidades internas o externas lo permitan, y siempre que se cumplan las horas de trabajo anuales.\nNo se especifican detalles adicionales sobre el horario exacto en el contexto proporcionado. Fuentes:2 Horario de trabajo.pdf (65%) Pagina: 3",
+      "ground_truth": "El horario en julio está sujeto a la condición de que los compromisos con clientes y entidades internas o externas lo permitan, y siempre que se cumplan las horas de trabajo anuales.\nNo se especifican detalles adicionales sobre el horario exacto en el contexto proporcionado. Fuentes:2 Horario de trabajo.pdf (65%) Pagina: 3",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "Horario de trabajo",
+      "user_input": "Cual es el horario en julio?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "El horario en julio está sujeto a la condición de que los compromisos con clientes y entidades internas o externas lo permitan, y siempre que se cumplan las horas de trabajo anuales.\nNo se especifican detalles adicionales sobre el horario exacto en el contexto proporcionado. Fuentes:2 Horario de trabajo.pdf (65%) Pagina: 3",
+      "reference": "El horario en julio está sujeto a la condición de que los compromisos con clientes y entidades internas o externas lo permitan, y siempre que se cumplan las horas de trabajo anuales.\nNo se especifican detalles adicionales sobre el horario exacto en el contexto proporcionado. Fuentes:2 Horario de trabajo.pdf (65%) Pagina: 3",
+      "faithfulness": 0.25,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Josune",
+      "question": "Que requisito debo cumplir para solicitar un año sabatico?",
+      "answer": "Según la normativa consultada, en Año sabático.pdf se indica: Procedimiento para la solicitud y concesión del permiso La solicitud se realizará en formato normalizado (Anexo I), en el mes de febrero anterior al comienzo del “año sab... La concesión de per misos estará limitada por la cantidad de solicitudes , esto es, la posibilidad de disfrutar del “año sabático” estará limitada al 2% de los socios tra... Fuentes:\n- Año sabático.pdf (72%)",
+      "ground_truth": "El derecho a solicitar este permiso laboral corresponde a todos los socios trabajadores en activo, siempre que cumplan estas condiciones: • Haber trabajado dos años en la cooperativa como socios trabajadores con contrato por tiempo indefinido. • No estar incurso en procedimiento disciplinario alguno por falta grave o muy grave.",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Año sabático",
+      "user_input": "Que requisito debo cumplir para solicitar un año sabatico?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Año sabático.pdf se indica: Procedimiento para la solicitud y concesión del permiso La solicitud se realizará en formato normalizado (Anexo I), en el mes de febrero anterior al comienzo del “año sab... La concesión de per misos estará limitada por la cantidad de solicitudes , esto es, la posibilidad de disfrutar del “año sabático” estará limitada al 2% de los socios tra... Fuentes:\n- Año sabático.pdf (72%)",
+      "reference": "El derecho a solicitar este permiso laboral corresponde a todos los socios trabajadores en activo, siempre que cumplan estas condiciones: • Haber trabajado dos años en la cooperativa como socios trabajadores con contrato por tiempo indefinido. • No estar incurso en procedimiento disciplinario alguno por falta grave o muy grave.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.5714222723622232,
+      "answer_correctness": 0.14147312425122488
+    },
+    {
+      "evaluador": "Josune",
+      "question": "Como me notifican si me conceden un año sabático?",
+      "answer": "Según la normativa consultada, en Año sabático.pdf se indica: Procedimiento para la solicitud y concesión del permiso La solicitud se realizará en formato normalizado (Anexo I), en el mes de febrero anterior al comienzo del “año sab... La concesión de per misos estará limitada por la cantidad de solicitudes , esto es, la posibilidad de disfrutar del “año sabático” estará limitada al 2% de los socios tra... Fuentes:Año sabático.pdf (72%)",
+      "ground_truth": "Según la normativa consultada, en Año sabático.pdf se indica: Procedimiento para la solicitud y concesión del permiso La solicitud se realizará en formato normalizado (Anexo I), en el mes de febrero anterior al comienzo del “año sab... La concesión de per misos estará limitada por la cantidad de solicitudes , esto es, la posibilidad de disfrutar del “año sabático” estará limitada al 2% de los socios tra... Fuentes:Año sabático.pdf (72%)",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Año sabático",
+      "user_input": "Como me notifican si me conceden un año sabático?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Año sabático.pdf se indica: Procedimiento para la solicitud y concesión del permiso La solicitud se realizará en formato normalizado (Anexo I), en el mes de febrero anterior al comienzo del “año sab... La concesión de per misos estará limitada por la cantidad de solicitudes , esto es, la posibilidad de disfrutar del “año sabático” estará limitada al 2% de los socios tra... Fuentes:Año sabático.pdf (72%)",
+      "reference": "Según la normativa consultada, en Año sabático.pdf se indica: Procedimiento para la solicitud y concesión del permiso La solicitud se realizará en formato normalizado (Anexo I), en el mes de febrero anterior al comienzo del “año sab... La concesión de per misos estará limitada por la cantidad de solicitudes , esto es, la posibilidad de disfrutar del “año sabático” estará limitada al 2% de los socios tra... Fuentes:Año sabático.pdf (72%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.665423152406473,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Josune",
+      "question": "Estoy disfrutando de un año sabático, pero quiero renunciar y volver a trabajar. Como debo proceder?",
+      "answer": "Según la normativa consultada, en Año sabático.pdf se indica: Si la renuncia no es aceptada, el trabajador deberá seguir disfrutando del “año sabático\" hasta su finalización. La solicitud de renuncia al permiso deberá presentarse ante el Consejo Rector y este órgano dispondrá de dos meses para dar una respuesta. Durante el quinto año de permiso, esto es, en el año libre de trabajo, no se aceptará ninguna solicitud de renuncia. Fuentes: Año sabático.pdf (67%)",
+      "ground_truth": "Según la normativa consultada, en Año sabático.pdf se indica: Si la renuncia no es aceptada, el trabajador deberá seguir disfrutando del “año sabático\" hasta su finalización. La solicitud de renuncia al permiso deberá presentarse ante el Consejo Rector y este órgano dispondrá de dos meses para dar una respuesta. Durante el quinto año de permiso, esto es, en el año libre de trabajo, no se aceptará ninguna solicitud de renuncia. Fuentes: Año sabático.pdf (67%)",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Año sabático",
+      "user_input": "Estoy disfrutando de un año sabático, pero quiero renunciar y volver a trabajar. Como debo proceder?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Año sabático.pdf se indica: Si la renuncia no es aceptada, el trabajador deberá seguir disfrutando del “año sabático\" hasta su finalización. La solicitud de renuncia al permiso deberá presentarse ante el Consejo Rector y este órgano dispondrá de dos meses para dar una respuesta. Durante el quinto año de permiso, esto es, en el año libre de trabajo, no se aceptará ninguna solicitud de renuncia. Fuentes: Año sabático.pdf (67%)",
+      "reference": "Según la normativa consultada, en Año sabático.pdf se indica: Si la renuncia no es aceptada, el trabajador deberá seguir disfrutando del “año sabático\" hasta su finalización. La solicitud de renuncia al permiso deberá presentarse ante el Consejo Rector y este órgano dispondrá de dos meses para dar una respuesta. Durante el quinto año de permiso, esto es, en el año libre de trabajo, no se aceptará ninguna solicitud de renuncia. Fuentes: Año sabático.pdf (67%)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.6309430123049593,
+      "answer_correctness": 0.9318181818181818
+    },
+    {
+      "evaluador": "Josune",
+      "question": "Cual es la retribución que percibo si estoy de año sabatico?",
+      "answer": "No se puede determinar la retribución exacta que percibes durante el año sabático con la información proporcionada. La normativa menciona que el porcentaje de retribución depende de los años trabajados, pero no se detalla la tabla específica en el contexto disponible. Fuentes:  Año sabático.pdf (75%). Pagina: 2",
+      "ground_truth": "No se puede determinar la retribución exacta que percibes durante el año sabático con la información proporcionada. La normativa menciona que el porcentaje de retribución depende de los años trabajados, pero no se detalla la tabla específica en el contexto disponible. Fuentes:  Año sabático.pdf (75%). Pagina: 2",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Año sabático",
+      "user_input": "Cual es la retribución que percibo si estoy de año sabatico?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "No se puede determinar la retribución exacta que percibes durante el año sabático con la información proporcionada. La normativa menciona que el porcentaje de retribución depende de los años trabajados, pero no se detalla la tabla específica en el contexto disponible. Fuentes:  Año sabático.pdf (75%). Pagina: 2",
+      "reference": "No se puede determinar la retribución exacta que percibes durante el año sabático con la información proporcionada. La normativa menciona que el porcentaje de retribución depende de los años trabajados, pero no se detalla la tabla específica en el contexto disponible. Fuentes:  Año sabático.pdf (75%). Pagina: 2",
+      "faithfulness": 0.2,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 1.0
+    },
+    {
+      "evaluador": "Josune",
+      "question": "1. Quien puede acogerse a la ayuda por cese de la actividad? 2. Que condiciones debo cumplir para acogerme a la ayuda por cese de la actividad? 3. Quien es beneficiario de la ayuda por cese de la actividad",
+      "answer": "No se especifica claramente en el contexto quién es beneficiario de la ayuda por cese de la actividad. Es posible que esta información esté detallada en otra sección del documento o en una normativa específica. Te recomiendo consultar directamente las condiciones de elegibilidad en el documento completo o en las políticas aplicables. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (69%). Página 3",
+      "ground_truth": "Los beneficiarios de la ayuda establecida en este plan serán las personas socias de trabajo de MGEP que reúnan las siguientes condiciones: • Estar en activo o en excedencia no voluntaria ni negociada en MGEP en los momentos de adhesión al plan, de ratificación y de cese. • Contar con más de 10 años de antigüedad como persona socia de trabajo de duración indefinida en MGEP en el momento de cese o tratarse de persona socia proveniente de otra cooperativa con la que se tenga establecido un régimen de reconocimiento de la antigüedad y el cómputo total supere los 10 años. • Tener 60 o más años en el momento del cese",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Normativas Laborales",
+      "source_document": "Ayudas por cese de la actividad laboral",
+      "user_input": "1. Quien puede acogerse a la ayuda por cese de la actividad? 2. Que condiciones debo cumplir para acogerme a la ayuda por cese de la actividad? 3. Quien es beneficiario de la ayuda por cese de la actividad",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "No se especifica claramente en el contexto quién es beneficiario de la ayuda por cese de la actividad. Es posible que esta información esté detallada en otra sección del documento o en una normativa específica. Te recomiendo consultar directamente las condiciones de elegibilidad en el documento completo o en las políticas aplicables. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (69%). Página 3",
+      "reference": "Los beneficiarios de la ayuda establecida en este plan serán las personas socias de trabajo de MGEP que reúnan las siguientes condiciones: • Estar en activo o en excedencia no voluntaria ni negociada en MGEP en los momentos de adhesión al plan, de ratificación y de cese. • Contar con más de 10 años de antigüedad como persona socia de trabajo de duración indefinida en MGEP en el momento de cese o tratarse de persona socia proveniente de otra cooperativa con la que se tenga establecido un régimen de reconocimiento de la antigüedad y el cómputo total supere los 10 años. • Tener 60 o más años en el momento del cese",
+      "faithfulness": 0.2,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.14374563921658043
+    },
+    {
+      "evaluador": "Josune",
+      "question": "Cual va a ser el importe de la ayuda que voy a recibir por el cese de la actividad?",
+      "answer": "No se puede determinar el importe exacto de la ayuda por cese de actividad con la información proporcionada. Los datos disponibles mencionan diferentes cifras, pero no especifican cómo se calculan ni los criterios aplicables a tu caso particular. Te recomiendo revisar los detalles específicos de tu situación y consultar directamente con el área encargada de gestionar estas ayudas. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (71%). Pagina: 3",
+      "ground_truth": "El importe base de la ayuda se establece en función de la edad y del índice laboral que resulte en el momento del cese de la actividad laboral en MGEP, con una única tabla para todas aquellas personas que quisieran acceder al plan. En caso de que la persona tenga una jornada reducida, se le aplicará el índice correspondiente a jornada completa, en el momento del cese. El importe de la ayuda es proporcional al número de meses que se anticipe con respecto a la Edad Legal de Jubilación (ELJ).",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Normativas Laborales",
+      "source_document": "Ayudas por cese de la actividad laboral",
+      "user_input": "Cual va a ser el importe de la ayuda que voy a recibir por el cese de la actividad?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "No se puede determinar el importe exacto de la ayuda por cese de actividad con la información proporcionada. Los datos disponibles mencionan diferentes cifras, pero no especifican cómo se calculan ni los criterios aplicables a tu caso particular. Te recomiendo revisar los detalles específicos de tu situación y consultar directamente con el área encargada de gestionar estas ayudas. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (71%). Pagina: 3",
+      "reference": "El importe base de la ayuda se establece en función de la edad y del índice laboral que resulte en el momento del cese de la actividad laboral en MGEP, con una única tabla para todas aquellas personas que quisieran acceder al plan. En caso de que la persona tenga una jornada reducida, se le aplicará el índice correspondiente a jornada completa, en el momento del cese. El importe de la ayuda es proporcional al número de meses que se anticipe con respecto a la Edad Legal de Jubilación (ELJ).",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.1606094656811597
+    },
+    {
+      "evaluador": "Josune",
+      "question": "Cual es el procedimiento que debo seguir si quiero acogerme a la ayuda por cese de la actividad?",
+      "answer": "No se dispone de información suficiente en el contexto proporcionado para detallar el procedimiento específico para acogerse a la ayuda por cese de la actividad. Te recomendamos consultar directamente con la entidad responsable o revisar la normativa completa aplicable para obtener instrucciones claras. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (68%) Pagina: 5",
+      "ground_truth": "PROCEDIMIENTO La persona socia deberá solicitar su adhesión al Plan (Anexo I) y suscribir un contrato de adhesión (Anexo II) con MGEP, en el mes que cumpla la edad correspondiente acordada en el Consejo Rector",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Normativas Laborales",
+      "source_document": "Ayudas por cese de la actividad laboral",
+      "user_input": "Cual es el procedimiento que debo seguir si quiero acogerme a la ayuda por cese de la actividad?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "No se dispone de información suficiente en el contexto proporcionado para detallar el procedimiento específico para acogerse a la ayuda por cese de la actividad. Te recomendamos consultar directamente con la entidad responsable o revisar la normativa completa aplicable para obtener instrucciones claras. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (68%) Pagina: 5",
+      "reference": "PROCEDIMIENTO La persona socia deberá solicitar su adhesión al Plan (Anexo I) y suscribir un contrato de adhesión (Anexo II) con MGEP, en el mes que cumpla la edad correspondiente acordada en el Consejo Rector",
+      "faithfulness": 0.6,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.09091041763235691
+    },
+    {
+      "evaluador": "Josune",
+      "question": "De que manera se realizara el abono de la ayuda?",
+      "answer": "El abono de la ayuda por el cese de la actividad se realizará mediante transferencias bancarias mensuales. Estas se efectuarán en la cuenta en la que la persona socia recibía habitualmente sus pagos. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (70%). Pagina: 8",
+      "ground_truth": "El abono de la ayuda por el cese de la actividad se realizará mediante transferencias bancarias mensuales. Estas se efectuarán en la cuenta en la que la persona socia recibía habitualmente sus pagos. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (70%). Pagina: 8",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "Ayudas por cese de la actividad laboral",
+      "user_input": "De que manera se realizara el abono de la ayuda?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "El abono de la ayuda por el cese de la actividad se realizará mediante transferencias bancarias mensuales. Estas se efectuarán en la cuenta en la que la persona socia recibía habitualmente sus pagos. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (70%). Pagina: 8",
+      "reference": "El abono de la ayuda por el cese de la actividad se realizará mediante transferencias bancarias mensuales. Estas se efectuarán en la cuenta en la que la persona socia recibía habitualmente sus pagos. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (70%). Pagina: 8",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.8028355002543462,
+      "answer_correctness": 0.75
+    },
+    {
+      "evaluador": "Josune",
+      "question": "Cuando debo comunicar que quiero acogerme a la ayuda por el cese dela actividad?",
+      "answer": "Debes comunicar tu intención de acogerte a la ayuda por cese de actividad al menos 12 meses antes de la fecha efectiva de cese efectivo de tu actividad laboral. Es necesario ratificar tu adhesión al plan mediante el formulario correspondiente y notificarlo al presidente según lo establecido. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (58%). Pagina: 4",
+      "ground_truth": "Debes comunicar tu intención de acogerte a la ayuda por cese de actividad al menos 12 meses antes de la fecha efectiva de cese efectivo de tu actividad laboral. Es necesario ratificar tu adhesión al plan mediante el formulario correspondiente y notificarlo al presidente según lo establecido. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (58%). Pagina: 4",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Normativas Laborales",
+      "source_document": "Ayudas por cese de la actividad laboral",
+      "user_input": "Cuando debo comunicar que quiero acogerme a la ayuda por el cese dela actividad?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Debes comunicar tu intención de acogerte a la ayuda por cese de actividad al menos 12 meses antes de la fecha efectiva de cese efectivo de tu actividad laboral. Es necesario ratificar tu adhesión al plan mediante el formulario correspondiente y notificarlo al presidente según lo establecido. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (58%). Pagina: 4",
+      "reference": "Debes comunicar tu intención de acogerte a la ayuda por cese de actividad al menos 12 meses antes de la fecha efectiva de cese efectivo de tu actividad laboral. Es necesario ratificar tu adhesión al plan mediante el formulario correspondiente y notificarlo al presidente según lo establecido. Fuentes: 7 Ayudas por cese de la actividad laboral.pdf (58%). Pagina: 4",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.8996334223705005,
+      "answer_correctness": 0.9999988240920672
+    },
+    {
+      "evaluador": "Eskarne",
+      "question": "¿Cuál es el periodo máximo de permanencia exigido para una persona socia?",
+      "answer": "Según la normativa consultada, en Estatutos.pdf se indica: Podrá ser acordada, en el momento de la admisión, una determinada permanencia mínima de la persona socia de trabajo en la Cooperativa. El período de prueba no procederá si la nueva persona socia llevase en la Cooperativa, como trabajadora por cuenta ajena, el tiempo que corresponda al período de prueba.\n\nFuentes:\n- Estatutos.pdf (65%)",
+      "ground_truth": "Ez da erantzun osoa. Estatutuetara joan da bila baina Barne Araudian ere begiratu beharko luke. Nik Reglamento de Regimen Interno-an dagoen erantzun hau agertzea nahi dut \"Cuando una persona socia de trabajo vaya a recibir una formación profesional específica, con cargo a la Cooperativa, se le podrá exigir la permanencia en la misma durante un tiempo determinado no superior a cinco años. Las condiciones se formalizarán previamente por escrito. El abandono de la Cooperativa antes del plazo establecido puede dar lugar a la oportuna indemnización de daños y perjuicios, entendiéndose en primera instancia como baja no justificada.\"",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Reglamento de Régimen Inerno",
+      "source_document": "",
+      "user_input": "¿Cuál es el periodo máximo de permanencia exigido para una persona socia?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Estatutos.pdf se indica: Podrá ser acordada, en el momento de la admisión, una determinada permanencia mínima de la persona socia de trabajo en la Cooperativa. El período de prueba no procederá si la nueva persona socia llevase en la Cooperativa, como trabajadora por cuenta ajena, el tiempo que corresponda al período de prueba.\n\nFuentes:\n- Estatutos.pdf (65%)",
+      "reference": "Ez da erantzun osoa. Estatutuetara joan da bila baina Barne Araudian ere begiratu beharko luke. Nik Reglamento de Regimen Interno-an dagoen erantzun hau agertzea nahi dut \"Cuando una persona socia de trabajo vaya a recibir una formación profesional específica, con cargo a la Cooperativa, se le podrá exigir la permanencia en la misma durante un tiempo determinado no superior a cinco años. Las condiciones se formalizarán previamente por escrito. El abandono de la Cooperativa antes del plazo establecido puede dar lugar a la oportuna indemnización de daños y perjuicios, entendiéndose en primera instancia como baja no justificada.\"",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.5968069167115259,
+      "answer_correctness": 0.19011584531388465
+    },
+    {
+      "evaluador": "Eskarne",
+      "question": "¿Cuál es el periodo de permanencia máximo si realizo una formación?",
+      "answer": "Según la normativa consultada, en Normativa Académica de Formación Profesional.pdf se indica:  La formación en empresa en Grado medio, superior y cursos de especialización tendrá una duración entre un 35% y un 50% de la duración de la formación y contemplará, al ... La formación DUAL INTENSIVA está regulada por el Decreto 83/2015, de 2 de junio y el Real Decreto 1529/2012, de 8 de noviembre.\n\nFuentes:\n- Normativa Académica de Formación Profesional.pdf (66%)",
+      "ground_truth": "Aurreko galderaren harira, oraindik gehiago despistatu da.",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Reglamento de Régimen Inerno",
+      "source_document": "",
+      "user_input": "¿Cuál es el periodo de permanencia máximo si realizo una formación?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Normativa Académica de Formación Profesional.pdf se indica:  La formación en empresa en Grado medio, superior y cursos de especialización tendrá una duración entre un 35% y un 50% de la duración de la formación y contemplará, al ... La formación DUAL INTENSIVA está regulada por el Decreto 83/2015, de 2 de junio y el Real Decreto 1529/2012, de 8 de noviembre.\n\nFuentes:\n- Normativa Académica de Formación Profesional.pdf (66%)",
+      "reference": "Aurreko galderaren harira, oraindik gehiago despistatu da.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.4627820447435595,
+      "answer_correctness": 0.03066937542294361
+    },
+    {
+      "evaluador": "Eskarne",
+      "question": "En el Reglamento de Régimen Inerterno, qué se dice sobre el periodo de permanencia?",
+      "answer": "Según la normativa consultada, en Reglamento de régimen interno.pdf se indica: Reglamento de Régimen Interno de MGEP. La duración máxima de una excedencia (excepto en el caso de las negociadas) es de 3 años.\n\nFuentes:\n- Reglamento de régimen interno.pdf (71%)",
+      "ground_truth": "Ez nabil erantzun honen bila. 2 lerroan ageri dena nahi dut",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Reglamento de Régimen Inerno",
+      "source_document": "",
+      "user_input": "En el Reglamento de Régimen Inerterno, qué se dice sobre el periodo de permanencia?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Reglamento de régimen interno.pdf se indica: Reglamento de Régimen Interno de MGEP. La duración máxima de una excedencia (excepto en el caso de las negociadas) es de 3 años.\n\nFuentes:\n- Reglamento de régimen interno.pdf (71%)",
+      "reference": "Ez nabil erantzun honen bila. 2 lerroan ageri dena nahi dut",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.7045238499141879,
+      "answer_correctness": 0.02996433289701715
+    },
+    {
+      "evaluador": "Eskarne",
+      "question": "soy una persona socia que he recibido una formación con cargo a la cooperativa. ¿Cúanto tiempo de permanencia me pueden exigir según el reglamento de régimen interno?",
+      "answer": "Según la normativa consultada, en Reglamento de régimen interno.pdf se indica: Cuando una persona socia de trabajo vaya a recibir una formación profesional específica, con cargo a la Cooperativa, se le podrá exigir la permanencia en la misma durante... La Cooperativa procurará colocar en lo posible a las personas socias en las tareas, funciones y responsabilidades profesionales, en función de sus aptitudes y capacidad p...\n\nFuentes:\n- Reglamento de régimen interno.pdf (74%)",
+      "ground_truth": "Gorriz dagoena ... jarri du, testuan \"un tiempo determinado no superior a cinco años\" da. Berdez dagoena asmatu egin duela esango nuke.",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Reglamento de Régimen Inerno",
+      "source_document": "",
+      "user_input": "soy una persona socia que he recibido una formación con cargo a la cooperativa. ¿Cúanto tiempo de permanencia me pueden exigir según el reglamento de régimen interno?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Reglamento de régimen interno.pdf se indica: Cuando una persona socia de trabajo vaya a recibir una formación profesional específica, con cargo a la Cooperativa, se le podrá exigir la permanencia en la misma durante... La Cooperativa procurará colocar en lo posible a las personas socias en las tareas, funciones y responsabilidades profesionales, en función de sus aptitudes y capacidad p...\n\nFuentes:\n- Reglamento de régimen interno.pdf (74%)",
+      "reference": "Gorriz dagoena ... jarri du, testuan \"un tiempo determinado no superior a cinco años\" da. Berdez dagoena asmatu egin duela esango nuke.",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.6176149218325877,
+      "answer_correctness": 0.31265595748915587
+    },
+    {
+      "evaluador": "Eskarne",
+      "question": "PROBA 2026-04-15 2 LERROKO GALDERAREN ERREPIKAPENA \n¿Cuál es el periodo máximo de permanencia exigido para una persona socia?",
+      "answer": "No se especifica en el contexto proporcionado un periodo máximo de permanencia exigido para una persona socia.\n\nFuentes:\n- Reglamento de régimen interno.pdf (63%)",
+      "ground_truth": "",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Reglamento de Régimen Inerno",
+      "source_document": "",
+      "user_input": "PROBA 2026-04-15 2 LERROKO GALDERAREN ERREPIKAPENA \n¿Cuál es el periodo máximo de permanencia exigido para una persona socia?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "No se especifica en el contexto proporcionado un periodo máximo de permanencia exigido para una persona socia.\n\nFuentes:\n- Reglamento de régimen interno.pdf (63%)",
+      "reference": "",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.015742372901070265
+    },
+    {
+      "evaluador": "Eskarne",
+      "question": "PROBA 2026-04-15 3 LERROKO GALDERAREN ERREPIKAPENA \n¿Cuál es el periodo de permanencia máximo si realizo una formación?",
+      "answer": "El periodo de permanencia máximo para realizar una formación no está especificado claramente en el contexto proporcionado. Sin embargo, se menciona que la formación incluye al menos 4 horas diarias en una academia oficial y que al menos la mitad del tiempo debe dedicarse a actividades relacionadas con el idioma. Si necesitas más detalles sobre la duración exacta, te recomiendo consultar directamente las políticas o requisitos específicos de la formación.\n\nFuentes:\n- Idiomas.pdf (62%)",
+      "ground_truth": "",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Reglamento de Régimen Inerno",
+      "source_document": "",
+      "user_input": "PROBA 2026-04-15 3 LERROKO GALDERAREN ERREPIKAPENA \n¿Cuál es el periodo de permanencia máximo si realizo una formación?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "El periodo de permanencia máximo para realizar una formación no está especificado claramente en el contexto proporcionado. Sin embargo, se menciona que la formación incluye al menos 4 horas diarias en una academia oficial y que al menos la mitad del tiempo debe dedicarse a actividades relacionadas con el idioma. Si necesitas más detalles sobre la duración exacta, te recomiendo consultar directamente las políticas o requisitos específicos de la formación.\n\nFuentes:\n- Idiomas.pdf (62%)",
+      "reference": "",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.006512777455752225
+    },
+    {
+      "evaluador": "Eskarne",
+      "question": "PROBA 2026-04-15 4 LERROKO GALDERAREN ERREPIKAPENA \nEn el Reglamento de Régimen Inerterno, qué se dice sobre el periodo de permanencia?",
+      "answer": "El Reglamento de Régimen Interno no proporciona información específica sobre el periodo de permanencia, al menos en la evidencia disponible. Si necesitas detalles concretos, sería necesario revisar más a fondo el documento completo.\n\nFuentes:\n- Reglamento de régimen interno.pdf (72%)",
+      "ground_truth": "",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Reglamento de Régimen Inerno",
+      "source_document": "",
+      "user_input": "PROBA 2026-04-15 4 LERROKO GALDERAREN ERREPIKAPENA \nEn el Reglamento de Régimen Inerterno, qué se dice sobre el periodo de permanencia?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "El Reglamento de Régimen Interno no proporciona información específica sobre el periodo de permanencia, al menos en la evidencia disponible. Si necesitas detalles concretos, sería necesario revisar más a fondo el documento completo.\n\nFuentes:\n- Reglamento de régimen interno.pdf (72%)",
+      "reference": "",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.0047949318200009566
+    },
+    {
+      "evaluador": "Eskarne",
+      "question": "PROBA 2026-04-15 5 LERROKO GALDERAREN ERREPIKAPENA \nsoy una persona socia que he recibido una formación con cargo a la cooperativa. ¿Cúanto tiempo de permanencia me pueden exigir según el reglamento de régimen interno?",
+      "answer": "El reglamento de régimen interno permite acordar una permanencia mínima para las personas socias de trabajo en el momento de su admisión. Sin embargo, no se especifica en el contexto proporcionado cuánto tiempo exacto puede exigirse en caso de recibir formación con cargo a la cooperativa. Te recomendamos consultar directamente el reglamento interno o contactar con la administración de la cooperativa para obtener detalles específicos.\n\nFuentes:\n- Estatutos.pdf (73%)",
+      "ground_truth": "",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Reglamento de Régimen Inerno",
+      "source_document": "",
+      "user_input": "PROBA 2026-04-15 5 LERROKO GALDERAREN ERREPIKAPENA \nsoy una persona socia que he recibido una formación con cargo a la cooperativa. ¿Cúanto tiempo de permanencia me pueden exigir según el reglamento de régimen interno?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "El reglamento de régimen interno permite acordar una permanencia mínima para las personas socias de trabajo en el momento de su admisión. Sin embargo, no se especifica en el contexto proporcionado cuánto tiempo exacto puede exigirse en caso de recibir formación con cargo a la cooperativa. Te recomendamos consultar directamente el reglamento interno o contactar con la administración de la cooperativa para obtener detalles específicos.\n\nFuentes:\n- Estatutos.pdf (73%)",
+      "reference": "",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.0,
+      "answer_correctness": 0.011100423963788639
+    },
+    {
+      "evaluador": "Mikel & Ibai",
+      "question": "Me han robado o he perdido mi portatil, qué tengo que hacer?",
+      "answer": "Según la normativa consultada, en Robo de dispositivos.pdf se indica: 2024-07-23 2 El CAU proporcionará la información relevante sobre el dispositivo perdido o robado, incluyendo el número de serie, marca, modelo y cualquier otra caracterís... El usuario debe presentar una denuncia formal a la policía, proporcionando toda la información recabada sobre el incidente y el dispositivo perdido o robado.  Fuentes:\n- Robo de dispositivos.pdf (57%)\nPagina: 2",
+      "ground_truth": "Según la normativa consultada, en Robo de dispositivos.pdf se indica: 2024-07-23 2 El CAU proporcionará la información relevante sobre el dispositivo perdido o robado, incluyendo el número de serie, marca, modelo y cualquier otra caracterís... El usuario debe presentar una denuncia formal a la policía, proporcionando toda la información recabada sobre el incidente y el dispositivo perdido o robado.  Fuentes:\n- Robo de dispositivos.pdf (57%)\nPagina: 2",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "",
+      "user_input": "Me han robado o he perdido mi portatil, qué tengo que hacer?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Robo de dispositivos.pdf se indica: 2024-07-23 2 El CAU proporcionará la información relevante sobre el dispositivo perdido o robado, incluyendo el número de serie, marca, modelo y cualquier otra caracterís... El usuario debe presentar una denuncia formal a la policía, proporcionando toda la información recabada sobre el incidente y el dispositivo perdido o robado.  Fuentes:\n- Robo de dispositivos.pdf (57%)\nPagina: 2",
+      "reference": "Según la normativa consultada, en Robo de dispositivos.pdf se indica: 2024-07-23 2 El CAU proporcionará la información relevante sobre el dispositivo perdido o robado, incluyendo el número de serie, marca, modelo y cualquier otra caracterís... El usuario debe presentar una denuncia formal a la policía, proporcionando toda la información recabada sobre el incidente y el dispositivo perdido o robado.  Fuentes:\n- Robo de dispositivos.pdf (57%)\nPagina: 2",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.5307754375680243,
+      "answer_correctness": 0.7954545454545454
+    },
+    {
+      "evaluador": "Mikel & Ibai",
+      "question": "Cual es la politica de uso de la red de I2Bask?",
+      "answer": "Según la normativa consultada, en Política de uso para los sistemas de información y soportes de dat.pdf se indica: Uso de Internet Los/las usuarios/as que utilicen Internet deberán ajustarse a los criterios establecidos por la i2Basque (Red Académica para I+D+I proveedor de nuestros s... • Deberán utilizar eficientemente la red, con el fin de evitar la congestión de la misma, la violación de la privacidad o de los derechos de autor.",
+      "ground_truth": "",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Normativa uso red I2Basque.pdf",
+      "user_input": "Cual es la politica de uso de la red de I2Bask?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Política de uso para los sistemas de información y soportes de dat.pdf se indica: Uso de Internet Los/las usuarios/as que utilicen Internet deberán ajustarse a los criterios establecidos por la i2Basque (Red Académica para I+D+I proveedor de nuestros s... • Deberán utilizar eficientemente la red, con el fin de evitar la congestión de la misma, la violación de la privacidad o de los derechos de autor.",
+      "reference": "",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.5469909843574279,
+      "answer_correctness": 0.017071624529654092
+    },
+    {
+      "evaluador": "Mikel & Ibai",
+      "question": "He codigo una excedencia, puedo quedarme el portátil y el teléfono y los accesos a los datos de MGEP?",
+      "answer": "Según la normativa consultada, en Política de bajas de personas usuarias de los sistemas de información.pdf se indica: 2.11 Excedencia por cuidado de un familiar 2.11.1 Servicios: En el caso de excedencia por cuidado de un familiar, s e mantienen todos los servicios activos: Usuario de re... 2.10.3 Dispositivos asignados: Se mantienen todos los dispositivos, salvo que la baja se prolongue más de 6 meses, en cuyo caso MGEP podrá solicitar su devolución por raz... Fuentes:\n- Política de bajas de personas usuarias de los sistemas de información.pdf (60%)\nPagina: 5",
+      "ground_truth": "Según la normativa consultada, en Política de bajas de personas usuarias de los sistemas de información.pdf se indica: 2.11 Excedencia por cuidado de un familiar 2.11.1 Servicios: En el caso de excedencia por cuidado de un familiar, s e mantienen todos los servicios activos: Usuario de re... 2.10.3 Dispositivos asignados: Se mantienen todos los dispositivos, salvo que la baja se prolongue más de 6 meses, en cuyo caso MGEP podrá solicitar su devolución por raz... Fuentes:\n- Política de bajas de personas usuarias de los sistemas de información.pdf (60%)\nPagina: 5",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "",
+      "user_input": "He codigo una excedencia, puedo quedarme el portátil y el teléfono y los accesos a los datos de MGEP?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Política de bajas de personas usuarias de los sistemas de información.pdf se indica: 2.11 Excedencia por cuidado de un familiar 2.11.1 Servicios: En el caso de excedencia por cuidado de un familiar, s e mantienen todos los servicios activos: Usuario de re... 2.10.3 Dispositivos asignados: Se mantienen todos los dispositivos, salvo que la baja se prolongue más de 6 meses, en cuyo caso MGEP podrá solicitar su devolución por raz... Fuentes:\n- Política de bajas de personas usuarias de los sistemas de información.pdf (60%)\nPagina: 5",
+      "reference": "Según la normativa consultada, en Política de bajas de personas usuarias de los sistemas de información.pdf se indica: 2.11 Excedencia por cuidado de un familiar 2.11.1 Servicios: En el caso de excedencia por cuidado de un familiar, s e mantienen todos los servicios activos: Usuario de re... 2.10.3 Dispositivos asignados: Se mantienen todos los dispositivos, salvo que la baja se prolongue más de 6 meses, en cuyo caso MGEP podrá solicitar su devolución por raz... Fuentes:\n- Política de bajas de personas usuarias de los sistemas de información.pdf (60%)\nPagina: 5",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.4140088078821023,
+      "answer_correctness": 0.8815789473684212
+    },
+    {
+      "evaluador": "Mikel & Ibai",
+      "question": "a qué recursos y accesos puede tener acceso una persona que viene de vista a MGEP?",
+      "answer": "Según la normativa consultada, en Pautas para visitas de personas a MGEP.pdf se indica: Si se quiere acceder a laboratorios distintos a los propios en los que se desarrolla el proyecto de investigación con dicha empresa (si lo hay): ● Es necesario avisar (a ... ● No se debe permitir sacar ninguna foto, salvo permiso explícito del coordinador del Grupo de I+T responsable de la investigación correspondiente. Fuentes:\n- Pautas para visitas de personas a MGEP.pdf (63%)\nPagina: 2",
+      "ground_truth": "1. Acceso a internet. 2. Usuario para acceso a la red y dirección de correo electrónico. 3. Acceso a software y aplicaciones informáticas de MGEP. 4. Servicio de impresión y reprografía. 5. Mantenimiento informático (por medio del CAU). 6. Portátil u ordenador de sobremesa, en los casos que sea necesario)",
+      "human_label": 0.0,
+      "human_correctness_raw": "Ez",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Servicios de Sistemas de Información para profesores asociados y visitantes.pdf",
+      "user_input": "a qué recursos y accesos puede tener acceso una persona que viene de vista a MGEP?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Pautas para visitas de personas a MGEP.pdf se indica: Si se quiere acceder a laboratorios distintos a los propios en los que se desarrolla el proyecto de investigación con dicha empresa (si lo hay): ● Es necesario avisar (a ... ● No se debe permitir sacar ninguna foto, salvo permiso explícito del coordinador del Grupo de I+T responsable de la investigación correspondiente. Fuentes:\n- Pautas para visitas de personas a MGEP.pdf (63%)\nPagina: 2",
+      "reference": "1. Acceso a internet. 2. Usuario para acceso a la red y dirección de correo electrónico. 3. Acceso a software y aplicaciones informáticas de MGEP. 4. Servicio de impresión y reprografía. 5. Mantenimiento informático (por medio del CAU). 6. Portátil u ordenador de sobremesa, en los casos que sea necesario)",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.5442816629344008,
+      "answer_correctness": 0.13339760152833002
+    },
+    {
+      "evaluador": "Mikel & Ibai",
+      "question": "¿Con qué frecuencia mínima debe cambiarse la contraseña de usuario?",
+      "answer": "Según la normativa consultada, en Política de uso para los sistemas de información y soportes de dat.pdf se indica: La contraseña se cambiará obligatoriamente como mínimo una vez al año siguiendo las reglas establecidas (longitud mínima 10 caracteres; utilización de mayúsculas, minúscu... No se debe utilizar una contraseña igual a otra que el usuario utilice en servicios externos a la organización.\n\nFuentes:\n- Política de uso para los sistemas de información y soportes de dat.pdf (63%)\nPagina: 6",
+      "ground_truth": "Según la normativa consultada, en Política de uso para los sistemas de información y soportes de dat.pdf se indica: La contraseña se cambiará obligatoriamente como mínimo una vez al año siguiendo las reglas establecidas (longitud mínima 10 caracteres; utilización de mayúsculas, minúscu... No se debe utilizar una contraseña igual a otra que el usuario utilice en servicios externos a la organización.\n\nFuentes:\n- Política de uso para los sistemas de información y soportes de dat.pdf (63%)\nPagina: 6",
+      "human_label": 1.0,
+      "human_correctness_raw": "Bai",
+      "scope": "Otras Normativas Generales",
+      "source_document": "",
+      "user_input": "¿Con qué frecuencia mínima debe cambiarse la contraseña de usuario?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Política de uso para los sistemas de información y soportes de dat.pdf se indica: La contraseña se cambiará obligatoriamente como mínimo una vez al año siguiendo las reglas establecidas (longitud mínima 10 caracteres; utilización de mayúsculas, minúscu... No se debe utilizar una contraseña igual a otra que el usuario utilice en servicios externos a la organización.\n\nFuentes:\n- Política de uso para los sistemas de información y soportes de dat.pdf (63%)\nPagina: 6",
+      "reference": "Según la normativa consultada, en Política de uso para los sistemas de información y soportes de dat.pdf se indica: La contraseña se cambiará obligatoriamente como mínimo una vez al año siguiendo las reglas establecidas (longitud mínima 10 caracteres; utilización de mayúsculas, minúscu... No se debe utilizar una contraseña igual a otra que el usuario utilice en servicios externos a la organización.\n\nFuentes:\n- Política de uso para los sistemas de información y soportes de dat.pdf (63%)\nPagina: 6",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.5380163019438183,
+      "answer_correctness": 0.9558823529411764
+    },
+    {
+      "evaluador": "Mikel & Ibai",
+      "question": "Quiero pedir/comprar un equipo nuevo para mi departamento. Cuales son las carácterísticas mínimas establecidas para la compra?",
+      "answer": "Según la normativa consultada, en Criterios de compra y renovación de equipamiento informático y software.pdf se indica: - El coordinador de área, será la persona que realice las solicitudes de portátil / ordenador de sobremesa de las nuevas incorporaciones. 2 - Para la adquisición de Workstation o portátiles para I+T, el grupo de investigación podrá elegir el modelo según las necesidades que tenga el propio grupo , siempre c...",
+      "ground_truth": "Las características generales son: o Portátil / equipo de sobremesa con Windows como Sistema Operativo o Procesador Intel i5 o superior. o 16 GB de memoria RAM o SSD de 512 GB (algún caso puede que sea de 256 GB) o Tarjeta gráfica dedicada de 2 GB para los usuarios de herramientas de cálculo y CAD. Sólo para equipos de tamaño de 15,6”",
+      "human_label": 0.5,
+      "human_correctness_raw": "Erdizka",
+      "scope": "Otras Normativas Generales",
+      "source_document": "Criterios de compra y renovación de equipamiento informático y software",
+      "user_input": "Quiero pedir/comprar un equipo nuevo para mi departamento. Cuales son las carácterísticas mínimas establecidas para la compra?",
+      "retrieved_contexts": [
+        ""
+      ],
+      "response": "Según la normativa consultada, en Criterios de compra y renovación de equipamiento informático y software.pdf se indica: - El coordinador de área, será la persona que realice las solicitudes de portátil / ordenador de sobremesa de las nuevas incorporaciones. 2 - Para la adquisición de Workstation o portátiles para I+T, el grupo de investigación podrá elegir el modelo según las necesidades que tenga el propio grupo , siempre c...",
+      "reference": "Las características generales son: o Portátil / equipo de sobremesa con Windows como Sistema Operativo o Procesador Intel i5 o superior. o 16 GB de memoria RAM o SSD de 512 GB (algún caso puede que sea de 256 GB) o Tarjeta gráfica dedicada de 2 GB para los usuarios de herramientas de cálculo y CAD. Sólo para equipos de tamaño de 15,6”",
+      "faithfulness": 0.0,
+      "answer_relevancy": 0.46214933285562815,
+      "answer_correctness": 0.11946295494611057
+    }
+  ]
+}
