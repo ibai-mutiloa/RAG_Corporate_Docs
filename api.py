@@ -450,7 +450,7 @@ Reglas:
 Contexto:
 {clean_context}
 
-Proporciona una respuesta directa y completa basándote solo en el contexto anterior."""
+Proporciona una respuesta directa y completa basándote en el contexto anterior. Si la respuesta está distribuida en varios fragmentos, combínalos. Si un fragmento describe el caso contrario al preguntado, ignóralo y céntrate en los fragmentos relevantes para la pregunta."""
 
     try:
         response = azure_client_text.chat.completions.create(
