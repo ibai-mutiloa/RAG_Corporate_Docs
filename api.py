@@ -750,6 +750,8 @@ def _quick_faq_lookup(question):
             q = stripped.lstrip('#').strip()
             a_lines = []
         elif q is not None:
+            if stripped.startswith('###'):
+                continue
             a_lines.append(stripped)
     if q:
         pairs.append((q, ' '.join(a_lines).strip()))
@@ -758,7 +760,7 @@ def _quick_faq_lookup(question):
     q_kw = _keywords(question)
     best_answer = None
     best_score = 0.0
-    best_overlap = 0.0
+    best_common_count = 0
 
     for fq, fa in pairs:
         if not fq or not fa:
@@ -769,25 +771,28 @@ def _quick_faq_lookup(question):
         if nq == nfq or nq in nfq or nfq in nq:
             return fa
 
-        # 2. Overlap contra título + primeras palabras del cuerpo
+        # 2. Overlap contra el título del FAQ únicamente (sin body_preview).
+        #    Usar el cuerpo de la respuesta para el matching causa falsos positivos:
+        #    palabras genéricas del texto (mes, trabajador, plazo…) hacen que
+        #    preguntas completamente distintas puntúen contra entradas incorrectas.
         if not q_kw:
             continue
 
-        # Combinar keywords del título y del cuerpo de la respuesta (primeras 30 palabras)
-        body_preview = ' '.join(fa.split()[:30])
-        fq_combined_kw = _keywords(fq) | _keywords(body_preview)
-
-        common = q_kw & fq_combined_kw
+        fq_kw = _keywords(fq)
+        common = q_kw & fq_kw
         overlap_ratio = len(common) / len(q_kw)
-        # Score: palabras en común + bonus por ratio
-        score = len(common) + overlap_ratio
+
+        # Score único: ratio normalizado [0,1], sin mezclar con conteo absoluto.
+        score = overlap_ratio
         if score > best_score:
             best_score = score
             best_answer = fa
-            best_overlap = overlap_ratio
+            best_common_count = len(common)
 
-    # Umbral: al menos 2 palabras en común O ratio >= 0.5
-    if best_answer and (best_score >= 2.0 or best_overlap >= 0.5):
+    # Umbral estricto (AND): ratio >= 0.60 Y al menos 2 palabras en común.
+    # El AND evita que preguntas de 2 KW con 1 coincidencia pasen (ratio=0.5,
+    # common=1 → bloqueado). El ratio 0.60 exige mayoría de palabras significativas.
+    if best_answer and best_score >= 0.60 and best_common_count >= 2:
         return best_answer
     return None
 
