@@ -26,7 +26,7 @@ except Exception:
 
 from pypdf import PdfReader
 
-load_dotenv()
+load_dotenv(override=True)
 
 # ===========================
 # Configuración de DB
@@ -120,24 +120,47 @@ def count_tokens(text):
 # Extracción de texto
 # ===========================
 
+def _score_pdf_text(text):
+    """
+    Puntúa la calidad del texto extraído de un PDF.
+    Penaliza texto con muchas líneas de índice/tabla (....., ---) y
+    premia texto con frases completas.
+    """
+    if not text or not text.strip():
+        return 0
+    lines = [l.strip() for l in text.split("\n") if l.strip()]
+    if not lines:
+        return 0
+    total = len(lines)
+    noise = sum(1 for l in lines if (
+        l.count(".") > len(l) * 0.4 or
+        l.startswith("| ---") or
+        l == "---" or
+        (len(l) < 8 and not l[0].isalpha())
+    ))
+    useful_chars = sum(len(l) for l in lines if len(l) > 30)
+    noise_ratio = noise / total if total else 1
+    return useful_chars * (1 - noise_ratio)
+
+
 def extract_text_from_pdf(pdf_path):
     """
     Extrae texto de un PDF.
-    Prioridad: markitdown → pdfplumber → pypdf.
-    Devuelve el texto crudo; normalize_pdf_text lo limpiará después.
+    Prueba markitdown y pdfplumber, devuelve el de mejor calidad.
+    Fallback: pypdf.
     """
-    # 1) markitdown (mejor para estructura, encabezados, tablas)
+    markitdown_text = ""
+    pdfplumber_text = ""
+
+    # 1) markitdown
     if _markitdown:
         try:
             result = _markitdown.convert(pdf_path)
-            text = result.text_content or ""
-            if text.strip():
-                print(f"[PDF] markitdown OK: {os.path.basename(pdf_path)}")
-                return text
+            markitdown_text = result.text_content or ""
         except Exception as e:
-            print(f"[WARN] markitdown falló en {pdf_path}: {e}, intentando pdfplumber")
+            print(f"[WARN] markitdown falló en {pdf_path}: {e}")
 
-    # 2) pdfplumber (bueno para tablas en PDFs complejos)
+    # 2) pdfplumber
     if pdfplumber:
         try:
             page_texts = []
@@ -170,16 +193,27 @@ def extract_text_from_pdf(pdf_path):
                             md += "| " + " | ".join(row_cells) + " |\n"
                         parts.append(md)
                     page_texts.append("\n\n".join(parts).strip())
-
             combined = "\n".join(page_texts)
-            if combined.strip():
-                print(f"[PDF] pdfplumber OK: {os.path.basename(pdf_path)}")
-                if not MAX_INDEXING_MODE:
-                    page_texts = strip_front_matter_pages(page_texts)
-                    combined = "\n".join(page_texts)
-                return combined
+            if not MAX_INDEXING_MODE:
+                page_texts = strip_front_matter_pages(page_texts)
+                combined = "\n".join(page_texts)
+            pdfplumber_text = combined
         except Exception as e:
-            print(f"[WARN] pdfplumber falló en {pdf_path}: {e}, usando pypdf")
+            print(f"[WARN] pdfplumber falló en {pdf_path}: {e}")
+
+    # Elegir el mejor resultado
+    score_md = _score_pdf_text(markitdown_text)
+    score_pl = _score_pdf_text(pdfplumber_text)
+
+    if score_md > 0 or score_pl > 0:
+        if score_pl > score_md * 1.2:
+            print(f"[PDF] pdfplumber mejor ({int(score_pl)} vs {int(score_md)}): {os.path.basename(pdf_path)}")
+            return pdfplumber_text
+        elif markitdown_text.strip():
+            print(f"[PDF] markitdown mejor ({int(score_md)} vs {int(score_pl)}): {os.path.basename(pdf_path)}")
+            return markitdown_text
+        else:
+            return pdfplumber_text
 
     # 3) pypdf fallback
     try:
