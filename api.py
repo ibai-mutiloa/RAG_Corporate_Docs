@@ -248,6 +248,8 @@ def rewrite_query(question, detected_lang):
         'kilometros':  'kilómetro vehículo desplazamiento compensación',
         'km':          'kilómetro vehículo desplazamiento compensación',
         'campus':      'campus base compensación cambio desplazamiento trabajador',
+        'socias':      'clases personas socias usuarias trabajo colaboradoras inactivas',
+        'variable':    'retribución variable anticipo laboral porcentaje objetivos',
         # Prestaciones sociales
         'jubilación':  'jubilación LagunAro pensión cotización',
         'pensión':     'jubilación LagunAro pensión cotización',
@@ -639,9 +641,10 @@ def expand_context_with_neighbors(chunks):
             file_path = chunk.get('file_path', '')
             chunk_index = chunk.get('chunk_index', -1)
             expanded.append(chunk)
-            for offset, label in [(-1, 'anterior'), (1, 'posterior')]:
-                if chunk_index + offset < 0:
+            for offset in range(-3, 4):
+                if offset == 0 or chunk_index + offset < 0:
                     continue
+                label = 'anterior' if offset < 0 else 'posterior'
                 cache_key = (file_path, chunk_index + offset)
                 if cache_key not in neighbor_cache:
                     with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -654,10 +657,10 @@ def expand_context_with_neighbors(chunks):
                 neighbor = neighbor_cache[cache_key]
                 if neighbor:
                     nd = dict(neighbor)
-                    nd['similarity'] = chunk.get('similarity', 0.0) * 0.7
+                    nd['similarity'] = chunk.get('similarity', 0.0)
                     nd['is_neighbor'] = True
                     nd['neighbor_type'] = label
-                    if offset == -1:
+                    if offset < 0:
                         expanded.insert(len(expanded) - 1, nd)
                     else:
                         expanded.append(nd)

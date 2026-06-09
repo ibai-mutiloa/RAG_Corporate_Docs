@@ -41,10 +41,10 @@ QUESTIONS = [
     {
         "id": 3,
         "question": "cómo puedo hacer una denuncia siendo un trabajador",
-        "expected_file": "Reglamento de régimen interno.pdf",
+        "expected_file": "Política de conflicto acoso laboral y acoso sexual.pdf",
         "expected_chunk_index": None,
         "partial_expected": False,
-        "notes": "keyword 'denuncia' tiene expansión de sinónimos ruidosa",
+        "notes": "Canal de denuncia está en chunk 238 de Política acoso (web MGEP, Compliance Officer). Antes se esperaba Reglamento — corregido tras validación manual.",
     },
     {
         "id": 4,
