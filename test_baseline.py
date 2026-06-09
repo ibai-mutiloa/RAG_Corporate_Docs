@@ -145,10 +145,10 @@ QUESTIONS = [
     {
         "id": 16,
         "question": "cuantas horas tengo que trabajar durante el curso 2024-2025",
-        "expected_file": "2 Horario de trabajo.pdf",
+        "expected_file": "Normativa laboral.pdf",
         "expected_chunk_index": None,
         "partial_expected": False,
-        "notes": "",
+        "notes": "Normativa laboral.pdf contiene la jornada actualizada (1.722h curso 2025-2026). Antes se esperaba 2 Horario de trabajo.pdf — corregido tras validación manual.",
     },
     {
         "id": 17,
