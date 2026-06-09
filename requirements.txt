@@ -6,6 +6,7 @@ pdfplumber
 camelot-py
 tiktoken
 python-dotenv
+pdfplumber
 pypdf
 azure-core
 flask

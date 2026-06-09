@@ -3,3 +3,7 @@ __pycache__/
 *.pyo
 .env
 /venv/
+/dokumentuak/
+/tests/
+*xlsx
+FAQ.md

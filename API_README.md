@@ -60,6 +60,7 @@ GET /health
 
 ### 2. Buscar Normativas
 Busca chunks de normativas similares a una pregunta.
+Si el chat conoce el idioma activo del sitio, envíalo en `site_language` para que la búsqueda y la respuesta usen esa rama (`es` o `eu`).
 
 **Request:**
 ```bash
@@ -68,6 +69,7 @@ Content-Type: application/json
 
 {
   "question": "¿Cuál es la normativa sobre seguridad laboral?",
+  "site_language": "es",
   "top_k": 5
 }
 ```

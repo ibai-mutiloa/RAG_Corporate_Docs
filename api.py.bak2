@@ -84,9 +84,9 @@ if AZURE_DEPLOYMENT_NAME_TEXT:
         )
 
 app = Flask(__name__)
-app.config['JSON_AS_ASCII'] = True
 CORS(app)
 # Forzar escape ASCII en JSON para compatibilidad con clientes Windows/IIS
+app.config['JSON_AS_ASCII'] = True
 
 
 # ===========================
@@ -750,8 +750,6 @@ def _quick_faq_lookup(question):
             q = stripped.lstrip('#').strip()
             a_lines = []
         elif q is not None:
-            if stripped.startswith('###'):
-                continue
             a_lines.append(stripped)
     if q:
         pairs.append((q, ' '.join(a_lines).strip()))
@@ -760,7 +758,7 @@ def _quick_faq_lookup(question):
     q_kw = _keywords(question)
     best_answer = None
     best_score = 0.0
-    best_common_count = 0
+    best_overlap = 0.0
 
     for fq, fa in pairs:
         if not fq or not fa:
@@ -771,28 +769,25 @@ def _quick_faq_lookup(question):
         if nq == nfq or nq in nfq or nfq in nq:
             return fa
 
-        # 2. Overlap contra el título del FAQ únicamente (sin body_preview).
-        #    Usar el cuerpo de la respuesta para el matching causa falsos positivos:
-        #    palabras genéricas del texto (mes, trabajador, plazo…) hacen que
-        #    preguntas completamente distintas puntúen contra entradas incorrectas.
+        # 2. Overlap contra título + primeras palabras del cuerpo
         if not q_kw:
             continue
 
-        fq_kw = _keywords(fq)
-        common = q_kw & fq_kw
-        overlap_ratio = len(common) / len(q_kw)
+        # Combinar keywords del título y del cuerpo de la respuesta (primeras 30 palabras)
+        body_preview = ' '.join(fa.split()[:30])
+        fq_combined_kw = _keywords(fq) | _keywords(body_preview)
 
-        # Score único: ratio normalizado [0,1], sin mezclar con conteo absoluto.
-        score = overlap_ratio
+        common = q_kw & fq_combined_kw
+        overlap_ratio = len(common) / len(q_kw)
+        # Score: palabras en común + bonus por ratio
+        score = len(common) + overlap_ratio
         if score > best_score:
             best_score = score
             best_answer = fa
-            best_common_count = len(common)
+            best_overlap = overlap_ratio
 
-    # Umbral estricto (AND): ratio >= 0.60 Y al menos 2 palabras en común.
-    # El AND evita que preguntas de 2 KW con 1 coincidencia pasen (ratio=0.5,
-    # common=1 → bloqueado). El ratio 0.60 exige mayoría de palabras significativas.
-    if best_answer and best_score >= 0.60 and best_common_count >= 2:
+    # Umbral: al menos 2 palabras en común O ratio >= 0.5
+    if best_answer and (best_score >= 2.0 or best_overlap >= 0.5):
         return best_answer
     return None
 
@@ -861,21 +856,26 @@ def search():
         if azure_client_text:
             try:
                 if detected_lang == 'eu':
-                    # Euskera: traducir el texto exacto del FAQ
+                    # Euskera: traducir el texto exacto del FAQ sin reformular
                     system_prompt = """Traduce el siguiente texto al euskera. Reproduce todos los datos exactos (números, fechas, importes). Solo el texto traducido, sin explicaciones."""
-                    r = azure_client_text.chat.completions.create(
-                        model=AZURE_DEPLOYMENT_NAME_TEXT,
-                        messages=[
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user", "content": quick_faq_text},
-                        ],
-                        temperature=0.0,
-                        max_tokens=500,
-                    )
-                    llm_answer = (r.choices[0].message.content or "").strip()
-                    if llm_answer:
-                        final_answer = _sanitize_answer_output(llm_answer)
-                # Castellano: FAQ ya en castellano, devolver directamente
+                    user_prompt = quick_faq_text
+                else:
+                    # Castellano: el FAQ ya está en castellano, devolver directamente sin LLM
+                    final_answer = quick_faq_text
+                    return final_answer  # salir sin llamar al LLM
+
+                r = azure_client_text.chat.completions.create(
+                    model=AZURE_DEPLOYMENT_NAME_TEXT,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    temperature=0.0,
+                    max_tokens=500,
+                )
+                llm_answer = (r.choices[0].message.content or "").strip()
+                if llm_answer:
+                    final_answer = _sanitize_answer_output(llm_answer)
             except Exception as e:
                 print(f"[WARN] Error pasando FAQ por LLM: {e}")
 

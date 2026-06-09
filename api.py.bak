@@ -84,9 +84,7 @@ if AZURE_DEPLOYMENT_NAME_TEXT:
         )
 
 app = Flask(__name__)
-app.config['JSON_AS_ASCII'] = True
 CORS(app)
-# Forzar escape ASCII en JSON para compatibilidad con clientes Windows/IIS
 
 
 # ===========================
@@ -375,27 +373,21 @@ def generate_faq_answer(question, faq_chunks, detected_lang):
         answer = _extract_faq_answer(faq_chunks[0].get('text', '')) if faq_chunks else None
         return answer, False  # (texto, is_llm_generated)
 
-    # Usar solo el chunk más relevante para evitar que el LLM elija el equivocado
-    top_faq_chunk = faq_chunks[0] if faq_chunks else None
-    if not top_faq_chunk:
-        return None, False
-
-    # Extraer solo la respuesta del chunk top (sin el ## de la pregunta)
-    top_faq_answer = _extract_faq_answer(top_faq_chunk.get('text', ''))
-    if not top_faq_answer:
-        return None, False
-
-    faq_context = top_faq_answer
+    faq_context = build_faq_context(faq_chunks)
     system_prompt = f"""Eres el asistente oficial de la intranet de MGEP.
-Se te proporciona la respuesta exacta extraída de las FAQ internas.
-Tu única tarea es reformularla de forma natural en el idioma indicado.
-CRÍTICO: Reproduce TODOS los datos exactos (números, fechas, importes, nombres). NUNCA omitas ni cambies cifras.
-No añadas información externa. No menciones la fuente.
-{_lang_instruction(detected_lang)}"""
+A continuación hay pares pregunta-respuesta en formato '## Pregunta'.
+Reglas:
+- Selecciona el par que MEJOR responda a la pregunta del usuario y da esa respuesta directamente.
+- NUNCA digas "no hay información" — siempre da la mejor respuesta disponible.
+- No repitas la pregunta. No menciones la fuente ni el documento.
+- {_lang_instruction(detected_lang)}"""
 
-    user_prompt = f"""Reformula esta respuesta de forma natural para la pregunta "{question}":
+    user_prompt = f"""Pregunta: {question}
 
-{faq_context}"""
+Pares pregunta-respuesta:
+{faq_context}
+
+Da directamente la respuesta del par que mejor encaje, de forma concisa."""
 
     try:
         response = azure_client_text.chat.completions.create(
@@ -696,11 +688,6 @@ def _quick_faq_lookup(question):
         'cobrar': ['percibir', 'recibir', 'paga'],
         'cobran': ['perciben', 'pagas'],
         'cobro': ['percibo', 'paga'],
-        'salario': ['pagas', 'paga', 'nómina', 'perciben', 'anuales', '14'],
-        'salarios': ['pagas', 'paga', 'nómina', 'perciben', 'anuales', '14'],
-        'recibe': ['percibe', 'paga', 'cobran'],
-        'reciben': ['perciben', 'pagas', 'cobran'],
-        'cobra': ['percibe', 'paga', 'cobran'],
         'km': ['kilómetro', 'kilómetros', 'desplazamiento'],
         'kilómetros': ['kilómetro', 'desplazamiento', 'compensación'],
         'coche': ['vehículo', 'desplazamiento'],
@@ -750,8 +737,6 @@ def _quick_faq_lookup(question):
             q = stripped.lstrip('#').strip()
             a_lines = []
         elif q is not None:
-            if stripped.startswith('###'):
-                continue
             a_lines.append(stripped)
     if q:
         pairs.append((q, ' '.join(a_lines).strip()))
@@ -760,7 +745,7 @@ def _quick_faq_lookup(question):
     q_kw = _keywords(question)
     best_answer = None
     best_score = 0.0
-    best_common_count = 0
+    best_overlap = 0.0
 
     for fq, fa in pairs:
         if not fq or not fa:
@@ -771,28 +756,25 @@ def _quick_faq_lookup(question):
         if nq == nfq or nq in nfq or nfq in nq:
             return fa
 
-        # 2. Overlap contra el título del FAQ únicamente (sin body_preview).
-        #    Usar el cuerpo de la respuesta para el matching causa falsos positivos:
-        #    palabras genéricas del texto (mes, trabajador, plazo…) hacen que
-        #    preguntas completamente distintas puntúen contra entradas incorrectas.
+        # 2. Overlap contra título + primeras palabras del cuerpo
         if not q_kw:
             continue
 
-        fq_kw = _keywords(fq)
-        common = q_kw & fq_kw
-        overlap_ratio = len(common) / len(q_kw)
+        # Combinar keywords del título y del cuerpo de la respuesta (primeras 30 palabras)
+        body_preview = ' '.join(fa.split()[:30])
+        fq_combined_kw = _keywords(fq) | _keywords(body_preview)
 
-        # Score único: ratio normalizado [0,1], sin mezclar con conteo absoluto.
-        score = overlap_ratio
+        common = q_kw & fq_combined_kw
+        overlap_ratio = len(common) / len(q_kw)
+        # Score: palabras en común + bonus por ratio
+        score = len(common) + overlap_ratio
         if score > best_score:
             best_score = score
             best_answer = fa
-            best_common_count = len(common)
+            best_overlap = overlap_ratio
 
-    # Umbral estricto (AND): ratio >= 0.60 Y al menos 2 palabras en común.
-    # El AND evita que preguntas de 2 KW con 1 coincidencia pasen (ratio=0.5,
-    # common=1 → bloqueado). El ratio 0.60 exige mayoría de palabras significativas.
-    if best_answer and best_score >= 0.60 and best_common_count >= 2:
+    # Umbral: al menos 2 palabras en común O ratio >= 0.5
+    if best_answer and (best_score >= 2.0 or best_overlap >= 0.5):
         return best_answer
     return None
 
@@ -860,22 +842,29 @@ def search():
         final_answer = quick_faq_text  # fallback si el LLM falla
         if azure_client_text:
             try:
-                if detected_lang == 'eu':
-                    # Euskera: traducir el texto exacto del FAQ
-                    system_prompt = """Traduce el siguiente texto al euskera. Reproduce todos los datos exactos (números, fechas, importes). Solo el texto traducido, sin explicaciones."""
-                    r = azure_client_text.chat.completions.create(
-                        model=AZURE_DEPLOYMENT_NAME_TEXT,
-                        messages=[
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user", "content": quick_faq_text},
-                        ],
-                        temperature=0.0,
-                        max_tokens=500,
-                    )
-                    llm_answer = (r.choices[0].message.content or "").strip()
-                    if llm_answer:
-                        final_answer = _sanitize_answer_output(llm_answer)
-                # Castellano: FAQ ya en castellano, devolver directamente
+                system_prompt = f"""Eres el asistente oficial de la intranet de MGEP.
+Se te proporciona la respuesta exacta de las FAQ internas.
+Reformula esa respuesta de forma natural y clara, sin inventar información adicional.
+No menciones que es una FAQ ni la fuente.
+{_lang_instruction(detected_lang)}"""
+                user_prompt = f"""Pregunta: {question}
+
+Respuesta de las FAQ:
+{quick_faq_text}
+
+Reformula la respuesta de forma directa y natural."""
+                r = azure_client_text.chat.completions.create(
+                    model=AZURE_DEPLOYMENT_NAME_TEXT,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt},
+                    ],
+                    temperature=0.1,
+                    max_tokens=500,
+                )
+                llm_answer = (r.choices[0].message.content or "").strip()
+                if llm_answer:
+                    final_answer = _sanitize_answer_output(llm_answer)
             except Exception as e:
                 print(f"[WARN] Error pasando FAQ por LLM: {e}")
 
