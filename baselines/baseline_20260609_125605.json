@@ -1,0 +1,307 @@
+{
+  "metadata": {
+    "timestamp": "20260609_125605",
+    "api_url": "http://localhost:5000",
+    "generate_answer": true,
+    "total_questions": 8,
+    "file_hits": 8
+  },
+  "results": [
+    {
+      "id": 2,
+      "question": "qué hago si conozco un delito cometido en Eskola",
+      "expected_file": "Manual Prevención Riesgos Penales.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "keyword 'Eskola' puede desviar retrieval",
+      "max_similarity": 0.3892,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Manual Prevención Riesgos Penales.pdf",
+          "chunk_index": 37,
+          "similarity": 0.3892
+        },
+        {
+          "file_name": "Manual Prevención Riesgos Penales.pdf",
+          "chunk_index": 3,
+          "similarity": 0.3849
+        },
+        {
+          "file_name": "Manual Prevención Riesgos Penales.pdf",
+          "chunk_index": 21,
+          "similarity": 0.3707
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 37,
+      "answer": "Si conoces un delito cometido en Eskola, debes comunicarlo de manera directa al Comité de Cumplimiento. Para ello, puedes utilizar el canal de información disponible en la página web de MGEP, en el apartado de Cumplimiento Normativo dentro de “Responsabilidad social y transparencia”. Este canal permite realizar la denuncia de forma anónima o no, según tu preferencia.",
+      "answer_generated": true
+    },
+    {
+      "id": 9,
+      "question": "le he dado un golpe al coche, que tengo que hacer",
+      "expected_file": "5 Compensación de daños en vehículos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.3897,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 17,
+          "similarity": 0.3897
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 0,
+          "similarity": 0.3778
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 13,
+          "similarity": 0.3599
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 17,
+      "answer": "Si has dado un golpe al coche, debes seguir estos pasos:\n\n1. **Informar del accidente**: Comunica el hecho y las circunstancias del accidente a Administración y al Coordinador de tu Departamento dentro de un plazo de 2 días hábiles desde que ocurrió.\n\n2. **Actuar diligentemente**: Gestiona la indemnización correspondiente con tu compañía de seguros, con el responsable del accidente o con la compañía de seguros de este último.\n\n3. **Enviar la solicitud**: Presenta una solicitud al Departamento de Administración en el plazo de un mes desde la fecha del siniestro (salvo motivos justificados). Acompaña la solicitud con:\n   - Un informe explicativo de las circunstancias del accidente.\n   - El atestado de tráfico (si lo hubiera).\n   - La póliza de accidentes y el último recibo del seguro del vehículo.\n\nEs importante que el vehículo esté cubierto por un seguro obligatorio de accidentes y que el conductor no haya superado la tasa de alcoholemia máxima ni dado positivo en drogas, según el Código de Circulación.",
+      "answer_generated": true
+    },
+    {
+      "id": 15,
+      "question": "cuales son los pasos si fallece un empleado de Eskola",
+      "expected_file": "Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "keyword 'Eskola' puede desviar retrieval",
+      "max_similarity": 0.3884,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf",
+          "chunk_index": 0,
+          "similarity": 0.3884
+        },
+        {
+          "file_name": "Protocolo en caso de fallecimiento de alumnado por enfermedad o accidente.pdf",
+          "chunk_index": 0,
+          "similarity": 0.3857
+        },
+        {
+          "file_name": "Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf",
+          "chunk_index": 1,
+          "similarity": 0.3846
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 0,
+      "answer": "El contexto proporcionado no incluye los pasos específicos del protocolo de actuación en caso de fallecimiento de un trabajador de MGEP. Solo se menciona que existe un protocolo dirigido a socios, contratados y doctorandos, y que está bajo la responsabilidad de la Coordinación General. No se detallan las acciones concretas a seguir.",
+      "answer_generated": true
+    },
+    {
+      "id": 21,
+      "question": "que condiciones debo cumplir para acogerme a la ayuda por cese de la actividad",
+      "expected_file": "7 Ayudas por cese de la actividad laboral.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.5898,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 0,
+          "similarity": 0.4615
+        },
+        {
+          "file_name": "Normativa laboral.pdf",
+          "chunk_index": 45,
+          "similarity": 0.4491
+        },
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 62,
+          "similarity": 0.4383
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 0,
+      "answer": "Para acogerte a la ayuda por cese de actividad, debes cumplir las siguientes condiciones:\n\n1. Ser socio trabajador en activo o en excedencia no voluntaria o negociada.\n2. Tener más de 10 años de antigüedad indefinida.\n3. Tener al menos 60 años en la fecha del cese.\n\nAdemás, el proceso para solicitar la ayuda incluye cuatro pasos:\n\n1. Solicitar la adhesión a través de la aplicación Incidencias (Anexo I).\n2. Firmar el contrato de adhesión (Anexo II).\n3. Ratificar el contrato con al menos 12 meses de antelación (Anexo III).\n4. Suscribir el documento final con la fecha y el importe bruto acordado (Anexo IV).",
+      "answer_generated": true
+    },
+    {
+      "id": 22,
+      "question": "cuando debo comunicar que quiero acogerme a la ayuda por cese de la actividad",
+      "expected_file": "7 Ayudas por cese de la actividad laboral.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.6192,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 51,
+          "similarity": 0.4649
+        },
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 33,
+          "similarity": 0.4539
+        },
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 62,
+          "similarity": 0.4509
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 51,
+      "answer": "Debes comunicar tu intención de acogerte a la ayuda por cese de actividad al menos con 12 meses de antelación, ratificando el contrato de adhesión (Anexo III) como parte del proceso.",
+      "answer_generated": true
+    },
+    {
+      "id": 23,
+      "question": "soy una persona socia que he recibido formación con cargo a la cooperativa, cuanto tiempo de permanencia me pueden exigir",
+      "expected_file": "Reglamento de régimen interno.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.5813,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 401,
+          "similarity": 0.5813
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 140,
+          "similarity": 0.521
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 214,
+          "similarity": 0.4966
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 401,
+      "answer": "Si has recibido formación profesional específica con cargo a la cooperativa, se te puede exigir una permanencia en la misma durante un tiempo determinado, que no podrá ser superior a cinco años. Estas condiciones deben formalizarse previamente por escrito.",
+      "answer_generated": true
+    },
+    {
+      "id": 25,
+      "question": "en caso de empate en votación para el Consejo Rector, qué criterios de desempate hay",
+      "expected_file": "Estatutos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.5636,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 450,
+          "similarity": 0.5636
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 456,
+          "similarity": 0.5255
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 187,
+          "similarity": 0.524
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 450,
+      "answer": "En caso de empate en una votación del Consejo Rector, el voto del Presidente o Presidenta será el que dirima el empate.",
+      "answer_generated": true
+    },
+    {
+      "id": 26,
+      "question": "que diferencia hay entre el procedimiento sancionador de falta leve y falta grave",
+      "expected_file": "Reglamento de régimen interno.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.505,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 250,
+          "similarity": 0.505
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 524,
+          "similarity": 0.5043
+        },
+        {
+          "file_name": "Normativa del Colegio Mayor Biteri.pdf",
+          "chunk_index": 247,
+          "similarity": 0.4543
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 524,
+      "answer": "La diferencia principal entre el procedimiento sancionador de faltas leves y faltas graves radica en quién instruye el expediente y cómo se lleva a cabo el proceso:\n\n1. **Faltas leves**:\n   - El expediente es instruido por el correspondiente Coordinador o Coordinadora.\n   - Este comunica por escrito al interesado/a los cargos imputados, la calificación provisional de la falta y la propuesta de sanción.\n   - La persona socia puede hacer un descargo ante el mismo Coordinador o Coordinadora, quien resolverá el caso.\n\n2. **Faltas graves**:\n   - No se especifica en el contexto proporcionado el procedimiento sancionador específico para faltas graves, pero se menciona que el Consejo Rector tiene la facultad sancionadora indelegable en todos los casos.\n   - En todos los casos, el pliego de cargos será formulado por un Comité Instructor compuesto por tres miembros nombrados por el Consejo Rector.\n\nPor lo tanto, la diferencia clave está en que las faltas leves son gestionadas directamente por el Coordinador o Coordinadora, mientras que las faltas graves implican la intervención del Consejo Rector y un Comité Instructor.",
+      "answer_generated": true
+    }
+  ]
+}

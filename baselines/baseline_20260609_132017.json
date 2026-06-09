@@ -1,0 +1,233 @@
+{
+  "metadata": {
+    "timestamp": "20260609_132017",
+    "api_url": "http://localhost:5000",
+    "generate_answer": true,
+    "total_questions": 6,
+    "file_hits": 6
+  },
+  "results": [
+    {
+      "id": 3,
+      "question": "cómo puedo hacer una denuncia siendo un trabajador",
+      "expected_file": "Reglamento de régimen interno.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "keyword 'denuncia' tiene expansión de sinónimos ruidosa",
+      "max_similarity": 0.4336,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 480,
+          "similarity": 0.4336
+        },
+        {
+          "file_name": "Política de conflicto acoso laboral y acoso sexual.pdf",
+          "chunk_index": 175,
+          "similarity": 0.4085
+        },
+        {
+          "file_name": "Política de conflicto acoso laboral y acoso sexual.pdf",
+          "chunk_index": 175,
+          "similarity": 0.4085
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 480,
+      "answer": "El contexto proporcionado no incluye un procedimiento claro y detallado sobre cómo realizar una denuncia como trabajador en MGEP. Aunque se mencionan aspectos relacionados con faltas laborales y situaciones de acoso, no se especifica un proceso general para presentar denuncias. Por lo tanto, no puedo ofrecer una respuesta completa basada en el contexto disponible.",
+      "answer_generated": true
+    },
+    {
+      "id": 8,
+      "question": "vamos a cobrar retribucion variable",
+      "expected_file": "1 Anticipos y retribución.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.5154,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 78,
+          "similarity": 0.5154
+        },
+        {
+          "file_name": "1 Anticipos y retribución.pdf",
+          "chunk_index": 6,
+          "similarity": 0.5132
+        },
+        {
+          "file_name": "1 Anticipos y retribución.pdf",
+          "chunk_index": 1,
+          "similarity": 0.5013
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 6,
+      "answer": "El contexto proporcionado menciona la existencia de una normativa sobre retribución variable, aprobada por el Consejo Rector y unificada con el texto del Reglamento de Régimen Interno en su versión de septiembre de 2017. Sin embargo, no se detalla en el contexto cuándo se cobra ni bajo qué condiciones específicas se aplica la retribución variable. \n\nSi necesitas información más específica sobre los criterios o fechas de pago, no está disponible en el contexto proporcionado.",
+      "answer_generated": true
+    },
+    {
+      "id": 12,
+      "question": "que tengo que hacer si la huelga es vinculante",
+      "expected_file": "Huelga trabajadores.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.5617,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 540,
+          "similarity": 0.5617
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 96,
+          "similarity": 0.531
+        },
+        {
+          "file_name": "Huelga trabajadores.pdf",
+          "chunk_index": 46,
+          "similarity": 0.4978
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 3,
+      "hit_chunk_index": 46,
+      "answer": "No se proporciona información específica en el contexto sobre qué hacer si la huelga es vinculante.",
+      "answer_generated": true
+    },
+    {
+      "id": 13,
+      "question": "cuando se vota cuando hay convocatoria de huelga",
+      "expected_file": "Huelga trabajadores.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.5789,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 540,
+          "similarity": 0.5789
+        },
+        {
+          "file_name": "Huelga trabajadores.pdf",
+          "chunk_index": 19,
+          "similarity": 0.5465
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 96,
+          "similarity": 0.5418
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 19,
+      "answer": "La votación en caso de convocatoria de huelga se realiza de la siguiente manera:\n\n1. **Delegación de voto**: Las personas que deseen delegar su voto deben enviar un correo electrónico indicando en el asunto \"delegación de voto\". Este correo se mostrará en la mesa de votación.\n\n2. **Resultados de la votación**:\n   - Si el voto favorable a la huelga alcanza una mayoría del 80% o más de los votos válidos emitidos, la huelga será considerada **vinculante**.\n   - Si el voto favorable alcanza una mayoría de 2/3, pero es inferior al 80%, las acciones dependerán de lo que decida el alumnado. Si el alumnado decide secundar la huelga, esta también será considerada **vinculante**.\n\n3. **Comunicación del resultado**: Tras la votación, el presidente o la presidenta del Consejo Social informará del resultado y de las acciones a realizar según el resultado obtenido.",
+      "answer_generated": true
+    },
+    {
+      "id": 14,
+      "question": "puedo ir a trabajar un dia de huelga",
+      "expected_file": "Huelga trabajadores.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.5281,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 540,
+          "similarity": 0.5281
+        },
+        {
+          "file_name": "Huelga trabajadores.pdf",
+          "chunk_index": 26,
+          "similarity": 0.4695
+        },
+        {
+          "file_name": "Huelga trabajadores.pdf",
+          "chunk_index": 11,
+          "similarity": 0.4421
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 26,
+      "answer": "Sí, puedes ir a trabajar un día de huelga, pero bajo ciertas condiciones específicas:\n\n1. **Necesidades inexcusables o servicios mínimos**: La coordinación general, previa consulta con los coordinadores de departamento, puede designar a personas que deban cumplir funciones laborales por necesidades inexcusables de la cooperativa o servicios mínimos.\n\n2. **Actividades externas ineludibles**: Si debes realizar una actividad externa ineludible, debes comunicarlo antes de la votación de la huelga a tu Coordinador/a de Departamento o Servicio y recibir confirmación expresa de la obligatoriedad de trabajar ese día. Además, deberás informar a Administración de Personal.\n\nPor lo tanto, para trabajar en un día de huelga, necesitas una autorización previa basada en necesidades específicas o actividades ineludibles.",
+      "answer_generated": true
+    },
+    {
+      "id": 24,
+      "question": "cuales son las cuatro clases de personas socias en la Cooperativa",
+      "expected_file": "Reglamento de régimen interno.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.5332,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 400,
+          "similarity": 0.5332
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 181,
+          "similarity": 0.5022
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 189,
+          "similarity": 0.4986
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 400,
+      "answer": "No se encuentra información en el contexto proporcionado sobre las cuatro clases de personas socias en la Cooperativa.",
+      "answer_generated": true
+    }
+  ]
+}
