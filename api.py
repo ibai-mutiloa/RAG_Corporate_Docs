@@ -247,6 +247,7 @@ def rewrite_query(question, detected_lang):
         'kilometraje': 'kilómetro vehículo desplazamiento compensación',
         'kilometros':  'kilómetro vehículo desplazamiento compensación',
         'km':          'kilómetro vehículo desplazamiento compensación',
+        'campus':      'cambio campus base trabajador compensación kilómetros semestres',
         'socias':      'clases personas socias usuarias trabajo colaboradoras inactivas',
         'variable':    'retribución variable anticipo laboral porcentaje objetivos',
         # Prestaciones sociales
@@ -1045,7 +1046,14 @@ def search():
 
     # ── Generación de respuesta con LLM ──────────────────────────────────────
     if generate_answer:
-        context_chunks = similar_chunks_expanded if ENABLE_NEIGHBOR_EXPANSION else similar_chunks
+        if ENABLE_NEIGHBOR_EXPANSION:
+            # Originales primero (TOP_K garantizados), luego vecinos hasta CONTEXT_MAX_SOURCES
+            original_ids = {c['id'] for c in similar_chunks}
+            neighbors = [c for c in similar_chunks_expanded if c['id'] not in original_ids]
+            neighbors_sorted = sorted(neighbors, key=lambda x: x['similarity'], reverse=True)
+            context_chunks = similar_chunks + neighbors_sorted
+        else:
+            context_chunks = similar_chunks
 
         if answered_by_faq:
             answer, is_llm = generate_faq_answer(question, similar_chunks, detected_lang)
