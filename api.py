@@ -247,7 +247,6 @@ def rewrite_query(question, detected_lang):
         'kilometraje': 'kilómetro vehículo desplazamiento compensación',
         'kilometros':  'kilómetro vehículo desplazamiento compensación',
         'km':          'kilómetro vehículo desplazamiento compensación',
-        'campus':      'campus base compensación cambio desplazamiento trabajador',
         'socias':      'clases personas socias usuarias trabajo colaboradoras inactivas',
         'variable':    'retribución variable anticipo laboral porcentaje objetivos',
         # Prestaciones sociales
@@ -440,9 +439,9 @@ Reglas:
 - NUNCA inventes cifras, fechas, plazos o datos que no estén en el contexto.
 - Si la respuesta implica varios pasos o elementos distribuidos en el contexto,
   sintetízalos en orden coherente.
-- Si tras revisar todo el contexto no encuentras información relevante, indícalo
-  brevemente. Antes de concluir que no está, comprueba si la respuesta puede
-  inferirse de los datos presentes.
+- Lee TODOS los fragmentos del contexto antes de responder, no solo el primero.
+  La información relevante puede estar en cualquier posición del contexto.
+  Solo si ningún fragmento contiene información útil, indica que no tienes la respuesta.
 - Sé preciso y directo. Si hay artículos o procedimientos relevantes, cítalos.
 - No menciones el nombre del documento ni la fuente.
 - {_lang_instruction(detected_lang)}"""
@@ -657,7 +656,7 @@ def expand_context_with_neighbors(chunks):
                 neighbor = neighbor_cache[cache_key]
                 if neighbor:
                     nd = dict(neighbor)
-                    nd['similarity'] = chunk.get('similarity', 0.0)
+                    nd['similarity'] = chunk.get('similarity', 0.0) * 0.85
                     nd['is_neighbor'] = True
                     nd['neighbor_type'] = label
                     if offset < 0:
