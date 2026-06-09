@@ -216,33 +216,45 @@ def rewrite_query(question, detected_lang):
     """
     # Sinónimos locales rápidos
     synonyms_map = {
-        'denuncia': 'denuncia comisión ética canal reporte procedimiento',
-        'queja': 'denuncia comisión reclamación procedimiento',
-        'permiso': 'licencia autorización permiso procedimiento',
-        'vacaciones': 'vacaciones permiso descanso prestaciones',
-        'baja': 'baja licencia incapacidad descanso',
-        'excedencia': 'excedencia baja permiso procedimiento',
-        'horario': 'jornada horario flexible trabajo presencial',
-        'teletrabajo': 'trabajo remoto teletrabajo presencial flexible',
-        'gastos': 'gastos dietas manutención desplazamiento reembolso',
-        'sueldo': 'pagas nómina retribución anticipo mensual anual',
-        'sueldos': 'pagas nómina retribución anticipo mensual anual',
-        'salario': 'pagas anticipo nómina retribución mensual',
-        'salarios': 'pagas anticipo nómina retribución mensual',
-        'nómina': 'pagas anticipo retribución mensual nómina',
+        # Compliance / canal ético
+        'denuncia':    'canal denuncias procedimiento interno comité cumplimiento penal',
+        'queja':       'reclamación queja procedimiento interno',
+        'delito':      'delito penal prevención riesgos penales cumplimiento',
+        # Permisos y ausencias
+        'permiso':     'licencia autorización permiso',
+        'vacaciones':  'vacaciones permiso descanso prestaciones',
+        'baja':        'baja licencia incapacidad descanso',
+        'excedencia':  'excedencia baja permiso',
+        'lactancia':   'lactancia permiso reducción jornada acumulación',
+        'maternidad':  'nacimiento permiso maternidad semanas',
+        'paternidad':  'nacimiento permiso paternidad semanas',
+        # Jornada y horario
+        'horario':     'jornada horario flexible reducida',
+        'jornada':     'jornada horas anuales horario trabajo curso',
+        'horas':       'horas anuales jornada horario curso trabajo',
+        'teletrabajo': 'teletrabajo remoto flexible jornada',
+        # Retribución
+        'sueldo':      'pagas nómina retribución anticipo',
+        'sueldos':     'pagas nómina retribución anticipo',
+        'salario':     'pagas nómina retribución anticipo',
+        'salarios':    'pagas nómina retribución anticipo',
+        'nómina':      'pagas anticipo retribución',
+        'irpf':        'IRPF retención fiscal porcentaje',
+        'retención':   'retención fiscal descuento porcentaje',
+        'canon':       'canon educación capitalización aportación',
+        # Desplazamiento
+        'gastos':      'gastos dietas manutención desplazamiento reembolso',
         'kilometraje': 'kilómetro vehículo desplazamiento compensación',
-        'kilometros': 'kilómetro vehículo desplazamiento compensación',
-        'km': 'kilómetro vehículo desplazamiento compensación',
-        'irpf': 'retención IRPF porcentaje impuesto',
-        'retención': 'retención IRPF porcentaje impuesto',
-        'lactancia': 'lactancia permiso reducción jornada acumulación',
-        'maternidad': 'nacimiento permiso maternidad semanas',
-        'paternidad': 'nacimiento permiso paternidad semanas',
-        'jubilación': 'jubilación LagunAro pensión cotización',
-        'pensión': 'jubilación LagunAro pensión cotización',
-        'médico': 'médico Osarten servicio médico baja',
-        'accidente': 'accidente tráfico compensación vehículo',
-        'canon': 'canon educación resultado ejercicio capitalización',
+        'kilometros':  'kilómetro vehículo desplazamiento compensación',
+        'km':          'kilómetro vehículo desplazamiento compensación',
+        'campus':      'cambio campus base trabajador compensación kilómetros semestres',
+        'socias':      'clases personas socias usuarias trabajo colaboradoras inactivas',
+        'variable':    'retribución variable anticipo laboral porcentaje objetivos',
+        # Prestaciones sociales
+        'jubilación':  'jubilación LagunAro pensión cotización',
+        'pensión':     'jubilación LagunAro pensión cotización',
+        'médico':      'médico Osarten servicio sanitario baja',
+        'accidente':   'accidente tráfico compensación vehículo',
     }
     question_lower = question.lower()
     variants = [question]
@@ -422,11 +434,15 @@ def generate_answer_from_chunks(question, chunks, detected_lang):
 
     clean_context = build_clean_context(chunks)
     system_prompt = f"""Eres el asistente oficial de la intranet de MGEP.
-Se te proporciona contexto de documentos normativos internos.
+Se te proporciona contexto extraído de documentos normativos internos.
 Reglas:
-- Responde ÚNICAMENTE con información que aparezca literalmente en el contexto.
-- Si el contexto no contiene la respuesta, di claramente que no tienes esa información.
+- Responde basándote exclusivamente en la información del contexto proporcionado.
 - NUNCA inventes cifras, fechas, plazos o datos que no estén en el contexto.
+- Si la respuesta implica varios pasos o elementos distribuidos en el contexto,
+  sintetízalos en orden coherente.
+- Lee TODOS los fragmentos del contexto antes de responder, no solo el primero.
+  La información relevante puede estar en cualquier posición del contexto.
+  Solo si ningún fragmento contiene información útil, indica que no tienes la respuesta.
 - Sé preciso y directo. Si hay artículos o procedimientos relevantes, cítalos.
 - No menciones el nombre del documento ni la fuente.
 - {_lang_instruction(detected_lang)}"""
@@ -436,7 +452,7 @@ Reglas:
 Contexto:
 {clean_context}
 
-Proporciona una respuesta directa y completa basándote solo en el contexto anterior."""
+Proporciona una respuesta directa y completa basándote en el contexto anterior. Si la respuesta está distribuida en varios fragmentos, combínalos. Si un fragmento describe el caso contrario al preguntado, ignóralo y céntrate en los fragmentos relevantes para la pregunta."""
 
     try:
         response = azure_client_text.chat.completions.create(
@@ -625,9 +641,10 @@ def expand_context_with_neighbors(chunks):
             file_path = chunk.get('file_path', '')
             chunk_index = chunk.get('chunk_index', -1)
             expanded.append(chunk)
-            for offset, label in [(-1, 'anterior'), (1, 'posterior')]:
-                if chunk_index + offset < 0:
+            for offset in range(-3, 4):
+                if offset == 0 or chunk_index + offset < 0:
                     continue
+                label = 'anterior' if offset < 0 else 'posterior'
                 cache_key = (file_path, chunk_index + offset)
                 if cache_key not in neighbor_cache:
                     with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -640,10 +657,10 @@ def expand_context_with_neighbors(chunks):
                 neighbor = neighbor_cache[cache_key]
                 if neighbor:
                     nd = dict(neighbor)
-                    nd['similarity'] = chunk.get('similarity', 0.0) * 0.7
+                    nd['similarity'] = chunk.get('similarity', 0.0) * 0.85
                     nd['is_neighbor'] = True
                     nd['neighbor_type'] = label
-                    if offset == -1:
+                    if offset < 0:
                         expanded.insert(len(expanded) - 1, nd)
                     else:
                         expanded.append(nd)
@@ -1029,7 +1046,14 @@ def search():
 
     # ── Generación de respuesta con LLM ──────────────────────────────────────
     if generate_answer:
-        context_chunks = similar_chunks_expanded if ENABLE_NEIGHBOR_EXPANSION else similar_chunks
+        if ENABLE_NEIGHBOR_EXPANSION:
+            # Originales primero (TOP_K garantizados), luego vecinos hasta CONTEXT_MAX_SOURCES
+            original_ids = {c['id'] for c in similar_chunks}
+            neighbors = [c for c in similar_chunks_expanded if c['id'] not in original_ids]
+            neighbors_sorted = sorted(neighbors, key=lambda x: x['similarity'], reverse=True)
+            context_chunks = similar_chunks + neighbors_sorted
+        else:
+            context_chunks = similar_chunks
 
         if answered_by_faq:
             answer, is_llm = generate_faq_answer(question, similar_chunks, detected_lang)
