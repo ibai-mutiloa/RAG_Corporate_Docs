@@ -1,0 +1,1309 @@
+{
+  "metadata": {
+    "timestamp": "20260610_091044",
+    "api_url": "http://localhost:5000",
+    "generate_answer": true,
+    "total_questions": 35,
+    "file_hits": 34
+  },
+  "results": [
+    {
+      "id": 1,
+      "question": "quién conforma el comité de cumplimiento",
+      "expected_file": "Manual Prevención Riesgos Penales.pdf",
+      "expected_chunk_index": 32,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "chunk_index=32 específico — caso crítico para neighbor expansion",
+      "max_similarity": 0.0,
+      "zone": "",
+      "confidence": "alta",
+      "answered_by_faq": true,
+      "second_pass_performed": false,
+      "query_variants_used": 0,
+      "top3_results": [],
+      "file_hit": false,
+      "chunk_hit": false,
+      "hit_position": null,
+      "hit_chunk_index": null,
+      "answer": "El Comité de Cumplimiento está compuesto por cinco miembros designados por el Consejo Rector de MGEP: - Un representante de la Comisión Ejecutiva. - Un miembro del colectivo, preferentemente del Consejo Social. - Tres representantes del Equipo de Coordinación General, incluyendo al/la Coordinador/a de Administración y Finanzas y al/la Coordinador/a de Sistemas y Servicios Transversales.",
+      "answer_generated": true
+    },
+    {
+      "id": 2,
+      "question": "qué hago si conozco un delito cometido en Eskola",
+      "expected_file": "Manual Prevención Riesgos Penales.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "keyword 'Eskola' puede desviar retrieval",
+      "max_similarity": 0.3892,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Manual Prevención Riesgos Penales.pdf",
+          "chunk_index": 37,
+          "similarity": 0.3892
+        },
+        {
+          "file_name": "Manual Prevención Riesgos Penales.pdf",
+          "chunk_index": 3,
+          "similarity": 0.385
+        },
+        {
+          "file_name": "Manual Prevención Riesgos Penales.pdf",
+          "chunk_index": 21,
+          "similarity": 0.3707
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 37,
+      "answer": "Si conoces un delito cometido en Eskola, debes comunicarlo de manera directa al Comité de Cumplimiento. Este organismo es el encargado de vigilar el funcionamiento y observancia del modelo de prevención de riesgos penales, y tiene la responsabilidad de gestionar las notificaciones relacionadas con indicios o sospechas de delitos, así como vulneraciones de principios y valores reconocidos en el Código Ético y las políticas de MGEP.",
+      "answer_generated": true
+    },
+    {
+      "id": 3,
+      "question": "cómo puedo hacer una denuncia siendo un trabajador",
+      "expected_file": "Política de conflicto acoso laboral y acoso sexual.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "Canal de denuncia está en chunk 238 de Política acoso (web MGEP, Compliance Officer). Antes se esperaba Reglamento — corregido tras validación manual.",
+      "max_similarity": 0.4182,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 480,
+          "similarity": 0.4182
+        },
+        {
+          "file_name": "Política de conflicto acoso laboral y acoso sexual.pdf",
+          "chunk_index": 175,
+          "similarity": 0.4085
+        },
+        {
+          "file_name": "Política de conflicto acoso laboral y acoso sexual.pdf",
+          "chunk_index": 175,
+          "similarity": 0.4085
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 175,
+      "answer": "Para realizar una denuncia como trabajador, el procedimiento no está claramente detallado en el contexto proporcionado. Sin embargo, si la denuncia está relacionada con faltas laborales, el \"Reglamento de régimen interno\" establece que la persona socia inculpada tiene derecho a audiencia previa a la formulación del pliego de cargos por parte del Coordinador o Coordinadora General. Además, la persona socia de trabajo puede hacer un descargo ante la Comisión Ejecutiva, quien resolverá el caso.\n\nSi la denuncia está relacionada con acoso laboral o sexual, el contexto menciona la existencia de un protocolo específico para gestionar estas situaciones, pero no detalla los pasos concretos para presentar la denuncia. Por lo tanto, deberías dirigirte al Departamento de Prevención de Riesgos Laborales (PRL) o al responsable correspondiente para obtener orientación sobre cómo proceder.\n\nSi necesitas más información o detalles específicos, consulta directamente con el área de recursos humanos o el departamento encargado de gestionar conflictos laborales.",
+      "answer_generated": true
+    },
+    {
+      "id": 4,
+      "question": "que canal puedo utilizar para hacer una denuncia",
+      "expected_file": "Manual Prevención Riesgos Penales.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "keyword 'denuncia' + 'canal' — riesgo de expansión ruidosa",
+      "max_similarity": 0.4154,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Manual Prevención Riesgos Penales.pdf",
+          "chunk_index": 40,
+          "similarity": 0.4154
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 250,
+          "similarity": 0.4138
+        },
+        {
+          "file_name": "Política de conflicto acoso laboral y acoso sexual.pdf",
+          "chunk_index": 96,
+          "similarity": 0.3862
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 40,
+      "answer": "Para realizar una denuncia, puedes utilizar el canal del Comité de Cumplimiento. Este comité se encargará de recibir la denuncia, abrir un expediente, analizarla y decidir si se inicia un proceso de investigación o si se archiva por ser infundada o malintencionada. Si la denuncia se dirige contra algún miembro del Comité de Cumplimiento, dicho miembro no podrá participar en su tramitación.",
+      "answer_generated": true
+    },
+    {
+      "id": 5,
+      "question": "que gastos de viaje se pagan en MGEP",
+      "expected_file": "3 Compensación gastos desplazamiento y manutención.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5993,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "3 Compensación gastos desplazamiento y manutención.pdf",
+          "chunk_index": 13,
+          "similarity": 0.5993
+        },
+        {
+          "file_name": "3 Compensación gastos desplazamiento y manutención.pdf",
+          "chunk_index": 11,
+          "similarity": 0.5743
+        },
+        {
+          "file_name": "Política anticorrupción.pdf",
+          "chunk_index": 18,
+          "similarity": 0.5679
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 13,
+      "answer": "MGEP paga los siguientes gastos de viaje y manutención relacionados con la actividad profesional de las personas trabajadoras:\n\n1. **Gastos de viaje y alojamiento**: Se reembolsan íntegramente mediante la cumplimentación del documento 49, siempre que sean exclusivamente profesionales y estén debidamente justificados.\n\n2. **Kilometraje**: Si se utiliza el vehículo propio para desplazamientos laborales, se compensa a razón de 0,32 euros por kilómetro.\n\n3. **Peajes**: Los gastos de peajes se abonan en su totalidad, siempre que estén debidamente justificados.\n\n4. **Manutención**: Los importes de referencia son:\n   - **Sin pernoctación**: 26,67 € en territorio nacional y 48,08 € en el extranjero.\n   - **Con pernoctación**: 53,34 € en territorio nacional y 91,35 € en el extranjero.\n\n5. **Excepciones**: En casos específicos, se puede financiar una ayuda para gastos de manutención de 25 euros por día sin necesidad de justificante, recomendándose realizar la liquidación mensualmente o al finalizar la estancia.\n\nTodos los pagos deben cumplir con normativas tributarias y de cotización, y están sujetos a seguimiento por parte de Hacienda y la Seguridad Social.",
+      "answer_generated": true
+    },
+    {
+      "id": 6,
+      "question": "cuando se calcula el IRPF",
+      "expected_file": "1 Anticipos y retribución.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5941,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Normativa laboral.pdf",
+          "chunk_index": 19,
+          "similarity": 0.4415
+        },
+        {
+          "file_name": "1 Anticipos y retribución.pdf",
+          "chunk_index": 19,
+          "similarity": 0.4168
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 105,
+          "similarity": 0.4034
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 19,
+      "answer": "El cálculo del porcentaje de retención de IRPF se realiza automáticamente a principios de año y nuevamente en abril si se produce una subida de anticipos. Este cálculo se basa estrictamente en las tablas de IRPF vigentes publicadas por Hacienda y refleja la normativa fiscal en vigor. Además, el porcentaje de retención se calcula en función de la percepción íntegra anual.",
+      "answer_generated": true
+    },
+    {
+      "id": 7,
+      "question": "que es el nivel de anticipos",
+      "expected_file": "1 Anticipos y retribución.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5302,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "1 Anticipos y retribución.pdf",
+          "chunk_index": 11,
+          "similarity": 0.5302
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 404,
+          "similarity": 0.4922
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 76,
+          "similarity": 0.4798
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 11,
+      "answer": "El Nivel de Anticipos (NA) es un cálculo que se utiliza para determinar la retribución del personal socio de trabajo de MGEP. Se define mediante la fórmula:\n\nNA = AL1(coop) * (1 + %CVT) – AL1(l-a) * (%CVT - %CVR)  \nNA = AL1(l-a) * (1 + %CVR)\n\nDonde:  \n- **NA**: Nivel de Anticipos.  \n- **AL1**: Anticipo Laboral.  \n- **%CVT** y **%CVR**: Porcentajes relacionados con la retribución variable.\n\nEl Consejo Rector de MGEP aprueba anualmente el nivel retributivo del personal socio de trabajo, fijándolo como un porcentaje respecto del Nivel de Anticipos de LagunAro, EPSV, siendo la referencia ideal el 100%.",
+      "answer_generated": true
+    },
+    {
+      "id": 8,
+      "question": "vamos a cobrar retribucion variable",
+      "expected_file": "1 Anticipos y retribución.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.546,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "1 Anticipos y retribución.pdf",
+          "chunk_index": 6,
+          "similarity": 0.5236
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 78,
+          "similarity": 0.5201
+        },
+        {
+          "file_name": "1 Anticipos y retribución.pdf",
+          "chunk_index": 1,
+          "similarity": 0.5017
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 6,
+      "answer": "La retribución variable es una posibilidad regulada por el artículo 55 del Reglamento Interno y su reconocimiento depende del Consejo Rector. Esta retribución es complementaria y contingente, basada en el cumplimiento de objetivos, y no puede superar el 2% del anticipo laboral anual. Además, no se computa para efectos de cotización ni para el cálculo de prestaciones. \n\nPor lo tanto, si el Consejo Rector lo considera conveniente y se cumplen los objetivos establecidos, se podrá cobrar retribución variable.",
+      "answer_generated": true
+    },
+    {
+      "id": 9,
+      "question": "le he dado un golpe al coche, que tengo que hacer",
+      "expected_file": "5 Compensación de daños en vehículos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.4157,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 17,
+          "similarity": 0.3897
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 0,
+          "similarity": 0.3778
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 13,
+          "similarity": 0.3599
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 17,
+      "answer": "Si has dado un golpe al coche, debes seguir estos pasos:\n\n1. **Informar del accidente**: Comunica el hecho y las circunstancias del accidente al Departamento de Administración y Finanzas y a tu Coordinador de Departamento dentro de un plazo de 2 días hábiles desde que ocurrió el siniestro. Puedes hacerlo telefónicamente, por correo electrónico u otro medio.\n\n2. **Preparar la documentación**: Envía una solicitud al Departamento de Administración en el plazo de un mes desde la fecha del siniestro (salvo motivos justificados), incluyendo:\n   - Un informe explicativo de las circunstancias del accidente.\n   - Atestado de tráfico, si lo hubiera.\n   - Póliza de accidentes y el último recibo del seguro del vehículo.\n   - Declaración del accidente en el impreso de la compañía aseguradora, si aplica.\n   - Factura de reparación de daños emitida por el servicio oficial de la marca del vehículo o talleres autorizados. En caso de siniestro total, incluye un presupuesto previo que demuestre que el coste de reparación supera el valor del vehículo en el mercado.\n\n3. **Cumplir los requisitos**: Asegúrate de que el vehículo tiene un seguro obligatorio de accidentes y que estás al corriente en el pago del mismo. Además, la cuantía concedida debe destinarse a la reparación de los daños sufridos, salvo en casos de siniestro total.\n\n4. **Actuar diligentemente**: Gestiona la indemnización correspondiente con tu compañía de seguros, el responsable del accidente o la aseguradora de este último.\n\nRecuerda que MGEP cubrirá la diferencia entre los gastos reales de reparación y la cobertura del seguro, sin franquicia a tu cargo.",
+      "answer_generated": true
+    },
+    {
+      "id": 10,
+      "question": "tengo que pagar la franquicia del vehiculo",
+      "expected_file": "5 Compensación de daños en vehículos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5111,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Normativa del Colegio Mayor Biteri.pdf",
+          "chunk_index": 35,
+          "similarity": 0.4129
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 4,
+          "similarity": 0.3416
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 0,
+          "similarity": 0.3283
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 4,
+      "answer": "No, no tienes que pagar la franquicia del vehículo. Desde la versión 2 de la normativa (mayo 2025), se eliminó la franquicia. MGEP cubre la diferencia entre los gastos reales de reparación y la cobertura del seguro, sin franquicia a cargo del trabajador.",
+      "answer_generated": true
+    },
+    {
+      "id": 11,
+      "question": "a quien tengo que avisar si he tenido un golpe con mi coche",
+      "expected_file": "5 Compensación de daños en vehículos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.4146,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 16,
+          "similarity": 0.4146
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 18,
+          "similarity": 0.3555
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 17,
+          "similarity": 0.337
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 16,
+      "answer": "Si has tenido un golpe con tu coche, debes poner en conocimiento del Departamento de Administración y de tu Coordinador de Departamento el hecho y las circunstancias del accidente dentro del plazo de 2 días hábiles desde que este haya tenido lugar.",
+      "answer_generated": true
+    },
+    {
+      "id": 12,
+      "question": "que tengo que hacer si la huelga es vinculante",
+      "expected_file": "Huelga trabajadores.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.57,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 540,
+          "similarity": 0.57
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 96,
+          "similarity": 0.5407
+        },
+        {
+          "file_name": "Huelga trabajadores.pdf",
+          "chunk_index": 46,
+          "similarity": 0.4978
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 3,
+      "hit_chunk_index": 46,
+      "answer": "No se proporciona información específica sobre qué hacer si la huelga es vinculante en el \"Reglamento de régimen interno.pdf\". Por lo tanto, no puedo responder a tu pregunta basándome en ese documento.",
+      "answer_generated": true
+    },
+    {
+      "id": 13,
+      "question": "cuando se vota cuando hay convocatoria de huelga",
+      "expected_file": "Huelga trabajadores.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5789,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 540,
+          "similarity": 0.5789
+        },
+        {
+          "file_name": "Huelga trabajadores.pdf",
+          "chunk_index": 19,
+          "similarity": 0.5464
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 96,
+          "similarity": 0.5419
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 19,
+      "answer": "No se especifica en el contexto proporcionado cuándo se realiza la votación en caso de convocatoria de huelga según el \"Reglamento de régimen interno\".",
+      "answer_generated": true
+    },
+    {
+      "id": 14,
+      "question": "puedo ir a trabajar un dia de huelga",
+      "expected_file": "Huelga trabajadores.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5394,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 540,
+          "similarity": 0.5394
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 96,
+          "similarity": 0.5054
+        },
+        {
+          "file_name": "Huelga trabajadores.pdf",
+          "chunk_index": 26,
+          "similarity": 0.478
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 3,
+      "hit_chunk_index": 26,
+      "answer": "No se proporciona información específica en el contexto sobre si puedes ir a trabajar un día de huelga. Sin embargo, el derecho a la huelga es irrenunciable y no sancionable, y la persona huelguista está exonerada de acudir a su puesto de trabajo mientras dure la huelga, sin necesidad de preaviso ni justificación. Por otro lado, si tienes una actividad externa ineludible, debes comunicarlo antes de la votación de la huelga a tu Coordinador/a de Departamento o Servicio y recibir confirmación expresa de la obligatoriedad de trabajar ese día.",
+      "answer_generated": true
+    },
+    {
+      "id": 15,
+      "question": "cuales son los pasos si fallece un empleado de Eskola",
+      "expected_file": "Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "keyword 'Eskola' puede desviar retrieval",
+      "max_similarity": 0.5054,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf",
+          "chunk_index": 0,
+          "similarity": 0.3883
+        },
+        {
+          "file_name": "Protocolo en caso de fallecimiento de alumnado por enfermedad o accidente.pdf",
+          "chunk_index": 0,
+          "similarity": 0.3857
+        },
+        {
+          "file_name": "Protocolo en caso de fallecimiento de trabajador o familiar de trabajador.pdf",
+          "chunk_index": 1,
+          "similarity": 0.3846
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 0,
+      "answer": "Ante el fallecimiento de un trabajador/a de MGEP, los pasos a seguir son los siguientes:\n\n1. **Comunicación inicial**: Quien tenga noticia del fallecimiento debe comunicarlo a la mayor brevedad al Coordinador/a de Departamento y a la Secretaría Técnica de Coordinación General.\n\n2. **Condolencias**: El/la Coordinador/a General contacta con la familia para mostrar condolencias.\n\n3. **Gestiones administrativas**: La Secretaría Técnica informa a Administración de Personas y gestiona lo siguiente:\n   - Contactar con el tanatorio para publicar una esquela en el medio que indique la familia.\n   - Encargar un centro de flores mediante el Servicio de Compras para enviar al tanatorio.\n\n4. **Difusión**: No se realizará difusión de actos de ningún tipo durante un día.\n\nEstos pasos están diseñados para garantizar una actuación respetuosa y organizada en estos momentos difíciles.",
+      "answer_generated": true
+    },
+    {
+      "id": 16,
+      "question": "cuantas horas tengo que trabajar durante el curso 2024-2025",
+      "expected_file": "Normativa laboral.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "Normativa laboral.pdf contiene la jornada actualizada (1.722h curso 2025-2026). Antes se esperaba 2 Horario de trabajo.pdf — corregido tras validación manual.",
+      "max_similarity": 0.5215,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Normativa laboral.pdf",
+          "chunk_index": 20,
+          "similarity": 0.5215
+        },
+        {
+          "file_name": "Normativa laboral.pdf",
+          "chunk_index": 22,
+          "similarity": 0.5062
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 329,
+          "similarity": 0.4385
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 20,
+      "answer": "No se proporciona información sobre las horas de trabajo correspondientes al curso 2024-2025 en el contexto proporcionado.",
+      "answer_generated": true
+    },
+    {
+      "id": 17,
+      "question": "cual es la jornada diaria de trabajo",
+      "expected_file": "Restricciones de horarios.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5406,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 329,
+          "similarity": 0.5406
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 328,
+          "similarity": 0.4869
+        },
+        {
+          "file_name": "Restricciones de horarios.pdf",
+          "chunk_index": 14,
+          "similarity": 0.4861
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 3,
+      "hit_chunk_index": 14,
+      "answer": "La jornada laboral diaria se ajustará a los criterios aprobados por el Consejo Rector en las normas laborales. No se especifica directamente en el contexto proporcionado cuál es la duración exacta de la jornada diaria según el reglamento interno.",
+      "answer_generated": true
+    },
+    {
+      "id": 18,
+      "question": "cual es el horario en julio",
+      "expected_file": "2 Horario de trabajo.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5275,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Restricciones de horarios.pdf",
+          "chunk_index": 27,
+          "similarity": 0.5275
+        },
+        {
+          "file_name": "2 Horario de trabajo.pdf",
+          "chunk_index": 21,
+          "similarity": 0.5174
+        },
+        {
+          "file_name": "Restricciones de horarios.pdf",
+          "chunk_index": 22,
+          "similarity": 0.5139
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 21,
+      "answer": "Durante el mes de julio, el horario de disponibilidad para la programación de actividades será de 7:45 a 15:30, siempre que los compromisos con clientes y entidades internos y externos lo permitan y se cumplan las horas de trabajo anual previstas en la normativa laboral.",
+      "answer_generated": true
+    },
+    {
+      "id": 19,
+      "question": "que requisito debo cumplir para solicitar un año sabatico",
+      "expected_file": "Año sabático.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5114,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Año sabático.pdf",
+          "chunk_index": 9,
+          "similarity": 0.5114
+        },
+        {
+          "file_name": "Año sabático.pdf",
+          "chunk_index": 12,
+          "similarity": 0.4859
+        },
+        {
+          "file_name": "Año sabático.pdf",
+          "chunk_index": 21,
+          "similarity": 0.423
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 9,
+      "answer": "Para solicitar un año sabático en MGEP, debes cumplir los siguientes requisitos:\n\n1. **Ser socio trabajador con contrato por tiempo indefinido.**\n2. **Haber trabajado al menos cinco años en la cooperativa desde la finalización de un año sabático anterior, si ya has disfrutado de uno previamente.**\n3. **Presentar la solicitud en formato normalizado (Anexo I) durante el mes de febrero anterior al inicio del año sabático.**\n4. **Comunicar la solicitud al Coordinador de tu Departamento o Servicio.**\n5. **Cumplir con la limitación del 2% de socios trabajadores que pueden disfrutar del año sabático simultáneamente.** En caso de que las solicitudes superen este porcentaje, tendrán preferencia quienes no hayan disfrutado del permiso anteriormente.\n\nEstos son los requisitos establecidos en la normativa.",
+      "answer_generated": true
+    },
+    {
+      "id": 20,
+      "question": "estoy de año sabatico y quiero renunciar, como debo proceder",
+      "expected_file": "Año sabático.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5005,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Año sabático.pdf",
+          "chunk_index": 9,
+          "similarity": 0.5005
+        },
+        {
+          "file_name": "Año sabático.pdf",
+          "chunk_index": 38,
+          "similarity": 0.4642
+        },
+        {
+          "file_name": "Año sabático.pdf",
+          "chunk_index": 40,
+          "similarity": 0.4624
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 9,
+      "answer": "Para renunciar al \"año sabático\", debes seguir el siguiente procedimiento:\n\n1. **Presentar la solicitud de renuncia**: La solicitud debe ser presentada ante el Consejo Rector de la Cooperativa.\n\n2. **Plazo de respuesta**: El Consejo Rector dispone de un plazo de dos meses para responder a tu solicitud.\n\n3. **Consecuencias de la renuncia**: Si la renuncia es aceptada, el permiso finalizará y se procederá a la regularización de las remuneraciones adeudadas y las retenciones fiscales desde el comienzo del permiso.\n\n4. **Si la renuncia no es aceptada**: En caso de que el Consejo Rector no acepte la renuncia, deberás continuar disfrutando del \"año sabático\" hasta su finalización.\n\nEs importante tener en cuenta que no se podrá interponer recurso contra el acuerdo adoptado por el Consejo Rector.",
+      "answer_generated": true
+    },
+    {
+      "id": 21,
+      "question": "que condiciones debo cumplir para acogerme a la ayuda por cese de la actividad",
+      "expected_file": "7 Ayudas por cese de la actividad laboral.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5913,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 0,
+          "similarity": 0.4615
+        },
+        {
+          "file_name": "Normativa laboral.pdf",
+          "chunk_index": 45,
+          "similarity": 0.4491
+        },
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 62,
+          "similarity": 0.4382
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 0,
+      "answer": "Para acogerte a la ayuda por cese de actividad en MGEP, debes cumplir las siguientes condiciones:\n\n1. **Ser socio trabajador** en activo o en excedencia no voluntaria o negociada.\n2. **Tener más de 10 años de antigüedad indefinida** como socio trabajador.\n3. **Tener al menos 60 años** en la fecha del cese de la actividad.\n\nAdemás, el proceso para solicitar la ayuda incluye los siguientes pasos:\n\n1. Solicitar la adhesión al plan a través de la aplicación Incidencias (Anexo I).\n2. Firmar el contrato de adhesión (Anexo II).\n3. Ratificar la adhesión al menos 12 meses antes de la fecha de cese efectivo (Anexo III).\n4. Suscribir el documento final que especifica la fecha de cese y el importe bruto acordado (Anexo IV).\n\nCumpliendo estos requisitos y siguiendo el procedimiento indicado, podrás acogerte a la ayuda por cese de actividad.",
+      "answer_generated": true
+    },
+    {
+      "id": 22,
+      "question": "cuando debo comunicar que quiero acogerme a la ayuda por cese de la actividad",
+      "expected_file": "7 Ayudas por cese de la actividad laboral.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.6224,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 51,
+          "similarity": 0.4715
+        },
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 33,
+          "similarity": 0.4605
+        },
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 0,
+          "similarity": 0.4465
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 51,
+      "answer": "Debes comunicar tu intención de acogerte a la ayuda por cese de actividad al menos 12 meses antes de la fecha efectiva de tu cese y baja voluntaria como persona socia de trabajo. Esta comunicación debe realizarse al presidente de la Comisión Ejecutiva de MGEP mediante la formalización del Anexo III del Plan de Ayudas.",
+      "answer_generated": true
+    },
+    {
+      "id": 23,
+      "question": "soy una persona socia que he recibido formación con cargo a la cooperativa, cuanto tiempo de permanencia me pueden exigir",
+      "expected_file": "Reglamento de régimen interno.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.6039,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 401,
+          "similarity": 0.6039
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 140,
+          "similarity": 0.5422
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 214,
+          "similarity": 0.5199
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 401,
+      "answer": "Si una persona socia recibe formación profesional específica con cargo a la cooperativa, se le puede exigir una permanencia en la misma por un tiempo determinado, que no podrá ser superior a cinco años. Las condiciones de esta permanencia deben formalizarse previamente por escrito.",
+      "answer_generated": true
+    },
+    {
+      "id": 24,
+      "question": "cuales son las cuatro clases de personas socias en la Cooperativa",
+      "expected_file": "Reglamento de régimen interno.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5771,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 102,
+          "similarity": 0.5771
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 131,
+          "similarity": 0.5611
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 10,
+          "similarity": 0.5503
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 102,
+      "answer": "Las cuatro clases de personas socias en la Cooperativa son:\n\n1. Personas socias usuarias.  \n2. Personas socias de trabajo.  \n3. Personas socias colaboradoras.  \n4. Personas socias inactivas.",
+      "answer_generated": true
+    },
+    {
+      "id": 25,
+      "question": "en caso de empate en votación para el Consejo Rector, qué criterios de desempate hay",
+      "expected_file": "Estatutos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5636,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 450,
+          "similarity": 0.5636
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 456,
+          "similarity": 0.5255
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 187,
+          "similarity": 0.524
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 450,
+      "answer": "En caso de empate en una votación del Consejo Rector, el voto del Presidente o Presidenta será el que dirima el empate.",
+      "answer_generated": true
+    },
+    {
+      "id": 26,
+      "question": "que diferencia hay entre el procedimiento sancionador de falta leve y falta grave",
+      "expected_file": "Reglamento de régimen interno.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5302,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 524,
+          "similarity": 0.5302
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 250,
+          "similarity": 0.5233
+        },
+        {
+          "file_name": "Normativa del Colegio Mayor Biteri.pdf",
+          "chunk_index": 57,
+          "similarity": 0.4678
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 524,
+      "answer": "La diferencia principal entre el procedimiento sancionador de faltas leves y faltas graves radica en quién instruye el expediente y cómo se comunica la sanción:\n\n1. **Faltas leves**: El Director del Colegio Mayor, tras escuchar a la persona interesada, puede imponer directamente la sanción correspondiente. Esta sanción debe ser notificada al alumno por escrito. (Fuente 5)\n\n2. **Faltas graves**: La instrucción del expediente corresponde al Coordinador o Coordinadora General. Este comunica por escrito a la persona interesada los cargos imputados, la calificación provisional de la falta y la propuesta de sanción. (Fuente 9)\n\nPor lo tanto, el procedimiento para faltas graves es más formal y requiere una instrucción detallada del expediente, mientras que el de faltas leves es más directo y menos complejo.",
+      "answer_generated": true
+    },
+    {
+      "id": 27,
+      "question": "puedo solicitar un cambio de campus",
+      "expected_file": "4 Compensación por cambio de campus base.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": true,
+      "notes": "FAQ entry válida — '¿Cómo funciona el cambio de campus base para trabajadores?'",
+      "max_similarity": 0.0,
+      "zone": "",
+      "confidence": "alta",
+      "answered_by_faq": true,
+      "second_pass_performed": false,
+      "query_variants_used": 0,
+      "top3_results": [],
+      "file_hit": true,
+      "chunk_hit": false,
+      "hit_position": null,
+      "hit_chunk_index": null,
+      "answer": "Sí, un trabajador puede solicitar un cambio de campus base. Después de un período de 8 semestres (6 cursos) en el nuevo campus, el Coordinador de Departamento y la persona afectada deciden si el cambio se consolida. Si no se consolida, se intentará reincorporar a la persona al campus más cercano a su domicilio. Si el cambio lo propone MGEP y el trabajador lo acepta, se compensa la diferencia de kilometraje en el itinere durante esos 8 semestres.",
+      "answer_generated": true
+    },
+    {
+      "id": 28,
+      "question": "como se compensa si MGEP me propone un cambio de campus",
+      "expected_file": "4 Compensación por cambio de campus base.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.6375,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "4 Compensación por cambio de campus base.pdf",
+          "chunk_index": 15,
+          "similarity": 0.5775
+        },
+        {
+          "file_name": "4 Compensación por cambio de campus base.pdf",
+          "chunk_index": 1,
+          "similarity": 0.5679
+        },
+        {
+          "file_name": "4 Compensación por cambio de campus base.pdf",
+          "chunk_index": 16,
+          "similarity": 0.5633
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 15,
+      "answer": "Si MGEP te propone un cambio de campus base y tú lo aceptas, se compensará la diferencia de kilometraje en el itinere habitual entre tu domicilio y el nuevo campus base durante un período de 8 semestres (6 cursos).",
+      "answer_generated": true
+    },
+    {
+      "id": 29,
+      "question": "he empezado hoy a trabajar, tengo que realizar el registro de jornada",
+      "expected_file": "2 Horario de trabajo.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.4692,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 329,
+          "similarity": 0.4692
+        },
+        {
+          "file_name": "2 Horario de trabajo.pdf",
+          "chunk_index": 44,
+          "similarity": 0.4437
+        },
+        {
+          "file_name": "2 Horario de trabajo.pdf",
+          "chunk_index": 41,
+          "similarity": 0.4393
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 44,
+      "answer": "Sí, debes realizar el registro de la jornada laboral. Según la normativa, la persona trabajadora debe registrar diariamente el momento de comienzo y cierre de la jornada laboral, así como las entradas y salidas que se produzcan durante la jornada por razones como paradas para comer o salidas personales. Este registro se realiza mediante el sistema SW Visual Time Live, en cumplimiento de la legislación vigente.",
+      "answer_generated": true
+    },
+    {
+      "id": 30,
+      "question": "al cabo de cuanto tiempo me pueden consolidar en MGEP",
+      "expected_file": "Normativa de contratación y consolidación.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.4846,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Normativa de contratación y consolidación.pdf",
+          "chunk_index": 13,
+          "similarity": 0.4846
+        },
+        {
+          "file_name": "Normativa de contratación y consolidación.pdf",
+          "chunk_index": 17,
+          "similarity": 0.4831
+        },
+        {
+          "file_name": "Normativa de contratación y consolidación.pdf",
+          "chunk_index": 0,
+          "similarity": 0.4747
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 13,
+      "answer": "El periodo mínimo para que una persona pueda ser consolidada como socia de duración indefinida en MGEP es de **3 años desde la entrada como PDI**, siempre que se cumplan las evaluaciones periódicas y exista acuerdo mutuo entre MGEP y la persona. \n\nAdemás, hay casos específicos que pueden requerir tiempos adicionales:\n- Si la persona estuvo realizando un post-doc contratado por MGEP, deberá estar contratada como PDI al menos **1 año desde la finalización del post-doc** antes de proponer su consolidación.\n- Si la persona pasó de un periodo de integración a ser estudiante de doctorado y luego contratada como PDI tras la defensa de la tesis, deberán transcurrir al menos **6 meses** antes de proponer su consolidación.\n\nPor lo tanto, el tiempo mínimo general es de 3 años, pero puede variar según las circunstancias específicas mencionadas.",
+      "answer_generated": true
+    },
+    {
+      "id": 31,
+      "question": "a cuanto se paga el kilometraje",
+      "expected_file": "3 Compensación gastos desplazamiento y manutención.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": true,
+      "faq_acceptable": false,
+      "notes": "Esperado: 0,32 euros/km. Tabla no indexada correctamente en versión anterior.",
+      "max_similarity": 0.5535,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Normativa laboral.pdf",
+          "chunk_index": 30,
+          "similarity": 0.498
+        },
+        {
+          "file_name": "3 Compensación gastos desplazamiento y manutención.pdf",
+          "chunk_index": 26,
+          "similarity": 0.4933
+        },
+        {
+          "file_name": "3 Compensación gastos desplazamiento y manutención.pdf",
+          "chunk_index": 23,
+          "similarity": 0.4483
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 26,
+      "answer": "El kilometraje se paga a 0,32 euros por kilómetro.",
+      "answer_generated": true
+    },
+    {
+      "id": 32,
+      "question": "el canon de educacion tiene retencion",
+      "expected_file": "Reglamento de régimen interno.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": true,
+      "faq_acceptable": false,
+      "notes": "Esperado: respuesta completa sobre retención del canon.",
+      "max_similarity": 0.5595,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 423,
+          "similarity": 0.5413
+        },
+        {
+          "file_name": "1 Anticipos y retribución.pdf",
+          "chunk_index": 16,
+          "similarity": 0.4826
+        },
+        {
+          "file_name": "Reglamento de régimen interno.pdf",
+          "chunk_index": 422,
+          "similarity": 0.4771
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 423,
+      "answer": "Sí, el Canon de Educación tiene retención fiscal. Se computa como rendimiento de trabajo y está sujeto a retención fiscal a efectos del IRPF individual, aunque no sea disponible ya que se capitaliza.",
+      "answer_generated": true
+    },
+    {
+      "id": 33,
+      "question": "cuanta aportacion paga un socio indefinido",
+      "expected_file": "Estatutos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": true,
+      "faq_acceptable": false,
+      "notes": "Esperado: desglose completo de aportación inicial.",
+      "max_similarity": 0.5543,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 559,
+          "similarity": 0.491
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 633,
+          "similarity": 0.4487
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 598,
+          "similarity": 0.4447
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 559,
+      "answer": "La aportación total que debe pagar un socio de duración indefinida (SDI) para el periodo del 01.04.2026 al 31.03.2027 es de **19.598,60 euros**, compuesta por:\n\n1. **Cuota de ingreso**: 20% del total.\n2. **Aportación Obligatoria Inicial**: 80% del total.\n\nSi previamente se tuvo un contrato como Socio de Duración Determinada (SDD), el importe pagado como SDD se descuenta del total. Además, el pago puede realizarse de forma fraccionada: el 25% debe abonarse en los primeros 30 días naturales desde el inicio de la condición de socio trabajador, y el 75% restante puede pagarse en un plazo de hasta 48 meses.",
+      "answer_generated": true
+    },
+    {
+      "id": 34,
+      "question": "quien puede acogerse a la ayuda por cese de la actividad",
+      "expected_file": "7 Ayudas por cese de la actividad laboral.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": true,
+      "faq_acceptable": false,
+      "notes": "Esperado: persona socia que cese y cause baja como socia de trabajo.",
+      "max_similarity": 0.5922,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Normativa laboral.pdf",
+          "chunk_index": 45,
+          "similarity": 0.4666
+        },
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 0,
+          "similarity": 0.4521
+        },
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 72,
+          "similarity": 0.4468
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 0,
+      "answer": "Pueden acogerse a la ayuda por cese de actividad los socios trabajadores en activo o en excedencia no voluntaria o negociada, que cumplan los siguientes requisitos:\n\n1. Tener más de 10 años de antigüedad indefinida en MGEP.\n2. Tener al menos 60 años en la fecha del cese.",
+      "answer_generated": true
+    },
+    {
+      "id": 35,
+      "question": "cual va a ser el importe de la ayuda que voy a recibir por el cese",
+      "expected_file": "7 Ayudas por cese de la actividad laboral.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": true,
+      "faq_acceptable": false,
+      "notes": "Esperado: tabla según índice laboral 2,3 a 4,0.",
+      "max_similarity": 0.5808,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 15,
+          "similarity": 0.4322
+        },
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 56,
+          "similarity": 0.4289
+        },
+        {
+          "file_name": "7 Ayudas por cese de la actividad laboral.pdf",
+          "chunk_index": 27,
+          "similarity": 0.4217
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 15,
+      "answer": "No puedo determinar el importe exacto de la ayuda que vas a recibir por el cese, ya que este se calcula según la tabla vigente en el momento del cese, basada en tu edad y el índice laboral correspondiente. Además, el importe se actualiza en el momento del cese y se abona en mensualidades hasta la edad legal de jubilación, sujeto a las retenciones fiscales aplicables. Para conocer el importe exacto, deberás consultar la tabla vigente y los detalles específicos de tu situación laboral.",
+      "answer_generated": true
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "metadata": {
+    "timestamp": "20260610_091017",
+    "api_url": "http://localhost:5000",
+    "generate_answer": true,
+    "total_questions": 4,
+    "file_hits": 3
+  },
+  "results": [
+    {
+      "id": 1,
+      "question": "quién conforma el comité de cumplimiento",
+      "expected_file": "Manual Prevención Riesgos Penales.pdf",
+      "expected_chunk_index": 32,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "chunk_index=32 específico — caso crítico para neighbor expansion",
+      "max_similarity": 0.0,
+      "zone": "",
+      "confidence": "alta",
+      "answered_by_faq": true,
+      "second_pass_performed": false,
+      "query_variants_used": 0,
+      "top3_results": [],
+      "file_hit": false,
+      "chunk_hit": false,
+      "hit_position": null,
+      "hit_chunk_index": null,
+      "answer": "El Comité de Cumplimiento está compuesto por cinco miembros designados por el Consejo Rector de MGEP: - Un representante de la Comisión Ejecutiva. - Un miembro del colectivo, preferentemente del Consejo Social. - Tres representantes del Equipo de Coordinación General, incluyendo al/la Coordinador/a de Administración y Finanzas y al/la Coordinador/a de Sistemas y Servicios Transversales.",
+      "answer_generated": true
+    },
+    {
+      "id": 10,
+      "question": "tengo que pagar la franquicia del vehiculo",
+      "expected_file": "5 Compensación de daños en vehículos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": false,
+      "notes": "",
+      "max_similarity": 0.5161,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Normativa del Colegio Mayor Biteri.pdf",
+          "chunk_index": 35,
+          "similarity": 0.3988
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 0,
+          "similarity": 0.3435
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 4,
+          "similarity": 0.3341
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 0,
+      "answer": "No, no tienes que pagar la franquicia del vehículo. Desde la versión 2 de la normativa (mayo 2025), se eliminó la franquicia. MGEP cubre la diferencia entre los gastos reales de reparación y la cobertura del seguro, sin franquicia a cargo del trabajador.",
+      "answer_generated": true
+    },
+    {
+      "id": 27,
+      "question": "puedo solicitar un cambio de campus",
+      "expected_file": "4 Compensación por cambio de campus base.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "faq_acceptable": true,
+      "notes": "FAQ entry válida — '¿Cómo funciona el cambio de campus base para trabajadores?'",
+      "max_similarity": 0.0,
+      "zone": "",
+      "confidence": "alta",
+      "answered_by_faq": true,
+      "second_pass_performed": false,
+      "query_variants_used": 0,
+      "top3_results": [],
+      "file_hit": true,
+      "chunk_hit": false,
+      "hit_position": null,
+      "hit_chunk_index": null,
+      "answer": "Sí, un trabajador puede solicitar un cambio de campus base. Después de un período de 8 semestres (6 cursos) en el nuevo campus, el Coordinador de Departamento y la persona afectada deciden si el cambio se consolida. Si no se consolida, se intentará reincorporar a la persona al campus más cercano a su domicilio. Si el cambio lo propone MGEP y el trabajador lo acepta, se compensa la diferencia de kilometraje en el itinere durante esos 8 semestres.",
+      "answer_generated": true
+    },
+    {
+      "id": 33,
+      "question": "cuanta aportacion paga un socio indefinido",
+      "expected_file": "Estatutos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": true,
+      "faq_acceptable": false,
+      "notes": "Esperado: desglose completo de aportación inicial.",
+      "max_similarity": 0.5535,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 559,
+          "similarity": 0.491
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 633,
+          "similarity": 0.4497
+        },
+        {
+          "file_name": "Estatutos.pdf",
+          "chunk_index": 584,
+          "similarity": 0.4463
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 1,
+      "hit_chunk_index": 559,
+      "answer": "La aportación total que debe pagar un socio de duración indefinida (SDI) para el periodo del 01.04.2026 al 31.03.2027 es de **19.598,60 euros**, compuesta por:\n\n1. **Cuota de ingreso**: 20% del total.\n2. **Aportación Obligatoria Inicial**: 80% del total.\n\nSi previamente se tuvo un contrato como Socio de Duración Determinada (SDD), el importe pagado como SDD se descuenta del total. Además, el pago puede realizarse de forma fraccionada: el 25% debe abonarse en los primeros 30 días naturales desde el inicio de la condición de socio trabajador, y el 75% restante puede pagarse en un plazo de hasta 48 meses.",
+      "answer_generated": true
+    }
+  ]
+}
