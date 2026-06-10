@@ -1,0 +1,85 @@
+{
+  "metadata": {
+    "timestamp": "20260610_074900",
+    "api_url": "http://localhost:5000",
+    "generate_answer": true,
+    "total_questions": 2,
+    "file_hits": 2
+  },
+  "results": [
+    {
+      "id": 10,
+      "question": "tengo que pagar la franquicia del vehiculo",
+      "expected_file": "5 Compensación de daños en vehículos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.3958,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Normativa del Colegio Mayor Biteri.pdf",
+          "chunk_index": 35,
+          "similarity": 0.3958
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 4,
+          "similarity": 0.3353
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 12,
+          "similarity": 0.3121
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 4,
+      "answer": "No tengo información en el contexto proporcionado que indique si debes pagar la franquicia del vehículo.",
+      "answer_generated": true
+    },
+    {
+      "id": 27,
+      "question": "puedo solicitar un cambio de campus",
+      "expected_file": "4 Compensación por cambio de campus base.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.535,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 4,
+      "top3_results": [
+        {
+          "file_name": "Normativa académica de Grado.pdf",
+          "chunk_index": 751,
+          "similarity": 0.535
+        },
+        {
+          "file_name": "4 Compensación por cambio de campus base.pdf",
+          "chunk_index": 0,
+          "similarity": 0.5165
+        },
+        {
+          "file_name": "Normativa académica de Grado.pdf",
+          "chunk_index": 766,
+          "similarity": 0.5147
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 0,
+      "answer": "Sí, puedes solicitar un cambio de campus. Según la normativa académica de grado, debes hacerlo antes del 15 de junio del curso académico que finaliza. Además, en los títulos con cupo limitado de plazas de nuevo ingreso, se reserva anualmente el 5% de las plazas de nuevo ingreso en 1º y 2º para estudiantes que soliciten el cambio de título y/o de campus dentro de MU, en base a la nota media del expediente académico.",
+      "answer_generated": true
+    }
+  ]
+}
