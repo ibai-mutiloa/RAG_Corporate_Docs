@@ -6,6 +6,8 @@ Un único FAQ en español; el LLM traduce si la pregunta llega en euskera.
 """
 import os
 import re
+import time
+import logging
 import numpy as np
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -17,6 +19,13 @@ from langdetect import detect, DetectorFactory
 
 DetectorFactory.seed = 0
 load_dotenv()
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%dT%H:%M:%S',
+)
+logger = logging.getLogger(__name__)
 
 # ===========================
 # Configuración de DB
@@ -830,11 +839,15 @@ def health():
 
 @app.route('/search', methods=['POST'])
 def search():
+    _t0 = time.time()
+    _ip = request.headers.get('X-Forwarded-For', request.remote_addr or '—').split(',')[0].strip()
     if not request.json:
         return jsonify({'error': 'Request debe ser JSON'}), 400
-    question = request.json.get('question')
+    question = request.json.get('question', '').strip()
     if not question:
         return jsonify({'error': 'Campo "question" es requerido'}), 400
+    if len(question) > 1000:
+        return jsonify({'error': 'Pregunta demasiado larga (máximo 1000 caracteres)'}), 400
 
     # Idioma: site_language del frontend tiene prioridad, luego detección automática
     site_language = (
@@ -917,7 +930,7 @@ def search():
     if not azure_client:
         return jsonify({'error': 'Azure OpenAI no configurado'}), 500
 
-    top_k = request.json.get('top_k', TOP_K)
+    top_k = min(int(request.json.get('top_k', TOP_K)), 20)  # techo duro: evitar consultas masivas
     generate_answer = request.json.get('generate_answer', DEFAULT_GENERATE_ANSWER)
 
     # ── Reescritura y búsqueda semántica ─────────────────────────────────────
@@ -1014,9 +1027,13 @@ def search():
     visible_chunks = [c for c in similar_chunks if not _is_faq_chunk(c)]
     response_results = []
     for item in visible_chunks:
-        ci = dict(item)
-        ci['text'] = _strip_chunk_metadata(item.get('text', ''))
-        response_results.append(ci)
+        response_results.append({
+            'file_name':   item.get('file_name', ''),
+            'folder_name': item.get('folder_name', ''),
+            'chunk_index': item.get('chunk_index'),
+            'similarity':  round(float(item.get('similarity', 0)), 4),
+            'text':        _strip_chunk_metadata(item.get('text', '')),
+        })
 
     primary_source = None
     if visible_chunks:
@@ -1094,6 +1111,13 @@ def search():
     else:
         response_data['display_mode'] = 'results'
 
+    logger.info(
+        "SEARCH ip=%s q_len=%d lang=%s sim=%.3f faq=%s zone=%s ms=%d",
+        _ip, len(question), detected_lang, float(max_similarity),
+        response_data.get('answered_by_faq', False),
+        response_data.get('zone', ''),
+        int((time.time() - _t0) * 1000),
+    )
     return jsonify(response_data), 200
 
 
