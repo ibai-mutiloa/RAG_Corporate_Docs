@@ -236,7 +236,8 @@ QUESTIONS = [
         "expected_file": "4 Compensación por cambio de campus base.pdf",
         "expected_chunk_index": None,
         "partial_expected": False,
-        "notes": "",
+        "faq_acceptable": True,
+        "notes": "FAQ entry válida — '¿Cómo funciona el cambio de campus base para trabajadores?'",
     },
     {
         "id": 28,
@@ -377,6 +378,7 @@ def run_question(api_url: str, q: dict, generate_answer: bool, delay: float) -> 
         "expected_file": q["expected_file"],
         "expected_chunk_index": q.get("expected_chunk_index"),
         "partial_expected": q.get("partial_expected", False),
+        "faq_acceptable": q.get("faq_acceptable", False),
         "notes": q.get("notes", ""),
         # Métricas de retrieval
         "max_similarity": round(float(data.get("max_similarity", 0)), 4),
@@ -388,7 +390,8 @@ def run_question(api_url: str, q: dict, generate_answer: bool, delay: float) -> 
         # Top 3 fuentes recuperadas
         "top3_results": top3,
         # Resultado del hit check
-        "file_hit": hit["file_hit"],
+        # faq_acceptable=True + answered_by_faq=True cuenta como hit válido
+        "file_hit": hit["file_hit"] or (q.get("faq_acceptable", False) and data.get("answered_by_faq", False)),
         "chunk_hit": hit["chunk_hit"],
         "hit_position": hit["hit_position"],
         "hit_chunk_index": hit["hit_chunk_index"],

@@ -1,0 +1,69 @@
+{
+  "metadata": {
+    "timestamp": "20260610_075344",
+    "api_url": "http://localhost:5000",
+    "generate_answer": true,
+    "total_questions": 2,
+    "file_hits": 1
+  },
+  "results": [
+    {
+      "id": 10,
+      "question": "tengo que pagar la franquicia del vehiculo",
+      "expected_file": "5 Compensación de daños en vehículos.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.4816,
+      "zone": "high",
+      "confidence": "alta",
+      "answered_by_faq": false,
+      "second_pass_performed": false,
+      "query_variants_used": 3,
+      "top3_results": [
+        {
+          "file_name": "Normativa del Colegio Mayor Biteri.pdf",
+          "chunk_index": 35,
+          "similarity": 0.3958
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 4,
+          "similarity": 0.3353
+        },
+        {
+          "file_name": "5 Compensación de daños en vehículos.pdf",
+          "chunk_index": 12,
+          "similarity": 0.3121
+        }
+      ],
+      "file_hit": true,
+      "chunk_hit": true,
+      "hit_position": 2,
+      "hit_chunk_index": 4,
+      "answer": "No, no tienes que pagar la franquicia del vehículo. Desde la versión 2 de la normativa (mayo 2025), se eliminó la franquicia. MGEP cubre la diferencia entre los gastos reales de reparación y la cobertura del seguro, sin franquicia a cargo del trabajador.",
+      "answer_generated": true
+    },
+    {
+      "id": 27,
+      "question": "puedo solicitar un cambio de campus",
+      "expected_file": "4 Compensación por cambio de campus base.pdf",
+      "expected_chunk_index": null,
+      "partial_expected": false,
+      "notes": "",
+      "max_similarity": 0.0,
+      "zone": "",
+      "confidence": "alta",
+      "answered_by_faq": true,
+      "second_pass_performed": false,
+      "query_variants_used": 0,
+      "top3_results": [],
+      "file_hit": false,
+      "chunk_hit": false,
+      "hit_position": null,
+      "hit_chunk_index": null,
+      "answer": "Sí, un trabajador puede solicitar un cambio de campus base. Después de un período de 8 semestres (6 cursos) en el nuevo campus, el Coordinador de Departamento y la persona afectada deciden si el cambio se consolida. Si no se consolida, se intentará reincorporar a la persona al campus más cercano a su domicilio. Si el cambio lo propone MGEP y el trabajador lo acepta, se compensa la diferencia de kilometraje en el itinere durante esos 8 semestres.",
+      "answer_generated": true
+    }
+  ]
+}

@@ -427,12 +427,13 @@ No añadas información externa. No menciones la fuente.
         return None, False
 
 
-def generate_answer_from_chunks(question, chunks, detected_lang):
+def generate_answer_from_chunks(question, chunks, detected_lang, domain_hint=None):
     """Genera respuesta desde documentos normativos. Responde en el idioma de la pregunta."""
     if not azure_client_text:
         return None
 
     clean_context = build_clean_context(chunks)
+    domain_hint_text = f"\n\nNOTA: {domain_hint}" if domain_hint else ""
     system_prompt = f"""Eres el asistente oficial de la intranet de MGEP.
 Se te proporciona contexto extraído de documentos normativos internos.
 Reglas:
@@ -445,6 +446,10 @@ Reglas:
   Solo si ningún fragmento contiene información útil, indica que no tienes la respuesta.
 - Sé preciso y directo. Si hay artículos o procedimientos relevantes, cítalos.
 - No menciones el nombre del documento ni la fuente.
+- Si los fragmentos provienen de documentos de ámbitos distintos (laboral vs académico,
+  trabajadores vs alumnos), da prioridad a los del ámbito más relevante para la pregunta.
+- Si el contexto establece que algo NO existe, ha sido ELIMINADO o NO aplica,
+  esa negación ES la respuesta. Exprésala directamente.
 - {_lang_instruction(detected_lang)}"""
 
     user_prompt = f"""Pregunta: {question}
@@ -452,7 +457,7 @@ Reglas:
 Contexto:
 {clean_context}
 
-Proporciona una respuesta directa y completa basándote en el contexto anterior. Si la respuesta está distribuida en varios fragmentos, combínalos. Si un fragmento describe el caso contrario al preguntado, ignóralo y céntrate en los fragmentos relevantes para la pregunta."""
+Proporciona una respuesta directa y completa basándote en el contexto anterior. Si la respuesta está distribuida en varios fragmentos, combínalos. Si un fragmento describe el caso contrario al preguntado, ignóralo y céntrate en los fragmentos relevantes para la pregunta.{domain_hint_text}"""
 
     try:
         response = azure_client_text.chat.completions.create(
@@ -1072,7 +1077,14 @@ def search():
                 response_data['display_mode'] = 'answer'
                 return jsonify(response_data), 200
         else:
-            answer = generate_answer_from_chunks(question, context_chunks, detected_lang)
+            # Detectar mismatch de dominio entre top1 y el resto del contexto
+            domain_hint = None
+            if context_chunks and len(context_chunks) > 1:
+                top1_doc = context_chunks[0].get('file_name', '')
+                other_docs = [c.get('file_name', '') for c in context_chunks[1:] if c.get('file_name', '') != top1_doc]
+                if len(other_docs) >= 2:
+                    domain_hint = f"El fragmento más relevante pertenece a '{top1_doc}'. Si otros fragmentos son de documentos con distinto ámbito, ignóralos y basa la respuesta en '{top1_doc}'."
+            answer = generate_answer_from_chunks(question, context_chunks, detected_lang, domain_hint=domain_hint)
             response_data['answer'] = answer
             response_data['answer_generated'] = bool(answer)
             response_data['answer_extractive'] = False
