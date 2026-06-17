@@ -13,3 +13,4 @@ flask
 flask-cors
 numpy
 langdetect
+sentence-transformers

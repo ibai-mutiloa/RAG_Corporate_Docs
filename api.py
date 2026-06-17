@@ -18,6 +18,15 @@ from openai import AzureOpenAI
 from langdetect import detect, DetectorFactory
 
 DetectorFactory.seed = 0
+
+# ── Cross-encoder reranker (carga en arranque, fallback silencioso si falla) ──
+_cross_encoder = None
+try:
+    from sentence_transformers import CrossEncoder as _CE
+    _cross_encoder = _CE('cross-encoder/ms-marco-MiniLM-L-6-v2')
+    logging.getLogger(__name__).info("Cross-encoder cargado correctamente")
+except Exception as _ce_err:
+    logging.getLogger(__name__).warning(f"Cross-encoder no disponible, usando reranker heurístico: {_ce_err}")
 load_dotenv()
 
 logging.basicConfig(
@@ -523,17 +532,53 @@ def calculate_query_overlap(text, query_terms):
 
 
 def rerank_chunks(chunks, question):
-    """Reranking: combina score híbrido, densidad normativa y overlap. FAQ no se retoca."""
+    """Reranking con cross-encoder si está disponible, heurístico como fallback.
+    Los chunks FAQ nunca se reordenan — su posición ya viene garantizada.
+    """
     if not chunks:
         return []
+
+    faq_chunks = [c for c in chunks if _is_faq_chunk(c)]
+    doc_chunks = [c for c in chunks if not _is_faq_chunk(c)]
+
+    for c in faq_chunks:
+        c.setdefault('keyword_density', 0.0)
+        c.setdefault('query_overlap', 0.0)
+
+    if not doc_chunks:
+        return faq_chunks
+
+    if _cross_encoder is not None:
+        try:
+            # El cross-encoder evalúa (pregunta, texto_chunk) como par
+            # Usamos el texto limpio sin la cabecera "Documento: X\nTexto:\n"
+            pairs = [(question, _strip_chunk_metadata(c.get('text', ''))) for c in doc_chunks]
+            ce_scores = _cross_encoder.predict(pairs)
+            # Normalizar scores a [0, 1] para que sean comparables con similarity
+            min_s, max_s = float(ce_scores.min()), float(ce_scores.max())
+            span = max_s - min_s if max_s > min_s else 1.0
+            for chunk, raw_score in zip(doc_chunks, ce_scores):
+                norm = (float(raw_score) - min_s) / span          # [0, 1]
+                base = float(chunk.get('similarity', 0.0))
+                # Combinar: 60% cross-encoder + 40% score híbrido original
+                chunk['similarity'] = 0.60 * norm + 0.40 * base
+                chunk['keyword_density'] = 0.0
+                chunk['query_overlap'] = 0.0
+            logger.debug(f"[RERANK] Cross-encoder aplicado a {len(doc_chunks)} chunks")
+        except Exception as e:
+            logger.warning(f"[RERANK] Cross-encoder falló, usando heurístico: {e}")
+            _rerank_heuristic(doc_chunks, question)
+    else:
+        _rerank_heuristic(doc_chunks, question)
+
+    doc_chunks.sort(key=lambda x: x['similarity'], reverse=True)
+    return faq_chunks + doc_chunks
+
+
+def _rerank_heuristic(doc_chunks, question):
+    """Reranker heurístico original (fallback)."""
     query_terms = _extract_query_terms(question)
-    reranked = []
-    for chunk in chunks:
-        if _is_faq_chunk(chunk):
-            chunk.setdefault('keyword_density', 0.0)
-            chunk.setdefault('query_overlap', 0.0)
-            reranked.append(chunk)
-            continue
+    for chunk in doc_chunks:
         base = float(chunk.get('similarity', 0.0))
         kd = calculate_keyword_density(chunk.get('text', ''))
         qo = calculate_query_overlap(chunk.get('text', ''), query_terms)
@@ -543,9 +588,6 @@ def rerank_chunks(chunks, question):
         chunk['keyword_density'] = kd
         chunk['query_overlap'] = qo
         chunk['similarity'] = combined
-        reranked.append(chunk)
-    reranked.sort(key=lambda x: x['similarity'], reverse=True)
-    return reranked
 
 
 def requires_governance_keywords(question):
