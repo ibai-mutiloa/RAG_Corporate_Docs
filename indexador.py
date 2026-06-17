@@ -106,6 +106,21 @@ def hash_file(path):
     return h.hexdigest()
 
 
+def get_indexed_hashes():
+    """Devuelve {file_hash: file_path} con la ruta canónica ya indexada para cada hash."""
+    conn = connect_db()
+    with conn.cursor() as cur:
+        cur.execute("""
+            SELECT DISTINCT ON (file_hash) file_hash, file_path
+            FROM chunks
+            WHERE file_hash IS NOT NULL
+            ORDER BY file_hash, file_path
+        """)
+        rows = cur.fetchall()
+    conn.close()
+    return {r[0]: r[1] for r in rows}
+
+
 def count_tokens(text):
     if not text:
         return 0
@@ -1069,6 +1084,9 @@ def process_documents():
 
     current_files = {rp: None for rp in indexed_faq_paths}
 
+    # Cargar hashes ya indexados para detectar contenido duplicado entre rutas distintas
+    indexed_hashes = get_indexed_hashes()
+
     for root, dirs, files in os.walk(DOCS_DIR):
         for ignore in IGNORE_DIRS:
             if ignore in dirs:
@@ -1081,6 +1099,15 @@ def process_documents():
             relative_path = os.path.relpath(full_path, common_root)
             file_hash = hash_file(full_path)
             current_files[relative_path] = file_hash
+
+            # ── Deduplicación por hash ────────────────────────────────────────
+            # Si este hash ya está indexado bajo una ruta distinta, es un duplicado.
+            # Se registra como "alias conocido" en current_files para que no se borre,
+            # pero no se indexa de nuevo.
+            canonical_path = indexed_hashes.get(file_hash)
+            if canonical_path is not None and canonical_path != relative_path:
+                print(f"[SKIP] Duplicado detectado: {relative_path!r} tiene el mismo contenido que {canonical_path!r} — omitiendo")
+                continue
 
             conn = connect_db()
             with conn.cursor() as cur:
@@ -1100,6 +1127,8 @@ def process_documents():
                     continue
                 chunks = chunk_text(text)
                 insert_chunks(f, relative_path, folder_name, chunks, file_hash)
+                # Actualizar el mapa de hashes con el recién indexado
+                indexed_hashes[file_hash] = relative_path
             else:
                 missing = update_missing_embeddings(relative_path)
                 if missing:

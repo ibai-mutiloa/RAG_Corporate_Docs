@@ -707,14 +707,16 @@ def _quick_faq_lookup(question):
 
     stopwords = {
         'de', 'la', 'el', 'los', 'las', 'un', 'una', 'y', 'o', 'en', 'con',
-        'por', 'para', 'del', 'al', 'que', 'como', 'es', 'se', 'su', 'sobre',
-        'hay', 'qué', 'cuál', 'cual', 'cómo', 'donde', 'cuando', 'puedo',
-        'debo', 'tengo', 'tiene', 'me', 'mi', 'nos', 'hacer',
-        'pedir', 'solicitar', 'obtener', 'pido', 'solicito',
+        'por', 'para', 'del', 'al', 'que', 'es', 'se', 'su', 'sobre',
+        'hay', 'cual', 'cuales', 'donde', 'cuando',
+        'me', 'mi', 'nos',
     }
 
     def _norm(s):
-        return re.sub(r"[^a-z0-9áéíóúüñ]+", ' ', (s or '').lower()).strip()
+        import unicodedata
+        s2 = unicodedata.normalize('NFD', (s or '').lower())
+        s2 = ''.join(c for c in s2 if unicodedata.category(c) != 'Mn')
+        return re.sub(r"[^a-z0-9]+", ' ', s2).strip()
 
     # Sinónimos: expanden las keywords de la pregunta antes del matching
     sinonimos = {
@@ -1030,6 +1032,7 @@ def search():
         response_results.append({
             'file_name':   item.get('file_name', ''),
             'folder_name': item.get('folder_name', ''),
+            'file_path':   item.get('file_path', ''),
             'chunk_index': item.get('chunk_index'),
             'similarity':  round(float(item.get('similarity', 0)), 4),
             'text':        _strip_chunk_metadata(item.get('text', '')),
